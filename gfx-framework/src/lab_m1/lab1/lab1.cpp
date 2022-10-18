@@ -121,9 +121,9 @@ void Lab1::OnInputUpdate(float deltaTime, int mods)
 		return;
 
 	if (window->KeyHold(GLFW_KEY_A))
-		mesh_coordinates.x += 1.0f * deltaTime;
-	if (window->KeyHold(GLFW_KEY_D))
 		mesh_coordinates.x -= 1.0f * deltaTime;
+	if (window->KeyHold(GLFW_KEY_D))
+		mesh_coordinates.x += 1.0f * deltaTime;
 
 	if (window->KeyHold(GLFW_KEY_W))
 		mesh_coordinates.y += 1.0f * deltaTime;
@@ -131,9 +131,9 @@ void Lab1::OnInputUpdate(float deltaTime, int mods)
 		mesh_coordinates.y -= 1.0f * deltaTime;
 
 	if (window->KeyHold(GLFW_KEY_Q))
-		mesh_coordinates.z += 1.0f * deltaTime;
-	if (window->KeyHold(GLFW_KEY_E))
 		mesh_coordinates.z -= 1.0f * deltaTime;
+	if (window->KeyHold(GLFW_KEY_E))
+		mesh_coordinates.z += 1.0f * deltaTime;
 }
 
 
