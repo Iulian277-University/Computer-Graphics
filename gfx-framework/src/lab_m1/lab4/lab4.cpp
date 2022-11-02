@@ -48,8 +48,17 @@ void Lab4::Init()
     angularStepOX = 0;
     angularStepOY = 0;
     angularStepOZ = 0;
-}
 
+	angularStep = 0;
+
+	cx =  0.0f;
+	cy =  0.5f;
+	cz = -1.5f;
+
+    // Sets the resolution of the small viewport
+    glm::ivec2 resolution = window->GetResolution();
+    miniViewportArea = ViewportArea(50, 50, resolution.x / 5.f, resolution.y / 5.f);
+}
 
 void Lab4::FrameStart()
 {
@@ -62,6 +71,33 @@ void Lab4::FrameStart()
     glViewport(0, 0, resolution.x, resolution.y);
 }
 
+void Lab4::RenderScene() {
+    modelMatrix = glm::mat4(1);
+    modelMatrix *= transform3D::Translate(-2.5f, 0.5f, -1.5f);
+    modelMatrix *= transform3D::Translate(translateX, translateY, translateZ);
+    RenderMesh(meshes["box"], shaders["VertexNormal"], modelMatrix);
+
+    modelMatrix = glm::mat4(1);
+	modelMatrix *= transform3D::Translate(cx, cy, cz);
+	// modelMatrix *= transform3D::Translate(0.0f, 0.0f, 0.0f);
+    modelMatrix *= transform3D::Scale(scaleX, scaleY, scaleZ);
+    RenderMesh(meshes["box"], shaders["Simple"], modelMatrix);
+
+    modelMatrix = glm::mat4(1);
+
+	modelMatrix *= transform3D::Translate(cx, cy, cz);
+	modelMatrix *= transform3D::RotateOY(angularStep);
+	modelMatrix *= transform3D::Translate(-cx, -cy, -cz);
+    
+	modelMatrix *= transform3D::Translate(2.5f, 0.5f, -1.5f);
+
+    modelMatrix *= transform3D::RotateOX(angularStepOX);
+    modelMatrix *= transform3D::RotateOY(angularStepOY);
+    modelMatrix *= transform3D::RotateOZ(angularStepOZ);
+
+		
+	RenderMesh(meshes["box"], shaders["VertexNormal"], modelMatrix);
+}
 
 void Lab4::Update(float deltaTimeSeconds)
 {
@@ -69,28 +105,19 @@ void Lab4::Update(float deltaTimeSeconds)
     glPointSize(5);
     glPolygonMode(GL_FRONT_AND_BACK, polygonMode);
 
-    modelMatrix = glm::mat4(1);
-    modelMatrix *= transform3D::Translate(-2.5f, 0.5f, -1.5f);
-    modelMatrix *= transform3D::Translate(translateX, translateY, translateZ);
-    RenderMesh(meshes["box"], shaders["VertexNormal"], modelMatrix);
+    RenderScene();
+    DrawCoordinateSystem();
 
-    modelMatrix = glm::mat4(1);
-    modelMatrix *= transform3D::Translate(0.0f, 0.5f, -1.5f);
-    modelMatrix *= transform3D::Scale(scaleX, scaleY, scaleZ);
-    RenderMesh(meshes["box"], shaders["Simple"], modelMatrix);
+    glClear(GL_DEPTH_BUFFER_BIT);
+    glViewport(miniViewportArea.x, miniViewportArea.y, miniViewportArea.width, miniViewportArea.height);
 
-    modelMatrix = glm::mat4(1);
-    modelMatrix *= transform3D::Translate(2.5f, 0.5f, -1.5f);
-    modelMatrix *= transform3D::RotateOX(angularStepOX);
-    modelMatrix *= transform3D::RotateOY(angularStepOY);
-    modelMatrix *= transform3D::RotateOZ(angularStepOZ);
-    RenderMesh(meshes["box"], shaders["VertexNormal"], modelMatrix);
+    // TODO(student): render the scene again, in the new viewport
+	RenderScene();
+    DrawCoordinateSystem();
 }
-
 
 void Lab4::FrameEnd()
 {
-    DrawCoordinateSystem();
 }
 
 
@@ -103,7 +130,56 @@ void Lab4::FrameEnd()
 void Lab4::OnInputUpdate(float deltaTime, int mods)
 {
     // TODO(student): Add transformation logic
+	// Cube 1
+	if (window->KeyHold(GLFW_KEY_A))
+		translateX -= 1.0f * deltaTime;
+	if (window->KeyHold(GLFW_KEY_D))
+		translateX += 1.0f * deltaTime;
 
+	if (window->KeyHold(GLFW_KEY_W))
+		translateY += 1.0f * deltaTime;
+	if (window->KeyHold(GLFW_KEY_S))
+		translateY -= 1.0f * deltaTime;
+
+	if (window->KeyHold(GLFW_KEY_R))
+		translateZ -= 1.0f * deltaTime;
+	if (window->KeyHold(GLFW_KEY_F))
+		translateZ += 1.0f * deltaTime;
+		
+	// Cube 2
+	if (window->KeyHold(GLFW_KEY_1)) {
+		scaleX -= 1.0f * deltaTime;
+		scaleY -= 1.0f * deltaTime;
+		scaleZ -= 1.0f * deltaTime;
+	}
+
+	if (window->KeyHold(GLFW_KEY_2)) {
+		scaleX += 1.0f * deltaTime;
+		scaleY += 1.0f * deltaTime;
+		scaleZ += 1.0f * deltaTime;
+	}
+
+	// Cube 3
+	if (window->KeyHold(GLFW_KEY_3))
+		angularStepOX -= 1.0f * deltaTime;
+	if (window->KeyHold(GLFW_KEY_4))
+		angularStepOX += 1.0f * deltaTime;
+
+	if (window->KeyHold(GLFW_KEY_5))
+		angularStepOY += 1.0f * deltaTime;
+	if (window->KeyHold(GLFW_KEY_6))
+		angularStepOY -= 1.0f * deltaTime;
+
+	if (window->KeyHold(GLFW_KEY_7))
+		angularStepOZ -= 1.0f * deltaTime;
+	if (window->KeyHold(GLFW_KEY_8))
+		angularStepOZ += 1.0f * deltaTime;
+
+	// Bonus
+	if (window->KeyHold(GLFW_KEY_N))
+		angularStep -= 1.0f * deltaTime;
+	if (window->KeyHold(GLFW_KEY_M))
+		angularStep += 1.0f * deltaTime;
 }
 
 
@@ -125,6 +201,26 @@ void Lab4::OnKeyPress(int key, int mods)
             break;
         }
     }
+    
+    // TODO(student): Add viewport movement and scaling logic
+	if (key == GLFW_KEY_I)
+		miniViewportArea.y += 10;
+	if (key == GLFW_KEY_K)
+		miniViewportArea.y -= 10;
+
+	if (key == GLFW_KEY_J)
+		miniViewportArea.x -= 10;
+	if (key == GLFW_KEY_L)
+		miniViewportArea.x += 10;
+
+	if (key == GLFW_KEY_U) {
+		miniViewportArea.width  += 10;
+		miniViewportArea.height += 10;
+	}
+	if (key == GLFW_KEY_O) {
+		miniViewportArea.width  -= 10;
+		miniViewportArea.height -= 10;
+	}
 }
 
 

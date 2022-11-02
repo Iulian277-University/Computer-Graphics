@@ -35,6 +35,6 @@ namespace m1
         float angularStep;
 
         // TODO(student): If you need any other class variables, define them here.
-
+		int delta_x;
     };
 }   // namespace m1

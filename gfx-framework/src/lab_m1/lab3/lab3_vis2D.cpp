@@ -51,7 +51,7 @@ void Lab3_Vis2D::Init()
 glm::mat3 Lab3_Vis2D::VisualizationTransf2D(const LogicSpace & logicSpace, const ViewportSpace & viewSpace)
 {
     float sx, sy, tx, ty;
-    sx = viewSpace.width / logicSpace.width;
+    sx = viewSpace.width  / logicSpace.width;
     sy = viewSpace.height / logicSpace.height;
     tx = viewSpace.x - sx * logicSpace.x;
     ty = viewSpace.y - sy * logicSpace.y;
@@ -123,7 +123,6 @@ void Lab3_Vis2D::Update(float deltaTimeSeconds)
     DrawScene(visMatrix);
 
     // The viewport is now the right half of the window
-
     viewSpace = ViewportSpace(resolution.x / 2, 0, resolution.x / 2, resolution.y);
     SetViewportArea(viewSpace, glm::vec3(0.5f), true);
 
@@ -167,9 +166,33 @@ void Lab3_Vis2D::DrawScene(glm::mat3 visMatrix)
 void Lab3_Vis2D::OnInputUpdate(float deltaTime, int mods)
 {
     // TODO(student): Move the logic window with W, A, S, D (up, left, down, right)
+	if (window->KeyHold(GLFW_KEY_W)) {
+		logicSpace.y -= 1.0 * deltaTime;
+	}
+	if (window->KeyHold(GLFW_KEY_S)) {
+		logicSpace.y += 1.0 * deltaTime;
+	}
+	if (window->KeyHold(GLFW_KEY_A)) {
+		logicSpace.x += 1.0 * deltaTime;
+	}
+	if (window->KeyHold(GLFW_KEY_D)) {
+		logicSpace.x -= 1.0 * deltaTime;
+	}
 
     // TODO(student): Zoom in and zoom out logic window with Z and X
-
+	float zoom_speed = 1.0f;
+	if (window->KeyHold(GLFW_KEY_Z)) {
+		logicSpace.height -= zoom_speed * deltaTime;
+		logicSpace.width  -= zoom_speed * deltaTime;
+		logicSpace.x += zoom_speed / 2  * deltaTime;
+		logicSpace.y += zoom_speed / 2  * deltaTime;
+	}
+	if (window->KeyHold(GLFW_KEY_X)) {
+		logicSpace.height += zoom_speed * deltaTime;
+		logicSpace.width  += zoom_speed * deltaTime;
+		logicSpace.x -= zoom_speed / 2  * deltaTime;
+		logicSpace.y -= zoom_speed / 2  * deltaTime;
+	}
 }
 
 
