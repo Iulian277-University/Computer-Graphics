@@ -497,6 +497,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\lab_m1\hw1\duck.cpp" />
     <ClCompile Include="..\src\lab_m1\hw1\hw1.cpp" />
     <ClCompile Include="..\src\lab_m1\hw1\object2D.cpp" />
     <ClCompile Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\components\camera_input.cpp" />
@@ -528,6 +529,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\main.cpp" />
     <ClCompile Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\utils\gl_utils.cpp" />
     <ClCompile Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\utils\text_utils.cpp" />
+    <ClInclude Include="..\src\lab_m1\hw1\duck.h" />
     <ClInclude Include="..\src\lab_m1\hw1\hw1.h" />
     <ClInclude Include="..\src\lab_m1\hw1\object2D.h" />
     <ClInclude Include="..\src\lab_m1\hw1\transform2D.h" />

@@ -2,11 +2,8 @@
 
 #include "components/simple_scene.h"
 
-
-namespace m1
-{
-	class Hw1 : public gfxc::SimpleScene
-	{
+namespace m1 {
+	class Hw1 : public gfxc::SimpleScene {
 	public:
 		Hw1();
 		~Hw1();
@@ -28,5 +25,8 @@ namespace m1
 		void OnWindowResize(int width, int height) override;
 
 	protected:
+		// Variables
+		Duck duck;
+		int curr_duck_id;
 	};
-}   // namespace m1
+}

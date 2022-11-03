@@ -37,3 +37,32 @@ Mesh* object2D::CreateSquare(
     square->InitFromData(vertices, indices);
     return square;
 }
+
+
+Mesh* object2D::CreateTriangle(
+	const std::string &name,
+	glm::vec3 leftBottomCorner,
+	float height,
+	float width,
+	glm::vec3 color,
+	bool fill)
+{
+	glm::vec3 corner = leftBottomCorner;
+
+	std::vector<VertexFormat> vertices =
+	{
+		VertexFormat(corner, color),
+		VertexFormat(corner + glm::vec3(width, height / 2, 0), color),
+		VertexFormat(corner + glm::vec3(0, height, 0), color)
+	};
+
+	Mesh* triangle = new Mesh(name);
+	std::vector<unsigned int> indices = {0, 1, 2};
+
+	if (!fill) {
+		triangle->SetDrawMode(GL_LINE_LOOP);
+	}
+
+	triangle->InitFromData(vertices, indices);
+	return triangle;
+}

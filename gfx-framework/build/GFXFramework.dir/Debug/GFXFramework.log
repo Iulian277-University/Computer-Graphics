@@ -1,5 +1,10 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(944,5): warning MSB8027: Two or more files with the name of object2D.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are ..\src\lab_m1\hw1\object2D.cpp, C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\lab3\object2D.cpp.
   hw1.cpp
-  GFXFramework.vcxproj -> C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\GFXFramework.exe
-  Junction created for C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\src <<===>> C:\Users\Iulian\Desktop\EGC\gfx-framework\src
-  Junction created for C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\assets <<===>> C:\Users\Iulian\Desktop\EGC\gfx-framework\assets
+C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1/hw1/hw1.h(10): error C3646: 'duck': unknown override specifier
+C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1/hw1/hw1.h(10): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+..\src\lab_m1\hw1\hw1.cpp(31): error C2065: 'duck': undeclared identifier
+..\src\lab_m1\hw1\hw1.cpp(33): error C2065: 'duck': undeclared identifier
+  main.cpp
+c:\users\iulian\desktop\egc\gfx-framework\src\lab_m1/hw1/hw1.h(10): error C3646: 'duck': unknown override specifier
+c:\users\iulian\desktop\egc\gfx-framework\src\lab_m1/hw1/hw1.h(10): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+  Generating Code...
