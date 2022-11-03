@@ -1,13 +1,14 @@
 #include <iostream>
 #include <vector>
 
-#include "lab_m1/hw1/hw1.h"
+#include "hw1.h"
+
 #include "lab_m1/hw1/transform2D.h"
 #include "lab_m1/hw1/object2D.h"
 
 #include "duck.h"
 
-using namespace std;
+//using namespace std;
 using namespace m1;
 
 Hw1::Hw1() {
@@ -28,10 +29,9 @@ void Hw1::Init() {
 	GetCameraInput()->SetActive(false);
 
 	// Create Duck
+	curr_duck_id = 0;
 	duck = Duck(curr_duck_id);
-	Mesh* duck_body = object2D::CreateTriangle("duck_body", glm::vec3(0, 0, 0), 200, 400, glm::vec3(1, 0, 0), true);
-	duck.addMesh("body", duck_body);
-	AddMeshToList(duck_body);
+	duck.generateMeshes();
 }
 
 
@@ -47,8 +47,10 @@ void Hw1::FrameStart() {
 
 
 void Hw1::Update(float deltaTimeSeconds) {
-	// RenderMesh2D(meshes["square1"], shaders["VertexColor"], glm::mat3(1));
-	// RenderMesh2D(duck.getMeshes()["body"], shaders["VertexColor"], glm::mat3(1));
+	for (const auto& pair : duck.getMeshes()) {
+		Mesh *mesh = pair.second;
+		RenderMesh2D(mesh, shaders["VertexColor"], glm::mat3(1));
+	}
 }
 
 

@@ -1,13 +1,15 @@
 #pragma once
 
 #include "components/simple_scene.h"
+#include "duck.h"
+
+using namespace duck;
 
 namespace m1 {
 	class Hw1 : public gfxc::SimpleScene {
 	public:
 		Hw1();
 		~Hw1();
-
 		void Init() override;
 
 	private:

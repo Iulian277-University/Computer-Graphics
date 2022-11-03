@@ -1,10 +1,21 @@
 #include <iostream>
 #include <string>
 #include <unordered_map>
-#include "core/gpu/mesh.h"
+
+#include "transform2D.h"
+#include "object2D.h"
+
 #include "duck.h"
 
+//using namespace std;
+using namespace duck;
+
 // Constructors
+Duck::Duck() {
+	this->is_alive = true;
+}
+
+
 Duck::Duck(int id) {
     this->id = id;
     this->is_alive = true;
@@ -43,10 +54,8 @@ void Duck::addMesh(std::string mesh_name, Mesh *mesh) {
 }
 
 
-//
-void Duck::render() {
-	for (const auto& pair : this->getMeshes()) {
-		auto mesh = pair.second;
-		// SimpleScene::RenderMesh2D(mesh, shaders["VertexColor"], glm::mat3(1));
-	}
+void Duck::generateMeshes() {
+	Mesh* duck_body = object2D::CreateTriangle("duck_body", glm::vec3(0, 0, 0), this->body_hei, this->body_wid, glm::vec3(1, 0, 0), true);
+	this->addMesh("body", duck_body);
 }
+
