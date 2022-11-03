@@ -58,9 +58,6 @@
     <ClCompile Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\lab3\lab3_vis2D.cpp">
       <Filter>src\lab_m1\lab3</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\lab3\object2D.cpp">
-      <Filter>src\lab_m1\lab3</Filter>
-    </ClCompile>
     <ClCompile Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\lab4\lab4.cpp">
       <Filter>src\lab_m1\lab4</Filter>
     </ClCompile>
@@ -87,6 +84,15 @@
     </ClCompile>
     <ClCompile Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\utils\text_utils.cpp">
       <Filter>src\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\lab_m1\hw1\hw1.cpp">
+      <Filter>src\lab_m1\hw1</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\lab3\object2D.cpp">
+      <Filter>src\lab_m1\lab3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\lab_m1\hw1\object2D.cpp">
+      <Filter>src\lab_m1\hw1</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -168,12 +174,6 @@
     <ClInclude Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\lab3\lab3_vis2D.h">
       <Filter>src\lab_m1\lab3</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\lab3\object2D.h">
-      <Filter>src\lab_m1\lab3</Filter>
-    </ClInclude>
-    <ClInclude Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\lab3\transform2D.h">
-      <Filter>src\lab_m1\lab3</Filter>
-    </ClInclude>
     <ClInclude Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\lab4\lab4.h">
       <Filter>src\lab_m1\lab4</Filter>
     </ClInclude>
@@ -243,6 +243,21 @@
     <ClInclude Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\utils\window_utils.h">
       <Filter>src\utils</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\lab_m1\hw1\hw1.h">
+      <Filter>src\lab_m1\hw1</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\lab3\object2D.h">
+      <Filter>src\lab_m1\lab3</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\lab3\transform2D.h">
+      <Filter>src\lab_m1\lab3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lab_m1\hw1\object2D.h">
+      <Filter>src\lab_m1\hw1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lab_m1\hw1\transform2D.h">
+      <Filter>src\lab_m1\hw1</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\CMakeLists.txt" />
@@ -310,6 +325,9 @@
     </Filter>
     <Filter Include="src\utils">
       <UniqueIdentifier>{E3CA3D06-C5A1-34DA-9A0B-6F3BA0844060}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\lab_m1\hw1">
+      <UniqueIdentifier>{c5fb71f2-0096-4473-b3cf-87891e266663}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

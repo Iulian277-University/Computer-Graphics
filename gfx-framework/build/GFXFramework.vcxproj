@@ -117,7 +117,8 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message>			</Message>
+      <Message>
+      </Message>
       <Command>setlocal
 "C:\Program Files\CMake\bin\cmake.exe" -E copy_if_different C:/Users/Iulian/Desktop/EGC/gfx-framework/deps/prebuilt/GL/i686/glew32.dll C:/Users/Iulian/Desktop/EGC/gfx-framework/deps/prebuilt/GLFW/i686/glfw3.dll C:/Users/Iulian/Desktop/EGC/gfx-framework/deps/prebuilt/assimp/i686/assimp.dll C:/Users/Iulian/Desktop/EGC/gfx-framework/deps/prebuilt/spdlog/i686/spdlog.dll C:/Users/Iulian/Desktop/EGC/gfx-framework/deps/prebuilt/freetype/i686/freetype.dll C:/Users/Iulian/Desktop/EGC/gfx-framework/build/bin/Debug
 if %errorlevel% neq 0 goto :cmEnd
@@ -205,7 +206,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message>			</Message>
+      <Message>
+      </Message>
       <Command>setlocal
 "C:\Program Files\CMake\bin\cmake.exe" -E copy_if_different C:/Users/Iulian/Desktop/EGC/gfx-framework/deps/prebuilt/GL/i686/glew32.dll C:/Users/Iulian/Desktop/EGC/gfx-framework/deps/prebuilt/GLFW/i686/glfw3.dll C:/Users/Iulian/Desktop/EGC/gfx-framework/deps/prebuilt/assimp/i686/assimp.dll C:/Users/Iulian/Desktop/EGC/gfx-framework/deps/prebuilt/spdlog/i686/spdlog.dll C:/Users/Iulian/Desktop/EGC/gfx-framework/deps/prebuilt/freetype/i686/freetype.dll C:/Users/Iulian/Desktop/EGC/gfx-framework/build/bin/Release
 if %errorlevel% neq 0 goto :cmEnd
@@ -293,7 +295,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message>			</Message>
+      <Message>
+      </Message>
       <Command>setlocal
 "C:\Program Files\CMake\bin\cmake.exe" -E copy_if_different C:/Users/Iulian/Desktop/EGC/gfx-framework/deps/prebuilt/GL/i686/glew32.dll C:/Users/Iulian/Desktop/EGC/gfx-framework/deps/prebuilt/GLFW/i686/glfw3.dll C:/Users/Iulian/Desktop/EGC/gfx-framework/deps/prebuilt/assimp/i686/assimp.dll C:/Users/Iulian/Desktop/EGC/gfx-framework/deps/prebuilt/spdlog/i686/spdlog.dll C:/Users/Iulian/Desktop/EGC/gfx-framework/deps/prebuilt/freetype/i686/freetype.dll C:/Users/Iulian/Desktop/EGC/gfx-framework/build/bin/MinSizeRel
 if %errorlevel% neq 0 goto :cmEnd
@@ -380,7 +383,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message>			</Message>
+      <Message>
+      </Message>
       <Command>setlocal
 "C:\Program Files\CMake\bin\cmake.exe" -E copy_if_different C:/Users/Iulian/Desktop/EGC/gfx-framework/deps/prebuilt/GL/i686/glew32.dll C:/Users/Iulian/Desktop/EGC/gfx-framework/deps/prebuilt/GLFW/i686/glfw3.dll C:/Users/Iulian/Desktop/EGC/gfx-framework/deps/prebuilt/assimp/i686/assimp.dll C:/Users/Iulian/Desktop/EGC/gfx-framework/deps/prebuilt/spdlog/i686/spdlog.dll C:/Users/Iulian/Desktop/EGC/gfx-framework/deps/prebuilt/freetype/i686/freetype.dll C:/Users/Iulian/Desktop/EGC/gfx-framework/build/bin/RelWithDebInfo
 if %errorlevel% neq 0 goto :cmEnd
@@ -493,6 +497,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\lab_m1\hw1\hw1.cpp" />
+    <ClCompile Include="..\src\lab_m1\hw1\object2D.cpp" />
     <ClCompile Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\components\camera_input.cpp" />
     <ClCompile Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\components\scene_input.cpp" />
     <ClCompile Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\components\simple_scene.cpp" />
@@ -522,6 +528,9 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\main.cpp" />
     <ClCompile Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\utils\gl_utils.cpp" />
     <ClCompile Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\utils\text_utils.cpp" />
+    <ClInclude Include="..\src\lab_m1\hw1\hw1.h" />
+    <ClInclude Include="..\src\lab_m1\hw1\object2D.h" />
+    <ClInclude Include="..\src\lab_m1\hw1\transform2D.h" />
     <ClInclude Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\components\camera.h" />
     <ClInclude Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\components\camera_input.h" />
     <ClInclude Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\components\exports.h" />
