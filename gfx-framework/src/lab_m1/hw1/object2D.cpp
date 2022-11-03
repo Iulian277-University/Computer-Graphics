@@ -42,8 +42,8 @@ Mesh* object2D::CreateSquare(
 Mesh* object2D::CreateTriangle(
 	const std::string &name,
 	glm::vec3 leftBottomCorner,
-	float height,
 	float width,
+	float height,
 	glm::vec3 color,
 	bool fill)
 {
@@ -65,4 +65,32 @@ Mesh* object2D::CreateTriangle(
 
 	triangle->InitFromData(vertices, indices);
 	return triangle;
+}
+
+Mesh* object2D::CreateCircle(
+	const std::string &name,
+	glm::vec3 center,
+	float radius,
+	glm::vec3 color,
+	bool fill)
+{
+	std::vector<VertexFormat> vertices =
+	{
+		VertexFormat(center),
+		VertexFormat(center + glm::vec3(10, 0, 0), color),
+		VertexFormat(center + glm::vec3(0, 10, 0), color),
+		VertexFormat(center + glm::vec3(-10, 0, 0), color),
+		VertexFormat(center + glm::vec3(0, -10, 0), color),
+	};
+
+
+	Mesh* circle = new Mesh(name);
+	std::vector<unsigned int> indices = {0, 1, 2, 3, 4, 1};
+
+	if (!fill) {
+		circle->SetDrawMode(GL_LINE_LOOP);
+	}
+
+	circle->InitFromData(vertices, indices);
+	return circle;
 }

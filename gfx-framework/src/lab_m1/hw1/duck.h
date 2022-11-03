@@ -25,11 +25,17 @@ namespace duck {
 
 		void generateMeshes();
 
+		glm::mat3 wing_left_mat();
+		glm::mat3 wing_right_mat();
+
 		// Sizes
-		int body_hei	= 100, body_wid = 200;
-		int wing_hei	= 25,  wing_wid = 50;
-		int head_radius = 25;
-		int beak_hei	= 5,   beak_wid = 10;
+		float body_hei	  = 100, body_wid = 200;
+		float wing_hei	  = 50,  wing_wid = 100;
+		float head_radius = 50;
+		float beak_hei	  = 5,   beak_wid = 10;
+
+		// Positions
+
 	};
 
 }

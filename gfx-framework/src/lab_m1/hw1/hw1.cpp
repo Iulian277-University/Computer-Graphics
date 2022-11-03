@@ -29,8 +29,8 @@ void Hw1::Init() {
 	GetCameraInput()->SetActive(false);
 
 	// Create Duck
-	curr_duck_id = 0;
-	duck = Duck(curr_duck_id);
+	duck_id = 0;
+	duck = Duck(duck_id);
 	duck.generateMeshes();
 }
 
@@ -47,10 +47,24 @@ void Hw1::FrameStart() {
 
 
 void Hw1::Update(float deltaTimeSeconds) {
-	for (const auto& pair : duck.getMeshes()) {
-		Mesh *mesh = pair.second;
-		RenderMesh2D(mesh, shaders["VertexColor"], glm::mat3(1));
-	}
+	auto duck_meshes = duck.getMeshes();
+	Mesh *body		 = duck_meshes["body"];
+	Mesh *wing_left  = duck_meshes["wing_left"];
+	Mesh *wing_right = duck_meshes["wing_right"];
+	Mesh *head		 = duck_meshes["head"];
+	// ...
+
+	//RenderMesh2D(body, shaders["VertexColor"], glm::mat3(1));
+	//
+	//glm::mat3 wing_left_mat = duck.wing_left_mat();
+	//RenderMesh2D(wing_left, shaders["VertexColor"], wing_left_mat);
+
+	//glm::mat3 wing_right_mat = duck.wing_right_mat();
+	//RenderMesh2D(wing_right, shaders["VertexColor"], wing_right_mat);
+
+	glm::mat3 head_mat = glm::mat3(1);
+	head_mat *= transform2D::Translate(200, 200);
+	RenderMesh2D(head, shaders["VertexColor"], head_mat);
 }
 
 

@@ -29,6 +29,6 @@ namespace m1 {
 	protected:
 		// Variables
 		Duck duck;
-		int curr_duck_id;
+		int duck_id;
 	};
 }
