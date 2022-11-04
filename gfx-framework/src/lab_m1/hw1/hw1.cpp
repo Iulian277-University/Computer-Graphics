@@ -8,6 +8,8 @@
 
 #include "duck.h"
 
+#include <glm/gtx/string_cast.hpp> // print glm mat
+
 //using namespace std;
 using namespace m1;
 
@@ -45,26 +47,53 @@ void Hw1::FrameStart() {
 	glViewport(0, 0, resolution.x, resolution.y);
 }
 
+void Hw1::RenderDuck(float deltaTimeSeconds) {
+	// Duck meshes
+	auto duck_meshes = duck.getMeshes();
+	Mesh *body = duck_meshes["body"];
+	Mesh *wing_left = duck_meshes["wing_left"];
+	Mesh *wing_right = duck_meshes["wing_right"];
+	Mesh *head = duck_meshes["head"];
+	Mesh *bake = duck_meshes["beak"];
+	Mesh *eye = duck_meshes["eye"];
+
+	// General matrix
+	glm::mat3 general_mat = glm::mat3(1);
+	general_mat *= transform2D::Translate(100, 100);
+	duck.general_matrix = general_mat;
+
+	// Eye
+	glm::mat3 eye_mat = duck.eye_mat();
+	RenderMesh2D(eye, shaders["VertexColor"], general_mat * eye_mat);
+
+	// Head
+	glm::mat3 head_mat = duck.head_mat();
+	RenderMesh2D(head, shaders["VertexColor"], general_mat * head_mat);
+
+	// Beak
+	glm::mat3 bake_mat = duck.beak_mat();
+	RenderMesh2D(bake, shaders["VertexColor"], general_mat * bake_mat);
+
+	// Body
+	glm::mat3 body_mat = duck.body_mat();
+	RenderMesh2D(body, shaders["VertexColor"], general_mat * body_mat);
+
+	// Left wing
+	glm::mat3 wing_left_mat = duck.wing_left_mat();
+	RenderMesh2D(wing_left, shaders["VertexColor"], general_mat * wing_left_mat);
+
+	// Right wing
+	glm::mat3 wing_right_mat = duck.wing_right_mat();
+	RenderMesh2D(wing_right, shaders["VertexColor"], general_mat * wing_right_mat);
+
+
+	// Apply the same transformations on [cx, cy, 1]
+	// ...
+}
+
 
 void Hw1::Update(float deltaTimeSeconds) {
-	auto duck_meshes = duck.getMeshes();
-	Mesh *body		 = duck_meshes["body"];
-	Mesh *wing_left  = duck_meshes["wing_left"];
-	Mesh *wing_right = duck_meshes["wing_right"];
-	Mesh *head		 = duck_meshes["head"];
-	// ...
-
-	//RenderMesh2D(body, shaders["VertexColor"], glm::mat3(1));
-	//
-	//glm::mat3 wing_left_mat = duck.wing_left_mat();
-	//RenderMesh2D(wing_left, shaders["VertexColor"], wing_left_mat);
-
-	//glm::mat3 wing_right_mat = duck.wing_right_mat();
-	//RenderMesh2D(wing_right, shaders["VertexColor"], wing_right_mat);
-
-	glm::mat3 head_mat = glm::mat3(1);
-	head_mat *= transform2D::Translate(200, 200);
-	RenderMesh2D(head, shaders["VertexColor"], head_mat);
+	RenderDuck(deltaTimeSeconds);
 }
 
 

@@ -24,7 +24,7 @@ Mesh* object2D::CreateSquare(
     };
 
     Mesh* square = new Mesh(name);
-    std::vector<unsigned int> indices = { 0, 1, 2, 3 };
+    std::vector<unsigned int> indices = {0, 1, 2, 3};
 
     if (!fill) {
         square->SetDrawMode(GL_LINE_LOOP);
@@ -67,28 +67,45 @@ Mesh* object2D::CreateTriangle(
 	return triangle;
 }
 
+
 Mesh* object2D::CreateCircle(
 	const std::string &name,
 	glm::vec3 center,
+	int num_triangles,
 	float radius,
 	glm::vec3 color,
 	bool fill)
 {
-	std::vector<VertexFormat> vertices =
-	{
-		VertexFormat(center),
-		VertexFormat(center + glm::vec3(10, 0, 0), color),
-		VertexFormat(center + glm::vec3(0, 10, 0), color),
-		VertexFormat(center + glm::vec3(-10, 0, 0), color),
-		VertexFormat(center + glm::vec3(0, -10, 0), color),
-	};
+	float theta = 2 * M_PI / num_triangles;
+	// Circle - parametric equation
+	// x = radius * cos(angle)
+	// y = radius * sin(angle)
 
+	// Vertices
+	std::vector<VertexFormat> vertices;
+	vertices.push_back(VertexFormat(center, color));
+	float angle = 0;
+	for (int i = 0; i < num_triangles; ++i) {
+		float x = radius * cos(angle);
+		float y = radius * sin(angle);
+		vertices.push_back(VertexFormat(center + glm::vec3(x, y, 0), color));
+		angle -= theta;
+	}
+
+	// Indices
+	std::vector<unsigned int> indices;
+	indices.push_back(0); // center
+	for (int i = 1; i <= num_triangles; ++i)
+		indices.push_back(i);
+	 indices.push_back(1); // close the circle
 
 	Mesh* circle = new Mesh(name);
-	std::vector<unsigned int> indices = {0, 1, 2, 3, 4, 1};
-
 	if (!fill) {
+		indices.erase(indices.begin());
 		circle->SetDrawMode(GL_LINE_LOOP);
+	}
+	else {
+		circle->SetDrawMode(GL_TRIANGLE_FAN);
 	}
 
 	circle->InitFromData(vertices, indices);

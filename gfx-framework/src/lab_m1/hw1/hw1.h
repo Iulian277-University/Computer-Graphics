@@ -26,6 +26,8 @@ namespace m1 {
 		void OnMouseScroll(int mouseX, int mouseY, int offsetX, int offsetY) override;
 		void OnWindowResize(int width, int height) override;
 
+		void RenderDuck(float deltaTimeSeconds);
+
 	protected:
 		// Variables
 		Duck duck;

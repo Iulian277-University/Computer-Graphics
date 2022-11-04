@@ -2,7 +2,7 @@
 
 namespace duck {
 	class Duck {
-		// private:
+	// private:
 
 	protected:
 		int id;
@@ -25,17 +25,33 @@ namespace duck {
 
 		void generateMeshes();
 
+		// Center coordinates
+		float cx, cy;
+
+		// Matrices
+		glm::mat3 general_matrix;
+		glm::mat3 head_mat();
+		glm::mat3 body_mat();
 		glm::mat3 wing_left_mat();
 		glm::mat3 wing_right_mat();
+		glm::mat3 beak_mat();
+		glm::mat3 eye_mat();
+
+		// Colors
+		glm::vec3 head_color = glm::vec3(48,  87,  55)  / 255.0f;
+		glm::vec3 body_color = glm::vec3(88,  58,  38)  / 255.0f;
+		glm::vec3 wing_color = glm::vec3(88,  58,  38)  / 255.0f;
+		glm::vec3 beak_color = glm::vec3(231, 204, 57)  / 255.0f;
+		glm::vec3 eye_color  = glm::vec3(255, 255, 255) / 255.0f;
 
 		// Sizes
-		float body_hei	  = 100, body_wid = 200;
-		float wing_hei	  = 50,  wing_wid = 100;
-		float head_radius = 50;
-		float beak_hei	  = 5,   beak_wid = 10;
+		float head_radius = 30,  head_body_wid_perc = 0.9f;
+		float body_wid	  = 200, body_hei			= 70;
+		float wing_wid	  = 80,  wing_hei			= 50;
+		float beak_wid	  = 30,  beak_hei			= 15;
+		float eye_radius  = 4;
 
 		// Positions
 
 	};
-
 }

@@ -14,5 +14,5 @@ namespace object2D
 	Mesh* CreateTriangle(const std::string &name, glm::vec3 leftBottomCorner,
 		float height, float width, glm::vec3 color, bool fill = false);
 
-	Mesh* CreateCircle(const std::string &name, glm::vec3 center, float radius, glm::vec3 color, bool fill = false);
+	Mesh* CreateCircle(const std::string &name, glm::vec3 center, int num_triangles, float radius, glm::vec3 color, bool fill = false);
 }
