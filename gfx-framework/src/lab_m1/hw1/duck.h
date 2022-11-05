@@ -33,6 +33,7 @@ namespace duck {
 		glm::mat3 wing_right_mat();
 		glm::mat3 beak_mat();
 		glm::mat3 eye_mat();
+		glm::mat3 iris_mat();
 		glm::mat3 bbox_mat();
 
 		// Colors
@@ -41,19 +42,27 @@ namespace duck {
 		glm::vec3 wing_color = glm::vec3(88,  58,  38)  / 255.0f;
 		glm::vec3 beak_color = glm::vec3(231, 204, 57)  / 255.0f;
 		glm::vec3 eye_color  = glm::vec3(255, 255, 255) / 255.0f;
+		glm::vec3 iris_color = glm::vec3(0,   0,   0)   / 255.0f;
 
 		// Sizes
 		float head_radius = 30,  head_body_wid_perc = 0.9f;
-		float body_wid	  = 200, body_hei			= 70;
+		float body_wid	  = 200, body_hei			= 80;
 		float wing_wid	  = 80,  wing_hei			= 50;
 		float beak_wid	  = 30,  beak_hei			= 15;
 		float eye_radius  = 4;
+		float iris_radius = 3;
+
+		// Wings animation
+		float wing_rot_angle     = 0;
+		bool  wing_pos_rot_angle = true;
 
 		// Bounding box
 		float bbox_wid	  = body_wid + head_radius * head_body_wid_perc * 1.1f;
 		float bbox_hei    = body_hei + wing_wid;
-		float left_x      = 0;
-		float left_y	  = 0;
-		float angle       = 0;
+
+		float x1 = 0,        y1	= 0;
+		float x2 = bbox_wid, y2 = 0;
+		float x3 = bbox_wid, y3 = bbox_hei;
+		float x4 = 0,        y4	= bbox_hei;
 	};
 }

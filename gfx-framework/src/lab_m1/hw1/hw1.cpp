@@ -56,15 +56,19 @@ void Hw1::RenderDuck(float deltaTimeSeconds) {
 	Mesh *head		 = duck_meshes["head"];
 	Mesh *bake		 = duck_meshes["beak"];
 	Mesh *eye		 = duck_meshes["eye"];
+	Mesh *iris		 = duck_meshes["iris"];
 	Mesh *bbox		 = duck_meshes["bbox"];
 
 	// General matrix
-	float rot_angle = 0.1f;
 	glm::mat3 general_mat = glm::mat3(1);
 	general_mat *= transform2D::Translate(100, 100);
-	general_mat *= transform2D::Rotate(rot_angle);
+	general_mat *= transform2D::Rotate(0.1f);
+	//general_mat *= transform2D::Scale(2, 2);
 	duck.general_matrix = general_mat;
-	duck.angle = rot_angle;
+
+	// Iris
+	// glm::mat3 iris_mat = duck.iris_mat();
+	// RenderMesh2D(iris, shaders["VertexColor"], general_mat * iris_mat);
 
 	// Eye
 	glm::mat3 eye_mat = duck.eye_mat();
@@ -82,6 +86,17 @@ void Hw1::RenderDuck(float deltaTimeSeconds) {
 	glm::mat3 body_mat = duck.body_mat();
 	RenderMesh2D(body, shaders["VertexColor"], general_mat * body_mat);
 
+	// Wings animation
+	if (duck.wing_pos_rot_angle)
+		duck.wing_rot_angle += 1.0f * deltaTimeSeconds;
+	else
+		duck.wing_rot_angle -= 1.0f * deltaTimeSeconds;
+
+	if (duck.wing_rot_angle > 20.0f * M_PI / 180.0f)
+		duck.wing_pos_rot_angle = false;
+	if (duck.wing_rot_angle <  0.0f * M_PI / 180.0f)
+		duck.wing_pos_rot_angle = true;
+
 	// Left wing
 	glm::mat3 wing_left_mat = duck.wing_left_mat();
 	RenderMesh2D(wing_left, shaders["VertexColor"], general_mat * wing_left_mat);
@@ -94,7 +109,10 @@ void Hw1::RenderDuck(float deltaTimeSeconds) {
 	glm::mat3 bbox_mat = duck.bbox_mat();
 	RenderMesh2D(bbox, shaders["VertexColor"], general_mat * bbox_mat);
 	
-	// std::cout << duck.left_x << " -- " << duck.left_y << " -- " << duck.angle << "\n";
+	//std::cout << "(" << duck.x1 << ", " << duck.y1 << ") ";
+	//std::cout << "(" << duck.x2 << ", " << duck.y2 << ") ";
+	//std::cout << "(" << duck.x3 << ", " << duck.y3 << ") ";
+	//std::cout << "(" << duck.x4 << ", " << duck.y4 << ")\n";
 }
 
 
