@@ -25,6 +25,19 @@ namespace duck {
 
 		void generateMeshes();
 
+
+		// Initial position and angle
+		// [TODO]: Randomize these values based on `window->GetResolution()`
+		float curr_x = 500;
+		float curr_y = 100;
+		
+		float min_angle = 15.0f;
+		float max_angle = 60.0f;
+
+		float angle_interval = fmod(rand(), (max_angle - min_angle)) + min_angle; // [min_angle, max_angle) degrees
+		float angle_sign	 = 2 * fmod(rand(), 2) - 1;  // -1 or 1 (positive / negative angle)
+		float curr_angle	 = angle_sign * angle_interval * M_PI / 180.0f;
+
 		// Matrices
 		glm::mat3 general_matrix;
 		glm::mat3 head_mat();

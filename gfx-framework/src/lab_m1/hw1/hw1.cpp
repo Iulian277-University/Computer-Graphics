@@ -48,23 +48,37 @@ void Hw1::FrameStart() {
 }
 
 void Hw1::RenderDuck(float deltaTimeSeconds) {
-	// Duck meshes
-	auto duck_meshes = duck.getMeshes();
-	Mesh *body		 = duck_meshes["body"];
-	Mesh *wing_left  = duck_meshes["wing_left"];
-	Mesh *wing_right = duck_meshes["wing_right"];
-	Mesh *head		 = duck_meshes["head"];
-	Mesh *bake		 = duck_meshes["beak"];
-	Mesh *eye		 = duck_meshes["eye"];
-	Mesh *iris		 = duck_meshes["iris"];
-	Mesh *bbox		 = duck_meshes["bbox"];
-
 	// General matrix
 	glm::mat3 general_mat = glm::mat3(1);
-	general_mat *= transform2D::Translate(100, 100);
-	general_mat *= transform2D::Rotate(0.1f);
-	//general_mat *= transform2D::Scale(2, 2);
+
+	// Duck movement
+	float speed = 100.0f;
+	float dx = speed * deltaTimeSeconds;
+	float dy = speed * deltaTimeSeconds;
+	float length = sqrt(dx * dx + dy * dy);
+	dx /= length;
+	dy /= length;
+	duck.curr_x -= duck.angle_sign * speed * dx * deltaTimeSeconds;
+	duck.curr_y += speed * dy * deltaTimeSeconds;
+
+	general_mat *= transform2D::Translate(duck.curr_x, duck.curr_y);
+	general_mat *= transform2D::Rotate(duck.curr_angle);
+	if (duck.curr_angle > 0) // mirror the duck if the starting angle if positive (to the left)
+		general_mat *= transform2D::Mirror_OY();
+	general_mat *= transform2D::Rotate(90.0f * M_PI / 180.0f); // rotate the duck vertically
 	duck.general_matrix = general_mat;
+
+
+	// Duck meshes
+	auto duck_meshes = duck.getMeshes();
+	Mesh *body = duck_meshes["body"];
+	Mesh *wing_left = duck_meshes["wing_left"];
+	Mesh *wing_right = duck_meshes["wing_right"];
+	Mesh *head = duck_meshes["head"];
+	Mesh *bake = duck_meshes["beak"];
+	Mesh *eye = duck_meshes["eye"];
+	Mesh *iris = duck_meshes["iris"];
+	Mesh *bbox = duck_meshes["bbox"];
 
 	// Iris
 	// glm::mat3 iris_mat = duck.iris_mat();
@@ -109,6 +123,7 @@ void Hw1::RenderDuck(float deltaTimeSeconds) {
 	glm::mat3 bbox_mat = duck.bbox_mat();
 	RenderMesh2D(bbox, shaders["VertexColor"], general_mat * bbox_mat);
 	
+	// bbox coordinates
 	//std::cout << "(" << duck.x1 << ", " << duck.y1 << ") ";
 	//std::cout << "(" << duck.x2 << ", " << duck.y2 << ") ";
 	//std::cout << "(" << duck.x3 << ", " << duck.y3 << ") ";
@@ -118,7 +133,6 @@ void Hw1::RenderDuck(float deltaTimeSeconds) {
 
 void Hw1::Update(float deltaTimeSeconds) {
 	RenderDuck(deltaTimeSeconds);
-
 }
 
 
