@@ -25,9 +25,6 @@ namespace duck {
 
 		void generateMeshes();
 
-		// Center coordinates
-		float cx, cy;
-
 		// Matrices
 		glm::mat3 general_matrix;
 		glm::mat3 head_mat();
@@ -36,6 +33,7 @@ namespace duck {
 		glm::mat3 wing_right_mat();
 		glm::mat3 beak_mat();
 		glm::mat3 eye_mat();
+		glm::mat3 bbox_mat();
 
 		// Colors
 		glm::vec3 head_color = glm::vec3(48,  87,  55)  / 255.0f;
@@ -51,7 +49,11 @@ namespace duck {
 		float beak_wid	  = 30,  beak_hei			= 15;
 		float eye_radius  = 4;
 
-		// Positions
-
+		// Bounding box
+		float bbox_wid	  = body_wid + head_radius * head_body_wid_perc * 1.1f;
+		float bbox_hei    = body_hei + wing_wid;
+		float left_x      = 0;
+		float left_y	  = 0;
+		float angle       = 0;
 	};
 }

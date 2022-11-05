@@ -50,17 +50,21 @@ void Hw1::FrameStart() {
 void Hw1::RenderDuck(float deltaTimeSeconds) {
 	// Duck meshes
 	auto duck_meshes = duck.getMeshes();
-	Mesh *body = duck_meshes["body"];
-	Mesh *wing_left = duck_meshes["wing_left"];
+	Mesh *body		 = duck_meshes["body"];
+	Mesh *wing_left  = duck_meshes["wing_left"];
 	Mesh *wing_right = duck_meshes["wing_right"];
-	Mesh *head = duck_meshes["head"];
-	Mesh *bake = duck_meshes["beak"];
-	Mesh *eye = duck_meshes["eye"];
+	Mesh *head		 = duck_meshes["head"];
+	Mesh *bake		 = duck_meshes["beak"];
+	Mesh *eye		 = duck_meshes["eye"];
+	Mesh *bbox		 = duck_meshes["bbox"];
 
 	// General matrix
+	float rot_angle = 0.1f;
 	glm::mat3 general_mat = glm::mat3(1);
 	general_mat *= transform2D::Translate(100, 100);
+	general_mat *= transform2D::Rotate(rot_angle);
 	duck.general_matrix = general_mat;
+	duck.angle = rot_angle;
 
 	// Eye
 	glm::mat3 eye_mat = duck.eye_mat();
@@ -86,14 +90,17 @@ void Hw1::RenderDuck(float deltaTimeSeconds) {
 	glm::mat3 wing_right_mat = duck.wing_right_mat();
 	RenderMesh2D(wing_right, shaders["VertexColor"], general_mat * wing_right_mat);
 
-
-	// Apply the same transformations on [cx, cy, 1]
-	// ...
+	// Bounding box
+	glm::mat3 bbox_mat = duck.bbox_mat();
+	RenderMesh2D(bbox, shaders["VertexColor"], general_mat * bbox_mat);
+	
+	// std::cout << duck.left_x << " -- " << duck.left_y << " -- " << duck.angle << "\n";
 }
 
 
 void Hw1::Update(float deltaTimeSeconds) {
 	RenderDuck(deltaTimeSeconds);
+
 }
 
 

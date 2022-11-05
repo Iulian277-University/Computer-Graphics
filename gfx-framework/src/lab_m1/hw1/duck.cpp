@@ -76,7 +76,12 @@ void Duck::generateMeshes() {
 	// Eye
 	Mesh *eye = object2D::CreateCircle("head", glm::vec3(0, 0, 0), 50, this->eye_radius, this->eye_color, true);
 	this->addMesh("eye", eye);
+
+	// Bounding box
+	Mesh *bbox = object2D::CreateRectangle("bbox", glm::vec3(0, 0, 0), this->bbox_wid, this->bbox_hei, glm::vec3(1, 1, 1), false);
+	this->addMesh("bbox", bbox);
 }
+
 
 glm::mat3 Duck::head_mat() {
 	glm::mat3 modelMatrix = glm::mat3(1);
@@ -116,5 +121,17 @@ glm::mat3 Duck::eye_mat() {
 	glm::mat3 modelMatrix = glm::mat3(1);
 	modelMatrix *= transform2D::Translate(this->head_radius * 0.2f, this->head_radius * 0.2f);
 	modelMatrix *= transform2D::Translate(this->body_wid * this->head_body_wid_perc, this->body_hei / 2);
+	return modelMatrix;
+}
+
+glm::mat3 Duck::bbox_mat() {
+	glm::mat3 modelMatrix = glm::mat3(1);
+	modelMatrix *= transform2D::Translate(0, -this->bbox_hei / 4);
+
+	glm::vec3 coord = glm::vec3(0, 0, 1);
+	coord = this->general_matrix * modelMatrix * coord;
+	this->left_x = coord.x;
+	this->left_y = coord.y;
+
 	return modelMatrix;
 }
