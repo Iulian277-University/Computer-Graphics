@@ -29,7 +29,7 @@ namespace m1 {
 		void RenderDuck(float deltaTimeSeconds);
 
 	protected:
-		// Variables
+		glm::ivec2 resolution;
 		Duck duck;
 		int duck_id;
 	};

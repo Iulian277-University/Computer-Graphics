@@ -7,7 +7,6 @@
 
 #include "duck.h"
 
-//using namespace std;
 using namespace duck;
 
 // Constructors
@@ -103,7 +102,7 @@ glm::mat3 Duck::wing_left_mat() {
 	modelMatrix *= transform2D::Translate(this->body_wid / 3, this->body_hei / 2);
 	modelMatrix *= transform2D::Rotate(this->wing_rot_angle); // wing animation
 	modelMatrix *= transform2D::Translate(this->wing_hei, 0);
-	modelMatrix *= transform2D::Rotate(90.0f * M_PI / 180.0f);
+	modelMatrix *= transform2D::Rotate(RADIANS(90));
 	return modelMatrix;
 }
 
@@ -111,7 +110,7 @@ glm::mat3 Duck::wing_right_mat() {
 	glm::mat3 modelMatrix = glm::mat3(1);
 	modelMatrix *= transform2D::Translate(this->body_wid / 3, this->body_hei / 2);
 	modelMatrix *= transform2D::Rotate(-this->wing_rot_angle); // wing animation
-	modelMatrix *= transform2D::Rotate(-90.0f * M_PI / 180.0f);
+	modelMatrix *= transform2D::Rotate(RADIANS(-90));
 	return modelMatrix;
 }
 
@@ -119,8 +118,13 @@ glm::mat3 Duck::beak_mat() {
 	glm::mat3 modelMatrix = glm::mat3(1);
 	modelMatrix *= transform2D::Translate(this->head_radius * 1.1f, -this->head_radius / 3);
 	modelMatrix *= transform2D::Translate(this->body_wid * this->head_body_wid_perc, this->body_hei / 2);
-	modelMatrix *= transform2D::Rotate(-5.0f * M_PI / 180.0f);
+	modelMatrix *= transform2D::Rotate(RADIANS(-5));
 	modelMatrix *= transform2D::Translate(-this->beak_wid / 2, -this->beak_hei / 2);
+
+	glm::vec3 coord = this->general_matrix * modelMatrix * glm::vec3(this->beak_wid, this->beak_hei / 2, 1);
+	this->beak_tip_x = coord.x;
+	this->beak_tip_y = coord.y;
+
 	return modelMatrix;
 }
 
@@ -153,7 +157,7 @@ glm::mat3 Duck::bbox_mat() {
 	*/
 
 	glm::vec3 coord;
-	coord = this->general_matrix * modelMatrix * glm::vec3(0, 0, 1);;
+	coord = this->general_matrix * modelMatrix * glm::vec3(0, 0, 1);
 	this->x1 = coord.x;
 	this->y1 = coord.y;
 

@@ -35,8 +35,11 @@ namespace duck {
 		float max_angle = 60.0f;
 
 		float angle_interval = fmod(rand(), (max_angle - min_angle)) + min_angle; // [min_angle, max_angle) degrees
-		float angle_sign	 = 2 * fmod(rand(), 2) - 1;  // -1 or 1 (positive / negative angle)
-		float curr_angle	 = angle_sign * angle_interval * M_PI / 180.0f;
+		float angle_sign	 = 2 * fmod(rand(), 2) - 1;							  // -1 or 1 (positive / negative angle)
+		float curr_angle	 = angle_sign * RADIANS(angle_interval);
+
+		float dx_sign = 1;
+		float dy_sign = 1;
 
 		// Matrices
 		glm::mat3 general_matrix;
@@ -70,12 +73,15 @@ namespace duck {
 		bool  wing_pos_rot_angle = true;
 
 		// Bounding box
-		float bbox_wid	  = body_wid + head_radius * head_body_wid_perc * 1.1f;
-		float bbox_hei    = body_hei + wing_wid;
+		float bbox_wid = body_wid + head_radius * head_body_wid_perc * 1.1f;
+		float bbox_hei = body_hei + wing_wid;
 
 		float x1 = 0,        y1	= 0;
 		float x2 = bbox_wid, y2 = 0;
 		float x3 = bbox_wid, y3 = bbox_hei;
 		float x4 = 0,        y4	= bbox_hei;
+		
+		// Position of beak tip
+		float beak_tip_x = 10, beak_tip_y = 10;
 	};
 }

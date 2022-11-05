@@ -35,6 +35,16 @@ namespace transform2D
 		));
     }
 
+	// Mirror matrix (wrt OX)
+	inline glm::mat3 Mirror_OX()
+	{
+		return glm::transpose(glm::mat3(
+			1, 0,  0,
+			0, -1, 0,
+			0, 0,  1
+		));
+	}
+
 	// Mirror matrix (wrt OY)
 	inline glm::mat3 Mirror_OY()
 	{
