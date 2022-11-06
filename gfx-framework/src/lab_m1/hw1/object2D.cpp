@@ -111,7 +111,7 @@ Mesh* object2D::CreateCircle(
 	bool fill)
 {
 	float theta = 2 * M_PI / num_triangles;
-	// Circle - parametric equation
+	// Circle parametric equation
 	// x = radius * cos(angle)
 	// y = radius * sin(angle)
 

@@ -2,34 +2,38 @@
 
 namespace duck {
 	class Duck {
-	// private:
-
-	protected:
-		int id;
-		bool is_alive;
-	
-		std::unordered_map<std::string, Mesh *> meshes; // <"head": head_mesh, "body": body_mesh, ...>
-
 	public:
 		Duck();
-		Duck(int id);
 		~Duck();
 
-		int getId();
-		bool isAlive();
-		std::unordered_map<std::string, Mesh *> getMeshes();
-
-		void setId(int id);
-		void setIsAlive(bool is_alive);
+		std::unordered_map<std::string, Mesh *> meshes; // <"head": head_mesh, "body": body_mesh, ...>
 		void addMesh(std::string mesh_name, Mesh *mesh);
 
 		void generateMeshes();
 
 
+		bool alive	= true;
+		bool escape	= false;
+		bool dead	= false;
+
+		float time_alive_thresh = 5.0f; // in seconds
+		float time_alive		= 0.0f; // in seconds
+
+		float speed				= 250.0f;
+		float escape_speed		= 2.0f * speed;
+
+		float wing_rot_speed	= 1.5f;
+
+
 		// Initial position and angle
 		// [TODO]: Randomize these values based on `window->GetResolution()`
-		float curr_x = 500;
-		float curr_y = 100;
+		float min_x  = 200.0f;
+		float max_x  = 600.0f;
+		float min_y  =  50.0f;
+		float max_y  = 150.0f;
+
+		float start_x = fmod(rand(), (max_x - min_x)) + min_x;
+		float start_y = fmod(rand(), (max_y - min_y)) + min_y;
 		
 		float min_angle = 15.0f;
 		float max_angle = 45.0f;
@@ -37,9 +41,6 @@ namespace duck {
 		float angle_interval = fmod(rand(), (max_angle - min_angle)) + min_angle; // [min_angle, max_angle) degrees
 		float angle_sign	 = 2 * fmod(rand(), 2) - 1;							  // -1 or 1 (positive / negative angle)
 		float start_angle	 = angle_sign * RADIANS(angle_interval);
-
-		//float angle_sign  = -1.0f;
-		//float start_angle = RADIANS(-30);
 
 		float dx_sign = 1;
 		float dy_sign = 1;
