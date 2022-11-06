@@ -61,11 +61,6 @@ void Hw1::RenderDuck(float deltaTimeSeconds) {
 		duck.dx_sign *= -1.0f;
 	}
 
-	if (duck.curr_angle > 0)
-		duck.angle_sign = 1;
-	else
-		duck.angle_sign = -1;
-
 	// Trajectory
 	float speed = 200.0f;
 	float dx = duck.dx_sign * speed * deltaTimeSeconds;
@@ -78,21 +73,20 @@ void Hw1::RenderDuck(float deltaTimeSeconds) {
 
 	general_mat *= transform2D::Translate(duck.curr_x, duck.curr_y);
 
-	//if (duck.beak_tip_y > resolution.y) {
-	//	general_mat *= transform2D::Mirror_OX();
-	//	//duck.curr_angle = M_PI - duck.curr_angle;
-	//}
 
-	//if (duck.beak_tip_x > resolution.x || duck.beak_tip_x < 0) {
-	//	general_mat *= transform2D::Mirror_OY();
-	//	//duck.curr_angle = -duck.curr_angle;
-	//}
-
-
-	general_mat *= transform2D::Rotate(duck.curr_angle);
-	if (duck.curr_angle > 0) // mirror the duck if the starting angle is positive (to the left)
+	general_mat *= transform2D::Rotate(duck.start_angle);
+	if (duck.start_angle > 0) // mirror the duck if the starting angle is positive (to the left)
 		general_mat *= transform2D::Mirror_OY();
 	general_mat *= transform2D::Rotate(RADIANS(90)); // rotate the duck vertically
+	
+	if (duck.dx_sign * duck.dy_sign < 0) {
+		general_mat *= transform2D::Rotate(RADIANS(-90));
+	}
+
+	if (duck.dx_sign < 0) {
+		general_mat *= transform2D::Mirror_OY();
+	}
+
 	duck.general_matrix = general_mat;
 
 
@@ -123,7 +117,7 @@ void Hw1::RenderDuck(float deltaTimeSeconds) {
 	// Beak
 	glm::mat3 bake_mat = duck.beak_mat();
 	RenderMesh2D(bake, shaders["VertexColor"], general_mat * bake_mat);
-	std::cout << duck.beak_tip_x << ", " << duck.beak_tip_y << "\n";
+	// std::cout << duck.beak_tip_x << ", " << duck.beak_tip_y << "\n";
 
 
 	// Body

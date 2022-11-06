@@ -36,7 +36,7 @@ namespace duck {
 
 		float angle_interval = fmod(rand(), (max_angle - min_angle)) + min_angle; // [min_angle, max_angle) degrees
 		float angle_sign	 = 2 * fmod(rand(), 2) - 1;							  // -1 or 1 (positive / negative angle)
-		float curr_angle	 = angle_sign * RADIANS(angle_interval);
+		float start_angle	 = angle_sign * RADIANS(angle_interval);
 
 		float dx_sign = 1;
 		float dy_sign = 1;
