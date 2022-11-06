@@ -7,8 +7,9 @@
 #include "lab_m1/hw1/object2D.h"
 
 #include "duck.h"
+#include "ui.h"
 
-#include <glm/gtx/string_cast.hpp> // Print glm mat
+#include <glm/gtx/string_cast.hpp> // print glm mat
 
 using namespace m1;
 
@@ -29,6 +30,10 @@ void Hw1::Init() {
 	// Create Duck
 	duck = Duck();
 	duck.generateMeshes();
+
+	// Create UI
+	ui = Ui(3, 3);
+	ui.generateMeshes();
 }
 
 
@@ -43,9 +48,23 @@ void Hw1::FrameStart() {
 }
 
 
+void Hw1::RenderUi(float deltaTimeSeconds) {
+	auto meshes= ui.meshes;
+
+	// Lives
+	for (int i = 0; i < ui.curr_lives; ++i)
+		RenderMesh2D(meshes["life"], shaders["VertexColor"], ui.life_mat(i));
+
+	// Bullets
+	for (int i = 0; i < ui.curr_bullets; ++i)
+		RenderMesh2D(meshes["bullet"], shaders["VertexColor"], ui.bullets_mat(i));
+
+}
+
 void Hw1::RenderDuck(float deltaTimeSeconds) {
 	// Increment `time_alive`
 	duck.time_alive += deltaTimeSeconds;
+	std::cout << duck.time_alive << "\n";
 
 	// Wall reflection
 	if (duck.cy > resolution.y || duck.cy < 0)
@@ -73,6 +92,8 @@ void Hw1::RenderDuck(float deltaTimeSeconds) {
 		if (!duck.dead) {
 			duck.escape = true;
 			duck.start_y += duck.escape_speed * deltaTimeSeconds;
+		} else {
+			duck.start_y -= duck.escape_speed * deltaTimeSeconds;
 		}
 	}
 
@@ -165,6 +186,7 @@ void Hw1::RenderDuck(float deltaTimeSeconds) {
 
 
 void Hw1::Update(float deltaTimeSeconds) {
+	RenderUi(deltaTimeSeconds);
 	RenderDuck(deltaTimeSeconds);
 }
 
@@ -182,13 +204,14 @@ void Hw1::OnMouseBtnPress(int mouseX, int mouseY, int button, int mods) {
 	float x = mouseX;
 	float y = resolution.y - mouseY;
 
+	// [TODO]: Check why mouse_btn_2 is left click and mouse_btn_1 is right click (they are inversed)
 	if (button == GLFW_MOUSE_BUTTON_2) {
 		float d12 = (x - duck.x1) * (duck.y1 - duck.y2) + (y - duck.y1) * (duck.x2 - duck.x1);
 		float d23 = (x - duck.x2) * (duck.y2 - duck.y3) + (y - duck.y2) * (duck.x3 - duck.x2);
 		float d34 = (x - duck.x3) * (duck.y3 - duck.y4) + (y - duck.y3) * (duck.x4 - duck.x3);
 		float d41 = (x - duck.x4) * (duck.y4 - duck.y1) + (y - duck.y4) * (duck.x1 - duck.x4);
 
-		// Inside the bbox
+		// Inside the bbox and the duck isn't in mode `escape`
 		if ((d12 > 0 && d23 > 0 && d34 > 0 && d41 > 0) || //		 clock-wise winding
 			(d12 < 0 && d23 < 0 && d34 < 0 && d41 < 0)) { // counter clock-wise winding
 			if (!duck.escape)

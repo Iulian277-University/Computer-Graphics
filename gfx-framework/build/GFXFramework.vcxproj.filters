@@ -97,6 +97,9 @@
     <ClCompile Include="..\src\lab_m1\hw1\duck.cpp">
       <Filter>src\lab_m1\hw1</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\lab_m1\hw1\ui.cpp">
+      <Filter>src\lab_m1\hw1</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\components\camera.h">
@@ -262,6 +265,9 @@
       <Filter>src\lab_m1\hw1</Filter>
     </ClInclude>
     <ClInclude Include="..\src\lab_m1\hw1\duck.h">
+      <Filter>src\lab_m1\hw1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lab_m1\hw1\ui.h">
       <Filter>src\lab_m1\hw1</Filter>
     </ClInclude>
   </ItemGroup>

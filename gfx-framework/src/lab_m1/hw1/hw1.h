@@ -2,8 +2,10 @@
 
 #include "components/simple_scene.h"
 #include "duck.h"
+#include "ui.h"
 
 using namespace duck;
+using namespace ui;
 
 namespace m1 {
 	class Hw1 : public gfxc::SimpleScene {
@@ -26,11 +28,13 @@ namespace m1 {
 		void OnMouseScroll(int mouseX, int mouseY, int offsetX, int offsetY) override;
 		void OnWindowResize(int width, int height) override;
 
+		void RenderUi(float deltaTimeSeconds);
 		void RenderDuck(float deltaTimeSeconds);
 
 	protected:
 		glm::ivec2 resolution;
 		Duck duck;
 		int duck_id;
+		Ui ui;
 	};
 }

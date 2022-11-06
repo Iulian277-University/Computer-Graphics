@@ -6,11 +6,10 @@ namespace duck {
 		Duck();
 		~Duck();
 
-		std::unordered_map<std::string, Mesh *> meshes; // <"head": head_mesh, "body": body_mesh, ...>
+		// <"head": head_mesh, "body": body_mesh, ...>
+		std::unordered_map<std::string, Mesh *> meshes;
 		void addMesh(std::string mesh_name, Mesh *mesh);
-
 		void generateMeshes();
-
 
 		bool alive	= true;
 		bool escape	= false;
@@ -24,9 +23,7 @@ namespace duck {
 
 		float wing_rot_speed	= 1.5f;
 
-
-		// Initial position and angle
-		// [TODO]: Randomize these values based on `window->GetResolution()`
+		// Random initial position and angle
 		float min_x  = 200.0f;
 		float max_x  = 600.0f;
 		float min_y  =  50.0f;
@@ -85,8 +82,5 @@ namespace duck {
 		float x3 = bbox_wid, y3 = bbox_hei;
 		float x4 = 0,        y4	= bbox_hei;
 		float cx = 10,		 cy = 10;
-		
-		// Positions
-		float beak_tip_x = 10, beak_tip_y = 10;
 	};
 }

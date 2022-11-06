@@ -90,10 +90,6 @@ glm::mat3 Duck::beak_mat() {
 	modelMatrix *= transform2D::Rotate(RADIANS(-5));
 	modelMatrix *= transform2D::Translate(-this->beak_wid / 2, -this->beak_hei / 2);
 
-	glm::vec3 coord = this->general_matrix * modelMatrix * glm::vec3(this->beak_wid, this->beak_hei / 2, 1);
-	this->beak_tip_x = coord.x;
-	this->beak_tip_y = coord.y;
-
 	return modelMatrix;
 }
 
