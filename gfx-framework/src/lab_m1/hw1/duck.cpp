@@ -150,7 +150,7 @@ glm::mat3 Duck::bbox_mat() {
 	(x4,y4)     (x3,y3)
 	-----------------
 	|				|
-	|	   bbox		|
+	|    (cx,cy)    |
 	|				|
 	-----------------
 	(x1,y1)      (x2,y2)
@@ -175,6 +175,11 @@ glm::mat3 Duck::bbox_mat() {
 	coord = this->general_matrix * modelMatrix * glm::vec3(0, this->bbox_hei, 1);
 	this->x4 = coord.x;
 	this->y4 = coord.y;
+
+	// (cx, cy)
+	coord = this->general_matrix * modelMatrix * glm::vec3(this->bbox_wid / 2, this->bbox_hei / 2, 1);
+	this->cx = coord.x;
+	this->cy = coord.y;
 
 	return modelMatrix;
 }

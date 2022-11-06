@@ -32,11 +32,14 @@ namespace duck {
 		float curr_y = 100;
 		
 		float min_angle = 15.0f;
-		float max_angle = 60.0f;
+		float max_angle = 45.0f;
 
 		float angle_interval = fmod(rand(), (max_angle - min_angle)) + min_angle; // [min_angle, max_angle) degrees
 		float angle_sign	 = 2 * fmod(rand(), 2) - 1;							  // -1 or 1 (positive / negative angle)
 		float start_angle	 = angle_sign * RADIANS(angle_interval);
+
+		//float angle_sign  = -1.0f;
+		//float start_angle = RADIANS(-30);
 
 		float dx_sign = 1;
 		float dy_sign = 1;
@@ -80,8 +83,9 @@ namespace duck {
 		float x2 = bbox_wid, y2 = 0;
 		float x3 = bbox_wid, y3 = bbox_hei;
 		float x4 = 0,        y4	= bbox_hei;
+		float cx = 10,		 cy = 10;
 		
-		// Position of beak tip
+		// Positions
 		float beak_tip_x = 10, beak_tip_y = 10;
 	};
 }
