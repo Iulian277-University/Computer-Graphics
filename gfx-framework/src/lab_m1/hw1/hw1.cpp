@@ -50,21 +50,66 @@ void Hw1::FrameStart() {
 
 void Hw1::RenderUi(float deltaTimeSeconds) {
 	auto meshes= ui.meshes;
-
 	// Lives
 	for (int i = 0; i < ui.curr_lives; ++i)
 		RenderMesh2D(meshes["life"], shaders["VertexColor"], ui.life_mat(i));
-
 	// Bullets
 	for (int i = 0; i < ui.curr_bullets; ++i)
 		RenderMesh2D(meshes["bullet"], shaders["VertexColor"], ui.bullets_mat(i));
 
+	if (duck.escape && !ui.decremented_lives) {
+		ui.curr_lives--;
+		ui.decremented_lives = true;
+	}
+
+	// [TODO]: Add an ending to the game
+	if (ui.curr_lives < 1) {
+		std::cout << "You lost!\n";
+		exit(1);
+	}
+
+	// Don't waste the time waiting for `time_alive_thresh` to pass
+	if (ui.curr_bullets < 1 && !duck.dead) {
+		duck.escape = true;
+		duck.alive  = false;
+		duck.dead   = false;
+	}
+
+	if (!duck.alive && !duck.respawn_reset) {
+		duck.time_respawn = duck.time_alive_thresh;
+		duck.respawn_reset = true;
+	}
 }
 
 void Hw1::RenderDuck(float deltaTimeSeconds) {
 	// Increment `time_alive`
-	duck.time_alive += deltaTimeSeconds;
-	std::cout << duck.time_alive << "\n";
+	duck.time_alive   += deltaTimeSeconds;
+	duck.time_respawn += deltaTimeSeconds;
+	std::cout << duck.time_respawn << "\n";
+
+	// [TODO]: Implement a `reset()` method in class `Duck` which resets the below information
+	if (duck.time_respawn > duck.time_respawn_thresh) {
+		ui.decremented_lives = false;
+		ui.curr_bullets      = ui.total_bullets;
+
+		duck.respawn_reset = false;
+		duck.time_alive    = 0.0f;
+		duck.time_respawn  = 0.0f;
+
+		duck.alive	 = true;
+		duck.escape  = false;
+		duck.dead    = false;
+
+		float angle_sign = 2 * fmod(rand(), 2) - 1;
+		duck.angle_sign  = angle_sign; 
+		duck.start_angle = angle_sign * RADIANS(duck.angle_interval);
+
+		duck.dx_sign = 1;
+		duck.dy_sign = 1;
+
+		duck.curr_x = fmod(rand(), (duck.max_x - duck.min_x)) + duck.min_x;
+		duck.curr_y = fmod(rand(), (duck.max_y - duck.min_y)) + duck.min_y;
+	}
 
 	// Wall reflection
 	if (duck.cy > resolution.y || duck.cy < 0)
@@ -79,28 +124,25 @@ void Hw1::RenderDuck(float deltaTimeSeconds) {
 	dx /= length;
 	dy /= length;
 
-	// Escape + Dead
-	if (duck.time_alive < duck.time_alive_thresh) {
-		if (!duck.escape && !duck.dead)
-			duck.start_x -= duck.angle_sign * duck.speed * dx * deltaTimeSeconds;
-
-		if (duck.dead)
-			duck.start_y -= duck.escape_speed * deltaTimeSeconds;
-		else
-			duck.start_y += duck.speed * dy * deltaTimeSeconds;
-	} else {
-		if (!duck.dead) {
-			duck.escape = true;
-			duck.start_y += duck.escape_speed * deltaTimeSeconds;
-		} else {
-			duck.start_y -= duck.escape_speed * deltaTimeSeconds;
-		}
+	if (duck.time_alive > duck.time_alive_thresh && duck.alive) {
+		duck.escape = true;
+		duck.dead   = false;
+		duck.alive  = false;
 	}
 
+	// Alive, Escape, Dead
+	if (duck.alive) {
+		duck.curr_x -= duck.angle_sign * duck.speed * dx * deltaTimeSeconds;
+		duck.curr_y += duck.speed * dy * deltaTimeSeconds;
+	}
+	else if (duck.dead)
+		duck.curr_y -= duck.escape_speed * deltaTimeSeconds;
+	else if (duck.escape)
+		duck.curr_y += duck.escape_speed * deltaTimeSeconds;
 
 	// General matrix
 	glm::mat3 general_mat = glm::mat3(1);
-	general_mat *= transform2D::Translate(duck.start_x, duck.start_y);
+	general_mat *= transform2D::Translate(duck.curr_x, duck.curr_y);
 
 	if (duck.escape) {
 		general_mat *= transform2D::Mirror_OY();
@@ -114,12 +156,12 @@ void Hw1::RenderDuck(float deltaTimeSeconds) {
 		general_mat *= transform2D::Rotate(duck.start_angle);
 	}
 
-	if (duck.angle_sign > 0) // Mirror the duck if the starting angle is positive (to the left)
+	if (duck.angle_sign > 0) // Mirror the duck if the starting angle is positive (clockwise)
 		general_mat *= transform2D::Mirror_OY();
 	general_mat *= transform2D::Rotate(RADIANS(90)); // Rotate the duck vertically
 	
 	// Wall reflection matrix
-	if (!duck.escape && !duck.dead) {
+	if (duck.alive) {
 		if (duck.dx_sign * duck.dy_sign < 0)
 			general_mat *= transform2D::Rotate(RADIANS(-90));
 		if (duck.dx_sign < 0)
@@ -204,18 +246,24 @@ void Hw1::OnMouseBtnPress(int mouseX, int mouseY, int button, int mods) {
 	float x = mouseX;
 	float y = resolution.y - mouseY;
 
-	// [TODO]: Check why mouse_btn_2 is left click and mouse_btn_1 is right click (they are inversed)
+	// [TODO]: Check why `mouse_btn_2` is left click and `mouse_btn_1` is right click (they are inversed)
 	if (button == GLFW_MOUSE_BUTTON_2) {
+		if (!duck.dead)
+			ui.curr_bullets--;
+
 		float d12 = (x - duck.x1) * (duck.y1 - duck.y2) + (y - duck.y1) * (duck.x2 - duck.x1);
 		float d23 = (x - duck.x2) * (duck.y2 - duck.y3) + (y - duck.y2) * (duck.x3 - duck.x2);
 		float d34 = (x - duck.x3) * (duck.y3 - duck.y4) + (y - duck.y3) * (duck.x4 - duck.x3);
 		float d41 = (x - duck.x4) * (duck.y4 - duck.y1) + (y - duck.y4) * (duck.x1 - duck.x4);
 
-		// Inside the bbox and the duck isn't in mode `escape`
+		// Bullet is inside the bbox and the duck is alive
 		if ((d12 > 0 && d23 > 0 && d34 > 0 && d41 > 0) || //		 clock-wise winding
 			(d12 < 0 && d23 < 0 && d34 < 0 && d41 < 0)) { // counter clock-wise winding
-			if (!duck.escape)
-				duck.dead = true;
+			if (duck.alive) {
+				duck.dead   = true;
+				duck.alive  = false;
+				duck.escape = false;
+			}
 		}
 	}
 }

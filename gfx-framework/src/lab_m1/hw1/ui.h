@@ -22,6 +22,7 @@ namespace ui {
 		float lives_pos_y		 = 650.0f;
 		float life_radius		 =  20.0f;
 		float lives_padding		 =  10.0f;
+		bool  decremented_lives  = false;
 		glm::vec3 life_color	 = glm::vec3(255, 0, 0) / 255.0f;
 		glm::mat3 life_mat(int life_idx);
 

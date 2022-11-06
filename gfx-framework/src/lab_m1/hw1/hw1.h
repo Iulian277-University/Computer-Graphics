@@ -30,11 +30,10 @@ namespace m1 {
 
 		void RenderUi(float deltaTimeSeconds);
 		void RenderDuck(float deltaTimeSeconds);
-
+		
 	protected:
 		glm::ivec2 resolution;
 		Duck duck;
-		int duck_id;
 		Ui ui;
 	};
 }

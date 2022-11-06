@@ -11,12 +11,15 @@ namespace duck {
 		void addMesh(std::string mesh_name, Mesh *mesh);
 		void generateMeshes();
 
-		bool alive	= true;
-		bool escape	= false;
-		bool dead	= false;
+		bool alive	 = true;
+		bool escape	 = false;
+		bool dead	 = false;
 
-		float time_alive_thresh = 5.0f; // in seconds
-		float time_alive		= 0.0f; // in seconds
+		bool  respawn_reset         = false;
+		float time_alive_thresh		= 5.0f;
+		float time_alive			= 0.0f;
+		float time_respawn			= 0.0f;
+		float time_respawn_thresh   = 2.0f + time_alive_thresh;
 
 		float speed				= 250.0f;
 		float escape_speed		= 2.0f * speed;
@@ -29,9 +32,9 @@ namespace duck {
 		float min_y  =  50.0f;
 		float max_y  = 150.0f;
 
-		float start_x = fmod(rand(), (max_x - min_x)) + min_x;
-		float start_y = fmod(rand(), (max_y - min_y)) + min_y;
-		
+		float curr_x = fmod(rand(), (max_x - min_x)) + min_x;
+		float curr_y = fmod(rand(), (max_y - min_y)) + min_y;
+
 		float min_angle = 15.0f;
 		float max_angle = 45.0f;
 
