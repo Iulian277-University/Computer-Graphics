@@ -6,6 +6,9 @@ namespace duck {
 		Duck();
 		~Duck();
 
+		int idx;
+		float max_ducks = 50; // max_levels
+
 		// <"head": head_mesh, "body": body_mesh, ...>
 		std::unordered_map<std::string, Mesh *> meshes;
 		void addMesh(std::string mesh_name, Mesh *mesh);
@@ -20,7 +23,7 @@ namespace duck {
 
 		// Alive + Respawn time
 		bool  respawn_reset         = false;
-		float time_alive_thresh		= 5.0f;
+		float time_alive_thresh		= 4.0f;
 		float time_alive			= 0.0f;
 		float time_respawn			= 0.0f;
 		float time_respawn_thresh   = 2.0f + time_alive_thresh;
@@ -33,8 +36,8 @@ namespace duck {
 		// Random initial position
 		float min_x  = 100.0f;
 		float max_x  = 600.0f;
-		float min_y  =  50.0f;
-		float max_y  = 150.0f;
+		float min_y  =  15.0f;
+		float max_y  =  30.0f;
 
 		float curr_x = fmod(rand(), (max_x - min_x)) + min_x;
 		float curr_y = fmod(rand(), (max_y - min_y)) + min_y;
@@ -48,8 +51,9 @@ namespace duck {
 		float start_angle	 = angle_sign * RADIANS(angle_interval);
 
 		// Orientation
-		float dx_sign = 1;
-		float dy_sign = 1;
+		bool  first_fly = true;
+		float dx_sign   = 1;
+		float dy_sign   = 1;
 
 		// Matrices
 		glm::mat3 general_matrix;
@@ -90,6 +94,6 @@ namespace duck {
 		float x2 = bbox_wid, y2 = 0;
 		float x3 = bbox_wid, y3 = bbox_hei;
 		float x4 = 0,        y4	= bbox_hei;
-		float cx = 10,		 cy = 10;
+		float cx = 300,		 cy = 300;
 	};
 }

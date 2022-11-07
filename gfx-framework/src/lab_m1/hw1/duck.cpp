@@ -11,6 +11,7 @@ using namespace duck;
 
 // Constructors
 Duck::Duck() {
+	this->idx   = 1;
 	this->alive = true;
 }
 
@@ -18,6 +19,20 @@ Duck::~Duck() {
 }
 
 void Duck::reset() {
+	this->idx++;
+	if (this->idx % 5 == 0) {
+		// Increase speed
+		this->speed          += this->speed / 3;
+		this->escape_speed    = 2.0f * this->speed;
+		this->wing_rot_speed += this->wing_rot_speed / 3;
+
+		// Decrease `time_alive_thresh` and `time_respawn_thresh`
+		this->time_alive_thresh   = 4.0f * (1 - this->idx / this->max_ducks);
+		this->time_respawn_thresh = 2.0f * (1 - this->idx / this->max_ducks) + this->time_alive_thresh;
+	}
+
+	this->first_fly     = true;
+
 	this->respawn_reset = false;
 	this->time_alive	= 0.0f;
 	this->time_respawn	= 0.0f;
@@ -28,8 +43,8 @@ void Duck::reset() {
 	this->angle_sign  = 2 * fmod(rand(), 2) - 1;
 	this->start_angle = this->angle_sign * RADIANS(this->angle_interval);
 
-	this->cx = 10;
-	this->cy = 10;
+	this->cx = 300;
+	this->cy = 300;
 
 	this->dx_sign = 1;
 	this->dy_sign = 1;

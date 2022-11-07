@@ -48,5 +48,10 @@ namespace ui {
 		float curr_score_hei		= score_wireframe_hei;
 		float curr_score_percentage = 0.0f;
 		glm::mat3 curr_score_mat();
+
+		// Floor
+		float floor_wid = 1280.0f;
+		float floor_hei =  720.0f;
+		glm::mat3 floor_mat();
 	};
 }

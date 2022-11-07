@@ -33,6 +33,8 @@ void Hw1::Init() {
 
 	// Create UI
 	ui = Ui(3, 3);
+	ui.floor_wid = resolution.x;
+	ui.floor_hei = resolution.y / 4;
 	ui.generateMeshes();
 }
 
@@ -64,6 +66,9 @@ void Hw1::RenderUi(float deltaTimeSeconds) {
 	// Current score
 	RenderMesh2D(meshes["score"], shaders["VertexColor"], ui.curr_score_mat());
 
+	// Floor
+	RenderMesh2D(meshes["floor"], shaders["VertexColor"], ui.floor_mat());
+
 	if (duck.escape && !ui.decremented_lives) {
 		ui.curr_lives--;
 		ui.decremented_lives = true;
@@ -83,7 +88,7 @@ void Hw1::RenderUi(float deltaTimeSeconds) {
 
 	// Don't waste the time waiting for `time_alive_thresh` to pass
 	if (!duck.alive && !duck.respawn_reset) {
-		duck.time_respawn = duck.time_alive_thresh;
+		duck.time_respawn  = duck.time_alive_thresh;
 		duck.respawn_reset = true;
 	}
 }
@@ -99,12 +104,16 @@ void Hw1::RenderDuck(float deltaTimeSeconds) {
 		ui.curr_bullets      = ui.total_bullets;
 		duck.reset();
 	}
-
+	
 	// Wall reflection
-	if (duck.cy > resolution.y || duck.cy < 0)
-		duck.dy_sign *= -1.0f;
-	if (duck.cx > resolution.x || duck.cx < 0)
-		duck.dx_sign *= -1.0f;
+	if (duck.cy > resolution.y || (duck.cy < ui.floor_hei && !duck.first_fly)) {
+		duck.first_fly = false;
+		duck.dy_sign  *= -1.0f;
+	}
+	if (duck.cx > resolution.x || duck.cx < 0) {
+		duck.first_fly = false;
+		duck.dx_sign  *= -1.0f;
+	}
 
 	// Trajectory
 	float dx = duck.dx_sign * duck.speed * deltaTimeSeconds;
@@ -159,7 +168,6 @@ void Hw1::RenderDuck(float deltaTimeSeconds) {
 	}
 
 	duck.general_matrix = general_mat;
-
 
 	// Meshes
 	auto duck_meshes = duck.meshes;
@@ -218,6 +226,7 @@ void Hw1::RenderDuck(float deltaTimeSeconds) {
 
 
 void Hw1::Update(float deltaTimeSeconds) {
+	std::cout << duck.idx << "\n";
 	RenderUi(deltaTimeSeconds);
 	RenderDuck(deltaTimeSeconds);
 }
@@ -253,6 +262,7 @@ void Hw1::OnMouseBtnPress(int mouseX, int mouseY, int button, int mods) {
 				duck.dead   = true;
 				duck.alive  = false;
 				duck.escape = false;
+				ui.curr_score_percentage = MIN(1.0f, ui.curr_score_percentage + 1.0f / duck.max_ducks);
 			}
 		}
 	}

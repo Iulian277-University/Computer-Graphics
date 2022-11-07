@@ -54,6 +54,11 @@ glm::mat3 Ui::curr_score_mat() {
 	return modelMatrix;
 }
 
+glm::mat3 Ui::floor_mat() {
+	glm::mat3 modelMatrix = glm::mat3(1);
+	return modelMatrix;
+}
+
 
 void Ui::addMesh(std::string mesh_name, Mesh *mesh) {
 	this->meshes[mesh_name] = mesh;
@@ -76,4 +81,8 @@ void Ui::generateMeshes() {
 	// Current score
 	Mesh *score = object2D::CreateRectangle("score", glm::vec3(0, 0, 0), 1, this->score_wireframe_hei, glm::vec3(0, 0, 1), true);
 	this->addMesh("score", score);
+
+	// Floor
+	Mesh *floor = object2D::CreateRectangle("floor", glm::vec3(0, 0, 0), this->floor_wid, this->floor_hei, glm::vec3(0, 1, 0), true);
+	this->addMesh("floor", floor);
 }
