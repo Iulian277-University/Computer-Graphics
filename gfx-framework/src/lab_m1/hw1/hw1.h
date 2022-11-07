@@ -1,6 +1,7 @@
 #pragma once
 
 #include "components/simple_scene.h"
+#include "components/text_renderer.h"
 #include "duck.h"
 #include "ui.h"
 
@@ -28,12 +29,13 @@ namespace m1 {
 		void OnMouseScroll(int mouseX, int mouseY, int offsetX, int offsetY) override;
 		void OnWindowResize(int width, int height) override;
 
-		void RenderUi(float deltaTimeSeconds);
 		void RenderDuck(float deltaTimeSeconds);
-		
+		void RenderUi(float deltaTimeSeconds);
+
 	protected:
 		glm::ivec2 resolution;
 		Duck duck;
 		Ui ui;
+		gfxc::TextRenderer *text_renderer;
 	};
 }

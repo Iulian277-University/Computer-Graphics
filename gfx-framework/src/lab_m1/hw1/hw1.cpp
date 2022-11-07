@@ -14,9 +14,7 @@
 using namespace m1;
 
 Hw1::Hw1() {}
-
 Hw1::~Hw1() {}
-
 
 void Hw1::Init() {
 	resolution = window->GetResolution();
@@ -36,8 +34,11 @@ void Hw1::Init() {
 	ui.floor_wid = resolution.x;
 	ui.floor_hei = resolution.y / 4;
 	ui.generateMeshes();
-}
 
+	// Text
+	text_renderer = new gfxc::TextRenderer(window->props.selfDir, resolution.x, resolution.y);
+	text_renderer->Load(PATH_JOIN(window->props.selfDir, RESOURCE_PATH::FONTS, "Hack-Bold.ttf"), 18);
+}
 
 void Hw1::FrameStart() {
 	// Clears the color buffer (using the previously set color) and depth buffer
@@ -48,7 +49,6 @@ void Hw1::FrameStart() {
 	// Sets the screen area where to draw
 	glViewport(0, 0, resolution.x, resolution.y);
 }
-
 
 void Hw1::RenderUi(float deltaTimeSeconds) {
 	auto meshes= ui.meshes;
@@ -74,10 +74,15 @@ void Hw1::RenderUi(float deltaTimeSeconds) {
 		ui.decremented_lives = true;
 	}
 
-	// [TODO]: Add an ending to the game
+	// [TODO]: Add some endings to the game
 	if (ui.curr_lives < 1) {
 		std::cout << "You lost!\n";
 		exit(1);
+	}
+
+	if (duck.idx - 1 == duck.max_ducks) {
+		std::cout << "You won!\n";
+		exit(2);
 	}
 
 	if (ui.curr_bullets < 1 && !duck.dead) {
@@ -110,10 +115,8 @@ void Hw1::RenderDuck(float deltaTimeSeconds) {
 		duck.first_fly = false;
 		duck.dy_sign  *= -1.0f;
 	}
-	if (duck.cx > resolution.x || duck.cx < 0) {
-		duck.first_fly = false;
+	if (duck.cx > resolution.x || duck.cx < 0)
 		duck.dx_sign  *= -1.0f;
-	}
 
 	// Trajectory
 	float dx = duck.dx_sign * duck.speed * deltaTimeSeconds;
@@ -224,14 +227,16 @@ void Hw1::RenderDuck(float deltaTimeSeconds) {
 	RenderMesh2D(bbox, shaders["VertexColor"], general_mat * bbox_mat);
 }
 
-
 void Hw1::Update(float deltaTimeSeconds) {
 	std::cout << duck.idx << "\n";
 	RenderUi(deltaTimeSeconds);
 	RenderDuck(deltaTimeSeconds);
 }
 
-void Hw1::FrameEnd() {}
+void Hw1::FrameEnd() {
+	text_renderer->RenderText("Duck index: " + std::to_string(duck.idx) + "/" + std::to_string((int) duck.max_ducks),
+		ui.score_wireframe_pos_x - ui.score_wireframe_wid / 2 - 90.0f, resolution.y - ui.score_wireframe_pos_y - 20.0f, 1.0f);
+}
 
 void Hw1::OnInputUpdate(float deltaTime, int mods) {}
 

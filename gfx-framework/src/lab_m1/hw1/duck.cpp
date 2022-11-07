@@ -27,8 +27,8 @@ void Duck::reset() {
 		this->wing_rot_speed += this->wing_rot_speed / 3;
 
 		// Decrease `time_alive_thresh` and `time_respawn_thresh`
-		this->time_alive_thresh   = 4.0f * (1 - this->idx / this->max_ducks);
-		this->time_respawn_thresh = 2.0f * (1 - this->idx / this->max_ducks) + this->time_alive_thresh;
+		this->time_alive_thresh   -= this->time_alive_thresh   / 4;
+		this->time_respawn_thresh -= this->time_respawn_thresh / 4;
 	}
 
 	this->first_fly     = true;
