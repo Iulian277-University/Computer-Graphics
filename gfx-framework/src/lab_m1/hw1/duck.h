@@ -11,23 +11,27 @@ namespace duck {
 		void addMesh(std::string mesh_name, Mesh *mesh);
 		void generateMeshes();
 
+		void reset();
+
+		// States
 		bool alive	 = true;
 		bool escape	 = false;
 		bool dead	 = false;
 
+		// Alive + Respawn time
 		bool  respawn_reset         = false;
 		float time_alive_thresh		= 5.0f;
 		float time_alive			= 0.0f;
 		float time_respawn			= 0.0f;
 		float time_respawn_thresh   = 2.0f + time_alive_thresh;
 
+		// Speed
 		float speed				= 250.0f;
 		float escape_speed		= 2.0f * speed;
-
 		float wing_rot_speed	= 1.5f;
 
-		// Random initial position and angle
-		float min_x  = 200.0f;
+		// Random initial position
+		float min_x  = 100.0f;
 		float max_x  = 600.0f;
 		float min_y  =  50.0f;
 		float max_y  = 150.0f;
@@ -35,13 +39,15 @@ namespace duck {
 		float curr_x = fmod(rand(), (max_x - min_x)) + min_x;
 		float curr_y = fmod(rand(), (max_y - min_y)) + min_y;
 
-		float min_angle = 15.0f;
-		float max_angle = 45.0f;
+		// Random initial angle
+		float min_angle = 10.0f;
+		float max_angle = 50.0f;
 
 		float angle_interval = fmod(rand(), (max_angle - min_angle)) + min_angle; // [min_angle, max_angle) degrees
 		float angle_sign	 = 2 * fmod(rand(), 2) - 1;							  // -1 or 1 (positive / negative angle)
 		float start_angle	 = angle_sign * RADIANS(angle_interval);
 
+		// Orientation
 		float dx_sign = 1;
 		float dy_sign = 1;
 

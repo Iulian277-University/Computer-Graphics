@@ -19,7 +19,7 @@ namespace ui {
 		int   total_lives		 =      3;
 		int   curr_lives		 =		3;
 		float lives_pos_x		 =  50.0f;
-		float lives_pos_y		 = 650.0f;
+		float lives_pos_y		 = 675.0f;
 		float life_radius		 =  20.0f;
 		float lives_padding		 =  10.0f;
 		bool  decremented_lives  = false;
@@ -36,14 +36,17 @@ namespace ui {
 		float bullets_padding   =  lives_padding;
 		glm::mat3 bullets_mat(int bullet_idx);
 
-		// Score
-		float score_wireframe_wid =  200.0f;
-		float score_wireframe_hei =   20.0f;
-		float curr_score_wid	  =    0.0f;
-		float curr_score_hei	  =   20.0f;
-		float score_pos_x		  = 1100.0f;
-		float score_pos_y		  =   20.0f;
+		// Score wireframe
+		float score_wireframe_wid   =  300.0f;
+		float score_wireframe_hei   =   40.0f;
+		float score_wireframe_pos_x	= 1250.0f;
+		float score_wireframe_pos_y	= lives_pos_y;
+		glm::mat3 score_wireframe_mat();
 
-		//
+		// Current score
+		float curr_score_wid		= 1.0f;
+		float curr_score_hei		= score_wireframe_hei;
+		float curr_score_percentage = 0.0f;
+		glm::mat3 curr_score_mat();
 	};
 }

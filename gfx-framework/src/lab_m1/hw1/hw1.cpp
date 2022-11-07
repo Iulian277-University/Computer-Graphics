@@ -53,9 +53,16 @@ void Hw1::RenderUi(float deltaTimeSeconds) {
 	// Lives
 	for (int i = 0; i < ui.curr_lives; ++i)
 		RenderMesh2D(meshes["life"], shaders["VertexColor"], ui.life_mat(i));
+	
 	// Bullets
 	for (int i = 0; i < ui.curr_bullets; ++i)
 		RenderMesh2D(meshes["bullet"], shaders["VertexColor"], ui.bullets_mat(i));
+
+	// Score wireframe
+	RenderMesh2D(meshes["score_wireframe"], shaders["VertexColor"], ui.score_wireframe_mat());
+
+	// Current score
+	RenderMesh2D(meshes["score"], shaders["VertexColor"], ui.curr_score_mat());
 
 	if (duck.escape && !ui.decremented_lives) {
 		ui.curr_lives--;
@@ -68,13 +75,13 @@ void Hw1::RenderUi(float deltaTimeSeconds) {
 		exit(1);
 	}
 
-	// Don't waste the time waiting for `time_alive_thresh` to pass
 	if (ui.curr_bullets < 1 && !duck.dead) {
 		duck.escape = true;
 		duck.alive  = false;
 		duck.dead   = false;
 	}
 
+	// Don't waste the time waiting for `time_alive_thresh` to pass
 	if (!duck.alive && !duck.respawn_reset) {
 		duck.time_respawn = duck.time_alive_thresh;
 		duck.respawn_reset = true;
@@ -82,33 +89,15 @@ void Hw1::RenderUi(float deltaTimeSeconds) {
 }
 
 void Hw1::RenderDuck(float deltaTimeSeconds) {
-	// Increment `time_alive`
+	// Increment `time_alive` and `time_respawn`
 	duck.time_alive   += deltaTimeSeconds;
 	duck.time_respawn += deltaTimeSeconds;
-	std::cout << duck.time_respawn << "\n";
-
-	// [TODO]: Implement a `reset()` method in class `Duck` which resets the below information
+	
+	// Reset duck and update ui
 	if (duck.time_respawn > duck.time_respawn_thresh) {
 		ui.decremented_lives = false;
 		ui.curr_bullets      = ui.total_bullets;
-
-		duck.respawn_reset = false;
-		duck.time_alive    = 0.0f;
-		duck.time_respawn  = 0.0f;
-
-		duck.alive	 = true;
-		duck.escape  = false;
-		duck.dead    = false;
-
-		float angle_sign = 2 * fmod(rand(), 2) - 1;
-		duck.angle_sign  = angle_sign; 
-		duck.start_angle = angle_sign * RADIANS(duck.angle_interval);
-
-		duck.dx_sign = 1;
-		duck.dy_sign = 1;
-
-		duck.curr_x = fmod(rand(), (duck.max_x - duck.min_x)) + duck.min_x;
-		duck.curr_y = fmod(rand(), (duck.max_y - duck.min_y)) + duck.min_y;
+		duck.reset();
 	}
 
 	// Wall reflection
@@ -145,14 +134,15 @@ void Hw1::RenderDuck(float deltaTimeSeconds) {
 	general_mat *= transform2D::Translate(duck.curr_x, duck.curr_y);
 
 	if (duck.escape) {
-		general_mat *= transform2D::Mirror_OY();
+		if (duck.dx_sign < 0)
+			general_mat *= transform2D::Mirror_OY();
 	}
 	else if (duck.dead) {
 		if (duck.dx_sign < 0)
 			general_mat *= transform2D::Mirror_OY();
 		general_mat *= transform2D::Rotate(RADIANS(180));
 	}
-	else {
+	else if (duck.alive) {
 		general_mat *= transform2D::Rotate(duck.start_angle);
 	}
 

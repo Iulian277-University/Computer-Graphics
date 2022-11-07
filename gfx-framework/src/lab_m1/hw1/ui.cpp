@@ -38,6 +38,23 @@ glm::mat3 Ui::bullets_mat(int bullet_idx) {
 	return modelMatrix;
 }
 
+glm::mat3 Ui::score_wireframe_mat() {
+	glm::mat3 modelMatrix = glm::mat3(1);
+	modelMatrix *= transform2D::Translate(this->score_wireframe_pos_x, this->score_wireframe_pos_y);
+	modelMatrix *= transform2D::Translate(-this->score_wireframe_wid, -this->score_wireframe_hei); // top-right corner
+	return modelMatrix;
+}
+
+glm::mat3 Ui::curr_score_mat() {
+	glm::mat3 modelMatrix = glm::mat3(1);
+	modelMatrix *= transform2D::Translate(this->score_wireframe_pos_x - this->score_wireframe_wid, this->score_wireframe_pos_y);
+	modelMatrix *= transform2D::Translate(this->score_wireframe_wid * this->curr_score_percentage / 2, -this->curr_score_hei / 2); // top-left
+	modelMatrix *= transform2D::Scale(this->score_wireframe_wid * this->curr_score_percentage, 1);
+	modelMatrix *= transform2D::Translate(-this->curr_score_wid / 2, -this->curr_score_hei / 2); // center
+	return modelMatrix;
+}
+
+
 void Ui::addMesh(std::string mesh_name, Mesh *mesh) {
 	this->meshes[mesh_name] = mesh;
 }
@@ -50,4 +67,13 @@ void Ui::generateMeshes() {
 	// Bullet
 	Mesh *bullet = object2D::CreateRectangle("bullet", glm::vec3(0, 0, 0), this->bullet_wid, this->bullet_hei, glm::vec3(0, 0, 1), false);
 	this->addMesh("bullet", bullet);
+
+	// Score wireframe
+	Mesh *score_wireframe = object2D::CreateRectangle("score_wireframe", glm::vec3(0, 0, 0),
+		this->score_wireframe_wid, this->score_wireframe_hei, glm::vec3(0, 0, 1), false);
+	this->addMesh("score_wireframe", score_wireframe);
+
+	// Current score
+	Mesh *score = object2D::CreateRectangle("score", glm::vec3(0, 0, 0), 1, this->score_wireframe_hei, glm::vec3(0, 0, 1), true);
+	this->addMesh("score", score);
 }

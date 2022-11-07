@@ -17,6 +17,26 @@ Duck::Duck() {
 Duck::~Duck() {
 }
 
+void Duck::reset() {
+	this->respawn_reset = false;
+	this->time_alive	= 0.0f;
+	this->time_respawn	= 0.0f;
+	this->alive			= true;
+	this->escape		= false;
+	this->dead			= false;
+
+	this->angle_sign  = 2 * fmod(rand(), 2) - 1;
+	this->start_angle = this->angle_sign * RADIANS(this->angle_interval);
+
+	this->cx = 10;
+	this->cy = 10;
+
+	this->dx_sign = 1;
+	this->dy_sign = 1;
+
+	this->curr_x = fmod(rand(), (this->max_x - this->min_x)) + this->min_x;
+	this->curr_y = fmod(rand(), (this->max_y - this->min_y)) + this->min_y;
+}
 
 void Duck::addMesh(std::string mesh_name, Mesh *mesh) {
 	this->meshes[mesh_name] = mesh;
