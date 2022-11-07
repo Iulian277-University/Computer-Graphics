@@ -76,13 +76,17 @@ void Hw1::RenderUi(float deltaTimeSeconds) {
 
 	// [TODO]: Add some endings to the game
 	if (ui.curr_lives < 1) {
-		std::cout << "You lost!\n";
-		exit(1);
+		if (!ended_game)
+			std::cout << "You lost!\n";
+		ended_game = true;
+		return;
 	}
 
 	if (duck.idx - 1 == duck.max_ducks) {
-		std::cout << "You won!\n";
-		exit(2);
+		if (!ended_game)
+			std::cout << "You won!\n";
+		ended_game = true;
+		return;
 	}
 
 	if (ui.curr_bullets < 1 && !duck.dead) {
@@ -228,14 +232,17 @@ void Hw1::RenderDuck(float deltaTimeSeconds) {
 }
 
 void Hw1::Update(float deltaTimeSeconds) {
-	std::cout << duck.idx << "\n";
 	RenderUi(deltaTimeSeconds);
-	RenderDuck(deltaTimeSeconds);
+	if (!ended_game)
+		RenderDuck(deltaTimeSeconds);
 }
 
 void Hw1::FrameEnd() {
-	text_renderer->RenderText("Duck index: " + std::to_string(duck.idx) + "/" + std::to_string((int) duck.max_ducks),
-		ui.score_wireframe_pos_x - ui.score_wireframe_wid / 2 - 90.0f, resolution.y - ui.score_wireframe_pos_y - 20.0f, 1.0f);
+	text_renderer->RenderText(
+		"Duck index: " + std::to_string((int) MIN(duck.idx, duck.max_ducks)) + "/" + std::to_string((int) duck.max_ducks),
+		ui.score_wireframe_pos_x - ui.score_wireframe_wid / 2 - 90.0f,
+		resolution.y - ui.score_wireframe_pos_y - 20.0f,
+		1.0f);
 }
 
 void Hw1::OnInputUpdate(float deltaTime, int mods) {}
