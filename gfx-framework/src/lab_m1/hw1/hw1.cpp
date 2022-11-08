@@ -115,11 +115,11 @@ void Hw1::RenderDuck(float deltaTimeSeconds) {
 	}
 	
 	// Wall reflection
-	if (duck.cy > resolution.y || (duck.cy < ui.floor_hei && !duck.first_fly)) {
+	if (duck.cy > window_hei || (duck.cy < ui.floor_hei && !duck.first_fly)) {
 		duck.first_fly = false;
 		duck.dy_sign  *= -1.0f;
 	}
-	if (duck.cx > resolution.x || duck.cx < 0)
+	if (duck.cx > window_wid || duck.cx < 0)
 		duck.dx_sign  *= -1.0f;
 
 	// Trajectory
@@ -173,6 +173,7 @@ void Hw1::RenderDuck(float deltaTimeSeconds) {
 		if (duck.dx_sign < 0)
 			general_mat *= transform2D::Mirror_OY();
 	}
+	general_mat *= transform2D::Scale(0.8, 0.8);
 
 	duck.general_matrix = general_mat;
 
@@ -241,7 +242,7 @@ void Hw1::FrameEnd() {
 	text_renderer->RenderText(
 		"Duck index: " + std::to_string((int) MIN(duck.idx, duck.max_ducks)) + "/" + std::to_string((int) duck.max_ducks),
 		ui.score_wireframe_pos_x - ui.score_wireframe_wid / 2 - 90.0f,
-		resolution.y - ui.score_wireframe_pos_y - 20.0f,
+		window_hei - ui.score_wireframe_pos_y - 20.0f,
 		1.0f);
 }
 
@@ -254,8 +255,9 @@ void Hw1::OnKeyRelease(int key, int mods) {}
 void Hw1::OnMouseMove(int mouseX, int mouseY, int deltaX, int deltaY) {}
 
 void Hw1::OnMouseBtnPress(int mouseX, int mouseY, int button, int mods) {
-	float x = mouseX;
-	float y = resolution.y - mouseY;
+	resolution = window->GetResolution();
+	float x =			   (mouseX / (float) resolution.x) * window_wid;
+	float y = window_hei - (mouseY / (float) resolution.y) * window_hei;
 
 	// [TODO]: Check why `mouse_btn_2` is left click and `mouse_btn_1` is right click (they are inversed)
 	if (button == GLFW_MOUSE_BUTTON_2) {

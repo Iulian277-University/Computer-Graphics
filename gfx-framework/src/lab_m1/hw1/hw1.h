@@ -33,6 +33,9 @@ namespace m1 {
 		void RenderUi(float deltaTimeSeconds);
 
 	protected:
+		float window_wid = 1280;
+		float window_hei = 720;
+		
 		bool ended_game = false;
 		glm::ivec2 resolution;
 		Duck duck;

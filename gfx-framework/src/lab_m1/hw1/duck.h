@@ -7,7 +7,7 @@ namespace duck {
 		~Duck();
 
 		int   idx		 = 1;
-		float max_ducks  = 5; // max_levels
+		float max_ducks  = 50; // max_levels
 
 		// <"head": head_mesh, "body": body_mesh, ...>
 		std::unordered_map<std::string, Mesh *> meshes;
