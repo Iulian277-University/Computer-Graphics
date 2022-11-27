@@ -13,7 +13,7 @@ Hw2::~Hw2() {}
 
 void Hw2::Init() {
     camera = new cam::Camera();
-    camera->Set(glm::vec3(0, 2, 3.5f), glm::vec3(0, 1, 0), glm::vec3(0, 1, 0));
+    camera->Set(glm::vec3(0, 1.5, 5.0f), glm::vec3(0, 1, 0), glm::vec3(0, 1, 0));
 
     Mesh* mesh = new Mesh("box");
     mesh->LoadMesh(PATH_JOIN(window->props.selfDir, RESOURCE_PATH::MODELS, "primitives"), "box.obj");
@@ -52,40 +52,23 @@ void Hw2::FrameStart() {
 
 void Hw2::Update(float deltaTimeSeconds)
 {
-    {
-        glm::mat4 modelMatrix = glm::mat4(1);
-        modelMatrix = glm::translate(modelMatrix, glm::vec3(0, 1, 0));
-        modelMatrix = glm::rotate(modelMatrix, RADIANS(45.0f), glm::vec3(0, 1, 0));
-        RenderMesh(meshes["box"], shaders["VertexNormal"], modelMatrix);
-    }
+    // Translate the target based on the camera's position, but keep the y on the ground
+    glm::mat4 modelMatrix = glm::mat4(1);
+    glm::vec3 targetPosition = camera->GetTargetPosition();
+    targetPosition.y = 0.5f;
+    modelMatrix = glm::translate(modelMatrix, targetPosition);
 
-    {
-        glm::mat4 modelMatrix = glm::mat4(1);
-        modelMatrix = glm::translate(modelMatrix, glm::vec3(2, 0.5f, 0));
-        modelMatrix = glm::rotate(modelMatrix, RADIANS(60.0f), glm::vec3(1, 0, 0));
-        RenderMesh(meshes["box"], shaders["VertexNormal"], modelMatrix);
-    }
+    // Rotate the target based on the forward vector of the camera
+    glm::vec3 forward = camera->forward * glm::vec3(1, 0, 1);
+    forward = glm::normalize(forward);
+    float angle = glm::acos(glm::dot(forward, glm::vec3(0, 0, 1))); // angle = arccos(cos_angle(forward, OZ))
+    if (forward.x < 0)
+        angle = -angle;
+    modelMatrix = glm::rotate(modelMatrix, angle, glm::vec3(0, 1, 0)); // rotate in plane XOZ (around OY)
 
-    {
-        glm::mat4 modelMatrix = glm::mat4(1);
-        modelMatrix = glm::translate(modelMatrix, glm::vec3(-2, 0.5f, 0));
-        RenderMesh(meshes["box"], shaders["Simple"], modelMatrix);
-    }
-
-    // TODO(student): Draw more objects with different model matrices.
-    // Attention! The `RenderMesh()` function overrides the usual
-    // `RenderMesh()` that we've been using up until now. This new
-    // function uses the view matrix from the camera that you just
-    // implemented, and the local projection matrix.
-
-    // Render the camera target. This is useful for understanding where
-    // the rotation point is, when moving in third-person camera mode.
-    {
-        glm::mat4 modelMatrix = glm::mat4(1);
-        modelMatrix = glm::translate(modelMatrix, camera->GetTargetPosition());
-        modelMatrix = glm::scale(modelMatrix, glm::vec3(0.1f));
-        RenderMesh(meshes["sphere"], shaders["VertexNormal"], modelMatrix);
-    }
+    // Scale the target
+    modelMatrix = glm::scale(modelMatrix, glm::vec3(0.5f, 0.5f, 1.0f));
+    RenderMesh(meshes["box"], shaders["VertexNormal"], modelMatrix);
 }
 
 
@@ -109,19 +92,19 @@ void Hw2::RenderMesh(Mesh *mesh, Shader *shader, const glm::mat4 &modelMatrix) {
 
 
 void Hw2::OnInputUpdate(float deltaTime, int mods) {
-    float cameraSpeed = 2.0f;
+    float cameraSpeed = 1.0f;
 
     if (window->KeyHold(GLFW_KEY_W))
         camera->TranslateForward(cameraSpeed * deltaTime);
-
-    if (window->KeyHold(GLFW_KEY_A))
-        camera->TranslateRight(-cameraSpeed * deltaTime);
-
+    
     if (window->KeyHold(GLFW_KEY_S))
         camera->TranslateForward(-cameraSpeed * deltaTime);
 
+    if (window->KeyHold(GLFW_KEY_A))
+        camera->RotateThirdPerson_OY(cameraSpeed * deltaTime);
+
     if (window->KeyHold(GLFW_KEY_D))
-        camera->TranslateRight(cameraSpeed * deltaTime);
+        camera->RotateThirdPerson_OY(-cameraSpeed * deltaTime);
 
 
     // TODO(student): Change projection parameters. Declare any extra
@@ -171,37 +154,7 @@ void Hw2::OnKeyPress(int key, int mods) {
 
 void Hw2::OnKeyRelease(int key, int mods) {}
 
-void Hw2::OnMouseMove(int mouseX, int mouseY, int deltaX, int deltaY)
-{
-    // Add mouse move event
-
-    // if (window->MouseHold(GLFW_MOUSE_BUTTON_RIGHT))
-    // {
-    //     float sensivityOX = 0.001f;
-    //     float sensivityOY = 0.001f;
-
-    //     if (window->GetSpecialKeyState() == 0) {
-    //         renderCameraTarget = false;
-    //         // TODO(student): Rotate the camera in first-person mode around
-    //         // OX and OY using `deltaX` and `deltaY`. Use the sensitivity
-    //         // variables for setting up the rotation speed.
-
-	// 		camera->RotateFirstPerson_OX(-sensivityOX * deltaY);
-	// 		camera->RotateFirstPerson_OY(-sensivityOY * deltaX);
-	// 	}
-
-    //     if (window->GetSpecialKeyState() & GLFW_MOD_CONTROL) {
-    //         renderCameraTarget = true;
-    //         // TODO(student): Rotate the camera in third-person mode around
-    //         // OX and OY using `deltaX` and `deltaY`. Use the sensitivity
-    //         // variables for setting up the rotation speed.
-
-	// 		camera->RotateThirdPerson_OX(-sensivityOX * deltaY);
-	// 		camera->RotateThirdPerson_OY(-sensivityOY * deltaX);
-    //     }
-    // }
-}
-
+void Hw2::OnMouseMove(int mouseX, int mouseY, int deltaX, int deltaY) {}
 
 void Hw2::OnMouseBtnPress(int mouseX, int mouseY, int button, int mods) {}
 

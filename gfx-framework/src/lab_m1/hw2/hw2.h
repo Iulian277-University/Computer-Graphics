@@ -5,7 +5,7 @@
 
 namespace m1
 {
-    class Hw2 : public gfxc::SimpleScene
+    class Hw2: public gfxc::SimpleScene
     {
      public:
         Hw2();
