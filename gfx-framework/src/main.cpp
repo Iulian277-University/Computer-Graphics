@@ -50,12 +50,16 @@ int main(int argc, char **argv)
 	// World *world = new m1::Lab3();
 	// World *world = new m1::Lab3_Vis2D();
 	// World *world = new m1::Lab4();
-	World *world = new m1::Hw1();
+	// World *world = new m1::Hw1();
+	World *world = new m1::Lab5();
+	// World *world = new m1::Lab6();
+	// World *world = new m1::Lab7();
+	// World *world = new m1::Hw2();
 
     world->Init();
     world->Run();
 
-    //Signals to the Engine to release the OpenGL context
+    // Signals to the Engine to release the OpenGL context
     Engine::Exit();
 
     return 0;

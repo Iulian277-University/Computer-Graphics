@@ -22,9 +22,9 @@ void Duck::reset() {
 	this->idx++;
 	if (this->idx % 5 == 0) {
 		// Increase speed
-		this->speed          += this->speed / 3;
+		this->speed          += this->speed / 4;
 		this->escape_speed    = 2.0f * this->speed;
-		this->wing_rot_speed += this->wing_rot_speed / 3;
+		this->wing_rot_speed += this->wing_rot_speed / 4;
 
 		// Decrease `time_alive_thresh` and `time_respawn_thresh`
 		this->time_alive_thresh   -= this->time_alive_thresh   / 4;

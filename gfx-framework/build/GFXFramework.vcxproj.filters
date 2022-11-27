@@ -100,6 +100,9 @@
     <ClCompile Include="..\src\lab_m1\hw1\ui.cpp">
       <Filter>src\lab_m1\hw1</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\lab_m1\hw2\hw2.cpp">
+      <Filter>src\lab_m1\hw2</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\components\camera.h">
@@ -270,6 +273,9 @@
     <ClInclude Include="..\src\lab_m1\hw1\ui.h">
       <Filter>src\lab_m1\hw1</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\lab_m1\hw2\hw2.h">
+      <Filter>src\lab_m1\hw2</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\CMakeLists.txt" />
@@ -340,6 +346,9 @@
     </Filter>
     <Filter Include="src\lab_m1\hw1">
       <UniqueIdentifier>{c5fb71f2-0096-4473-b3cf-87891e266663}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\lab_m1\hw2">
+      <UniqueIdentifier>{2146c475-6dea-4f13-ad06-9b9258496c35}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

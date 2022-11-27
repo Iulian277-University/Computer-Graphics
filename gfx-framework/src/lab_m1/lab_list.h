@@ -12,3 +12,4 @@
 #include "lab_m1/lab9/lab9.h"
 
 #include "lab_m1/hw1/hw1.h"
+#include "lab_m1/hw2/hw2.h"

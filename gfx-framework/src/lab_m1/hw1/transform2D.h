@@ -54,5 +54,4 @@ namespace transform2D
 			 0, 0, 1
 		));
 	}
-
-}   // namespace transform2D
+}

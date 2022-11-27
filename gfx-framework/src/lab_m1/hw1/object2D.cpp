@@ -38,6 +38,7 @@ Mesh* object2D::CreateSquare(
     return square;
 }
 
+
 Mesh* object2D::CreateRectangle(
 	const std::string &name,
 	glm::vec3 leftBottomCorner,

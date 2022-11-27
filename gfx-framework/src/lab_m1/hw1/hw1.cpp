@@ -9,8 +9,6 @@
 #include "duck.h"
 #include "ui.h"
 
-#include <glm/gtx/string_cast.hpp> // print glm mat
-
 using namespace m1;
 
 Hw1::Hw1() {}
@@ -74,7 +72,6 @@ void Hw1::RenderUi(float deltaTimeSeconds) {
 		ui.decremented_lives = true;
 	}
 
-	// [TODO]: Add some endings to the game
 	if (ui.curr_lives < 1) {
 		if (!ended_game)
 			std::cout << "You lost!\n";
@@ -229,7 +226,7 @@ void Hw1::RenderDuck(float deltaTimeSeconds) {
 
 	// Bounding box
 	glm::mat3 bbox_mat = duck.bbox_mat();
-	RenderMesh2D(bbox, shaders["VertexColor"], general_mat * bbox_mat);
+	// RenderMesh2D(bbox, shaders["VertexColor"], general_mat * bbox_mat);
 }
 
 void Hw1::Update(float deltaTimeSeconds) {
@@ -259,7 +256,6 @@ void Hw1::OnMouseBtnPress(int mouseX, int mouseY, int button, int mods) {
 	float x =			   (mouseX / (float) resolution.x) * window_wid;
 	float y = window_hei - (mouseY / (float) resolution.y) * window_hei;
 
-	// [TODO]: Check why `mouse_btn_2` is left click and `mouse_btn_1` is right click (they are inversed)
 	if (button == GLFW_MOUSE_BUTTON_2) {
 		if (!duck.dead)
 			ui.curr_bullets--;

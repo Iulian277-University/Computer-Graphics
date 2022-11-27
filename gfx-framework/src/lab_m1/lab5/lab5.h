@@ -36,6 +36,9 @@ namespace m1
         bool renderCameraTarget;
 
         // TODO(student): If you need any other class variables, define them here.
-
+		float fov;
+		float nearZ, farZ;
+		bool projectionType;
+		float right, left, bottom, top;
     };
 }   // namespace m1

@@ -33,8 +33,8 @@ namespace m1 {
 		void RenderUi(float deltaTimeSeconds);
 
 	protected:
-		float window_wid = 1280;
-		float window_hei = 720;
+		float window_wid = 1280.0f;
+		float window_hei = 720.0f;
 		
 		bool ended_game = false;
 		glm::ivec2 resolution;
