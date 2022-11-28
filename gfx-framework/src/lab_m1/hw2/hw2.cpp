@@ -7,52 +7,27 @@
 using namespace std;
 using namespace m1;
 
-
 Hw2::Hw2() {}
 Hw2::~Hw2() {}
 
-
 void Hw2::Init() {
+    // Camera
     camera = new cam::Camera();
-    camera->Set(glm::vec3(0, 1.5f, 5), glm::vec3(0, 1, 0), glm::vec3(0, 1, 0));
+    camera->Set(glm::vec3(0, 1.5f, -5), glm::vec3(0, 1, 0), glm::vec3(0, 1, 0));
+	camera->RotateThirdPerson_OY(RADIANS(-110));
 
-    // Init environment
+    // Environment
     env = environment::Environment();
     env.generateMeshes();
     env.generateTrack();
-    // env.generateShaders();
+    env.generateShaders();
 
-    // [TODO]: Move in Car class
-    Mesh* mesh = new Mesh("box");
-    mesh->LoadMesh(PATH_JOIN(window->props.selfDir, RESOURCE_PATH::MODELS, "primitives"), "box.obj");
-    meshes[mesh->GetMeshID()] = mesh;
+    // Car
+    car = car::Car();
+    car.generateMeshes();
 
-    // Create a shader program for drawing face polygon with the color of the normal
-    Shader* shader = new Shader("LabShader");
-    shader->AddShader(PATH_JOIN(window->props.selfDir, SOURCE_PATH::M1, "hw2", "shaders", "VertexShader.glsl"), GL_VERTEX_SHADER);
-    shader->AddShader(PATH_JOIN(window->props.selfDir, SOURCE_PATH::M1, "hw2", "shaders", "FragmentShader.glsl"), GL_FRAGMENT_SHADER);
-    shader->CreateAndLink();
-    shaders[shader->GetName()] = shader;
-
-    // TODO(student): After you implement the changing of the projection
-    // parameters, remove hardcodings of these parameters
-	fov = 60.0f;
-	nearZ = 0.01f;
-	farZ = 200.0f;
+    // Projection matrix
 	projectionMatrix = glm::perspective(RADIANS(fov), window->props.aspectRatio, nearZ, farZ);
-
-	right = 3.5f;
-	left = -3.5f;
-	bottom = 0.01f;
-	top = 10.0f;
-
-	perspectiveType = true;
-
-    // Light & material properties
-    lightPosition = glm::vec3(0, 10, 0);
-    materialShininess = 30;
-    materialKd = 0.5;
-    materialKs = 0.5;
 }
 
 
@@ -61,8 +36,8 @@ void Hw2::FrameStart() {
     glClearColor(0, 0, 0, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glm::ivec2 resolution = window->GetResolution();
     // Sets the screen area where to draw
+    glm::ivec2 resolution = window->GetResolution();
     glViewport(0, 0, resolution.x, resolution.y);
 }
 
@@ -76,14 +51,11 @@ void Hw2::RenderMesh(Mesh *mesh, Shader *shader, const glm::mat4 &modelMatrix) {
     glUniformMatrix4fv(shader->loc_view_matrix,       1, GL_FALSE, glm::value_ptr(camera->GetViewMatrix()));
     glUniformMatrix4fv(shader->loc_projection_matrix, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
     glUniformMatrix4fv(shader->loc_model_matrix,      1, GL_FALSE, glm::value_ptr(modelMatrix));
-
     mesh->Render();
 }
 
 
-// [TODO]: Move in Environment class
-void Hw2::RenderSimpleMesh(Mesh* mesh, Shader* shader, const glm::mat4& modelMatrix, const glm::vec3& color)
-{
+void Hw2::RenderSimpleMesh(Mesh* mesh, Shader* shader, const glm::mat4& modelMatrix, const glm::vec3& color) {
     if (!mesh || !shader || !shader->GetProgramID())
         return;
 
@@ -99,7 +71,7 @@ void Hw2::RenderSimpleMesh(Mesh* mesh, Shader* shader, const glm::mat4& modelMat
     GLint locEyePos = glGetUniformLocation(shader->program, "eye_position");
     glUniform3fv(locEyePos, 1, glm::value_ptr(eyePosition));
 
-    // TODO(student): Set material property uniforms (shininess, kd, ks, object color)
+    // Set material property uniforms (shininess, kd, ks, object color)
     GLint locMaterial = glGetUniformLocation(shader->program, "material_shininess");
     glUniform1i(locMaterial, materialShininess);
 
@@ -109,19 +81,19 @@ void Hw2::RenderSimpleMesh(Mesh* mesh, Shader* shader, const glm::mat4& modelMat
     GLint locMaterialKs = glGetUniformLocation(shader->program, "material_ks");  // specular light
     glUniform1f(locMaterialKs, materialKs);
 
-    GLint locObject = glGetUniformLocation(shader->program, "object_color");
+    GLint locObject = glGetUniformLocation(shader->program, "object_color"); // color
     glUniform3fv(locObject, 1, glm::value_ptr(color));
 
-    // Bind model matrix
+    // Bind `M` matrix
     GLint loc_model_matrix = glGetUniformLocation(shader->program, "Model");
     glUniformMatrix4fv(loc_model_matrix, 1, GL_FALSE, glm::value_ptr(modelMatrix));
 
-    // Bind view matrix
+    // Bind `V` matrix
     glm::mat4 viewMatrix = GetSceneCamera()->GetViewMatrix();
     int loc_view_matrix = glGetUniformLocation(shader->program, "View");
     glUniformMatrix4fv(loc_view_matrix, 1, GL_FALSE, glm::value_ptr(viewMatrix));
 
-    // Bind projection matrix
+    // Bind `P` matrix
     glm::mat4 projectionMatrix = GetSceneCamera()->GetProjectionMatrix();
     int loc_projection_matrix = glGetUniformLocation(shader->program, "Projection");
     glUniformMatrix4fv(loc_projection_matrix, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
@@ -132,38 +104,18 @@ void Hw2::RenderSimpleMesh(Mesh* mesh, Shader* shader, const glm::mat4& modelMat
 }
 
 
-void Hw2::Update(float deltaTimeSeconds)
-{
-    /* Render target */
-    // Translate the target based on the camera's position, but keep the y on the ground
-    glm::mat4 modelMatrix = glm::mat4(1);
-    glm::vec3 targetPosition = camera->GetTargetPosition();
-    targetPosition.y = 0.5f;
-    modelMatrix = glm::translate(modelMatrix, targetPosition);
-
-    // Rotate the target based on the forward vector of the camera
-    glm::vec3 forward = camera->forward * glm::vec3(1, 0, 1);
-    forward = glm::normalize(forward);
-    float angle = glm::acos(glm::dot(forward, glm::vec3(0, 0, 1))); // angle = arccos(cos_angle(forward, OZ))
-    if (forward.x < 0)
-        angle = -angle;
-    modelMatrix = glm::rotate(modelMatrix, angle, glm::vec3(0, 1, 0)); // rotate in plane XOZ (around OY)
-
-    // Scale the target
-    modelMatrix = glm::scale(modelMatrix, glm::vec3(0.5f, 0.5f, 1.0f));
-    RenderMesh(meshes["box"], shaders["VertexNormal"], modelMatrix);
-
+void Hw2::RenderEnvironment(float deltaTimeSeconds) {
     /* Render ground */
-    modelMatrix = glm::mat4(1);
+    glm::mat4 modelMatrix = glm::mat4(1);
     modelMatrix = glm::translate(modelMatrix, glm::vec3(0, -5, 0));
     modelMatrix = glm::scale(modelMatrix, glm::vec3(100, 1, 100));
-    RenderSimpleMesh(env.meshes["ground"], shaders["LabShader"], modelMatrix, glm::vec3(133, 216, 84) / 255.0f);
+    RenderSimpleMesh(env.meshes["ground"], env.shaders["LabShader"], modelMatrix, env.groundColor);
 
-    /* Render a big sphere for ambient light */
+    /* Render a big sphere for skybox */
     modelMatrix = glm::mat4(1);
     modelMatrix = glm::translate(modelMatrix, glm::vec3(0, 10, 0));
     modelMatrix = glm::scale(modelMatrix, glm::vec3(100, 100, 100));
-    RenderSimpleMesh(env.meshes["skybox"], shaders["LabShader"], modelMatrix, glm::vec3(0, 0.5, 1));
+    RenderSimpleMesh(env.meshes["skybox"], env.shaders["LabShader"], modelMatrix, env.skyColor);
 
     /* Render light */
     modelMatrix = glm::mat4(1);
@@ -178,31 +130,89 @@ void Hw2::Update(float deltaTimeSeconds)
     RenderMesh(env.meshes["track"], shaders["VertexNormal"], modelMatrix);
 }
 
+void Hw2::Update(float deltaTimeSeconds) {
+    /* Render car */
+    // Translate the car based on the camera's position, but keep the y on the ground
+    glm::mat4 modelMatrix = glm::mat4(1);
+    glm::vec3 targetPosition = camera->GetTargetPosition();
+    targetPosition.y = 0.5f;
+    modelMatrix = glm::translate(modelMatrix, targetPosition);
+
+    // Rotate the car based on the forward vector of the camera
+    glm::vec3 forward = camera->forward * glm::vec3(1, 0, 1);
+    forward = glm::normalize(forward);
+    float angle = glm::acos(glm::dot(forward, glm::vec3(0, 0, 1))); // angle = arccos(cos_angle(forward, OZ))
+    if (forward.x < 0)
+        angle = -angle;
+    modelMatrix = glm::rotate(modelMatrix, angle, glm::vec3(0, 1, 0)); // rotate in plane XOZ (around OY)
+
+    // Scale the car
+    modelMatrix = glm::scale(modelMatrix, glm::vec3(0.5f, 0.5f, 1.0f));
+    // Render the car with blue color
+    glUseProgram(shaders["Color"]->program);
+    GLint loc_color = glGetUniformLocation(shaders["Color"]->program, "color");
+    glUniform3fv(loc_color, 1, glm::value_ptr(glm::vec3(21, 255, 251) / 255.0f));
+    car.center = targetPosition;
+    RenderMesh(car.meshes["car"], shaders["Color"], modelMatrix);
+
+    RenderEnvironment(deltaTimeSeconds);   
+}
+
 
 void Hw2::FrameEnd() {
     // DrawCoordinateSystem(camera->GetViewMatrix(), projectionMatrix);
 }
 
-void Hw2::OnInputUpdate(float deltaTime, int mods) {
-    float cameraSpeed = 3.0f;
+bool Hw2::IsInsideTriangle(glm::vec3 center, std::vector<glm::vec3> triangle) {
+    // Ignore the y coordinate
+    center.y = 0;
+    for (auto &point: triangle)
+        point.y = 0;
 
-    if (window->KeyHold(GLFW_KEY_W))
-        camera->TranslateForward(cameraSpeed * deltaTime);
-    
-    if (window->KeyHold(GLFW_KEY_S))
+    // Compute the area of the triangle
+    float area = glm::length(glm::cross(triangle[1] - triangle[0], triangle[2] - triangle[0])) / 2;
+
+    // Compute the area of the 3 sub-triangles
+    float area1 = glm::length(glm::cross(triangle[1] - triangle[0], center - triangle[0])) / 2;
+    float area2 = glm::length(glm::cross(triangle[2] - triangle[1], center - triangle[1])) / 2;
+    float area3 = glm::length(glm::cross(triangle[0] - triangle[2], center - triangle[2])) / 2;
+
+    // If the sum of the areas is equal to the area of the triangle, then the point is inside
+    // Check with 0.01 precision
+    return abs(area - (area1 + area2 + area3)) < 0.01;
+}
+
+void Hw2::OnInputUpdate(float deltaTime, int mods) {
+    if (window->KeyHold(GLFW_KEY_X)) {
+        std::cout << "Car center: " << car.center.x << " " << car.center.y << " " << car.center.z << std::endl;
+        for (int i = 0; i < env.triangles.size(); i++) {
+            std::cout << "Triangle " << i << ": " << env.triangles[i][0].x << " " << env.triangles[i][0].z << " " << env.triangles[i][1].x << " " << env.triangles[i][1].z << " " << env.triangles[i][2].x << " " << env.triangles[i][2].z << std::endl;
+        }
+    }
+
+    if (window->KeyHold(GLFW_KEY_W)) {
+        // Check if the car is on the track
+        // Iterate over all env.triangles and check if the car is inside any of them
+        for (auto triangle: env.triangles) {
+            std::cout << "\n";
+            if (IsInsideTriangle(car.center, triangle)) {
+                // Move the car forward
+                camera->TranslateForward(cameraSpeed * deltaTime);
+                std::cout << "car center: " << car.center.x << " " << car.center.z << std::endl;
+                break;
+            }
+        }
+    }
+
+    if (window->KeyHold(GLFW_KEY_S)) {
         camera->TranslateForward(-cameraSpeed * deltaTime);
+    }
 
     if (window->KeyHold(GLFW_KEY_A))
         camera->RotateThirdPerson_OY(cameraSpeed * deltaTime);
-
     if (window->KeyHold(GLFW_KEY_D))
         camera->RotateThirdPerson_OY(-cameraSpeed * deltaTime);
 
-
-    // TODO(student): Change projection parameters. Declare any extra
-    // variables you might need in the class header. Inspect this file
-    // for any hardcoded projection arguments (can you find any?) and
-    // replace them with those extra variables.
 
     // Changing fov
 	if (perspectiveType) {
@@ -232,6 +242,7 @@ void Hw2::OnInputUpdate(float deltaTime, int mods) {
 
 }
 
+
 void Hw2::OnKeyPress(int key, int mods) {
     // Switch projections
     if (key == GLFW_KEY_P)
@@ -243,6 +254,7 @@ void Hw2::OnKeyPress(int key, int mods) {
             projectionMatrix = glm::ortho(left, right, bottom, top, nearZ, farZ);
     }
 }
+
 
 void Hw2::OnKeyRelease(int key, int mods) {}
 

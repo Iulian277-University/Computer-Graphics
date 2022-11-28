@@ -48,7 +48,8 @@ void main()
 	float light					= ambient_light + attenuation_factor * (diffuse_light + specular_light);
 
 	// Send color light output to fragment shader
-	color = object_color * light;
+	// color = object_color * light; // this disables the illumination
+	color = object_color;
 
 	gl_Position = Projection * View * Model * vec4(v_position, 1.0);
 }

@@ -1,11 +1,11 @@
 #include <iostream>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 #include "core/gpu/mesh.h"
 #include "core/gpu/shader.h"
 #include "core/managers/resource_path.h"
-
 #include "environment.h"
 
 using namespace std;
@@ -19,9 +19,11 @@ void Environment::addMesh(std::string mesh_name, Mesh *mesh) {
     this->meshes[mesh_name] = mesh;
 }
 
+
 void Environment::addShader(std::string shader_name, Shader *shader) {
     this->shaders[shader_name] = shader;
 }
+
 
 void Environment::generateMeshes() {
     // Skybox
@@ -35,9 +37,16 @@ void Environment::generateMeshes() {
     this->addMesh("ground", ground);
 }
 
+
 void Environment::generateShaders() {
-    
+	// Create a shader program for drawing face polygon with the color of the normal
+    Shader* shader = new Shader("LabShader");
+	shader->AddShader(SOURCE_PATH::M1 + "/hw2/" + "shaders" + "/VertexShader.glsl", GL_VERTEX_SHADER);
+	shader->AddShader(SOURCE_PATH::M1 + "/hw2/" + "shaders" + "/FragmentShader.glsl", GL_FRAGMENT_SHADER);
+    shader->CreateAndLink();
+    this->addShader("LabShader", shader);
 }
+
 
 void Environment::generateTrack() {
     // Define a set of points for the middle points of car track
@@ -83,9 +92,19 @@ void Environment::generateTrack() {
         trackPoints.push_back(p1 - n * 0.5f); // Interior point
     }
 
+    // Complete the triangles vector with points from `trackPoints`
+    for (int i = 0; i < trackPoints.size(); i++) {
+        vector<glm::vec3> triangle;
+        triangle.push_back(trackPoints[i]);
+        triangle.push_back(trackPoints[(i + 1) % trackPoints.size()]);
+        triangle.push_back(trackPoints[(i + 2) % trackPoints.size()]);
+        this->triangles.push_back(triangle);
+    }
+    
     // Generate the track mesh
-    generateTrackMesh(trackPoints, glm::vec3(0.1, 0.1, 0.1));
+    generateTrackMesh(trackPoints, trackColor);
 }
+
 
 void Environment::generateTrackMesh(vector<glm::vec3> trackPoints, glm::vec3 color) {
     // Create the track

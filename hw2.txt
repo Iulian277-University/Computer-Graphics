@@ -1,0 +1,7 @@
+- Comment the next block from `camera_input.cpp`
+    if (window->MouseHold(GLFW_MOUSE_BUTTON_RIGHT))
+    {
+        camera->RotateOY(-(float)deltaX);
+        camera->RotateOX(-(float)deltaY);
+        camera->Update();
+    }

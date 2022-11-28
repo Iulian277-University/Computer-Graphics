@@ -3,6 +3,7 @@
 #include "components/transform.h"
 #include "lab_m1/hw2/camera.h"
 #include "lab_m1/hw2/environment.h"
+#include "lab_m1/hw2/car.h"
 
 namespace m1 {
    class Hw2: public gfxc::SimpleScene {
@@ -29,21 +30,31 @@ namespace m1 {
          void OnMouseScroll(int mouseX, int mouseY, int offsetX, int offsetY) override;
          void OnWindowResize(int width, int height) override;
 
+         void RenderEnvironment(float deltaTimeSeconds);
+
+         bool IsInsideTriangle(glm::vec3 center, std::vector<glm::vec3> triangle);
+
      protected:
          environment::Environment env;
+         car::Car car;
 
          cam::Camera *camera;
          glm::mat4 projectionMatrix;
-         bool renderCameraTarget;
 
-         float fov;
-         float nearZ, farZ;
-         float right, left, bottom, top;
-         bool  perspectiveType;
+         float fov    =  60.0f;
+         float nearZ  =  0.01f;
+         float farZ   = 200.0f;
+         float right  =  3.5f;
+         float left   = -3.5f;
+         float bottom = 0.01f;
+         float top    = 10.0f;
+         bool  perspectiveType = true;
 
-         glm::vec3 lightPosition;
-         unsigned int materialShininess;
-         float materialKd;
-         float materialKs;
+         float cameraSpeed = 5.0f;
+
+         glm::vec3 lightPosition = glm::vec3(0, 20, 0);
+         unsigned int materialShininess = 30;
+         float materialKd = 0.5f;
+         float materialKs = 0.5f;
    };
 }
