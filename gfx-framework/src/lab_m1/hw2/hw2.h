@@ -1,6 +1,7 @@
 #pragma once
 
 #include "components/simple_scene.h"
+#include "components/transform.h"
 #include "lab_m1/hw2/camera.h"
 
 namespace m1
@@ -19,6 +20,7 @@ namespace m1
         void FrameEnd() override;
 
         void RenderMesh(Mesh *mesh, Shader *shader, const glm::mat4 &modelMatrix) override;
+        void RenderSimpleMesh(Mesh* mesh, Shader* shader, const glm::mat4& modelMatrix, const glm::vec3& color);
 
         void OnInputUpdate(float deltaTime, int mods) override;
         void OnKeyPress(int key, int mods) override;
@@ -30,13 +32,18 @@ namespace m1
         void OnWindowResize(int width, int height) override;
 
      protected:
-        cam::Camera *camera;
-        glm::mat4 projectionMatrix;
-        bool renderCameraTarget;
+         cam::Camera *camera;
+         glm::mat4 projectionMatrix;
+         bool renderCameraTarget;
 
-		float fov;
-		float nearZ, farZ;
-		float right, left, bottom, top;
-		bool  perspectiveType;
+         float fov;
+         float nearZ, farZ;
+         float right, left, bottom, top;
+         bool  perspectiveType;
+
+         glm::vec3 lightPosition;
+         unsigned int materialShininess;
+         float materialKd;
+         float materialKs;
     };
 }

@@ -13,7 +13,7 @@ Hw2::~Hw2() {}
 
 void Hw2::Init() {
     camera = new cam::Camera();
-    camera->Set(glm::vec3(0, 1.5, 5.0f), glm::vec3(0, 1, 0), glm::vec3(0, 1, 0));
+    camera->Set(glm::vec3(0, 1.5f, 5), glm::vec3(0, 1, 0), glm::vec3(0, 1, 0));
 
     Mesh* mesh = new Mesh("box");
     mesh->LoadMesh(PATH_JOIN(window->props.selfDir, RESOURCE_PATH::MODELS, "primitives"), "box.obj");
@@ -22,6 +22,19 @@ void Hw2::Init() {
     mesh = new Mesh("sphere");
     mesh->LoadMesh(PATH_JOIN(window->props.selfDir, RESOURCE_PATH::MODELS, "primitives"), "sphere.obj");
     meshes[mesh->GetMeshID()] = mesh;
+
+    mesh = new Mesh("plane");
+    mesh->LoadMesh(PATH_JOIN(window->props.selfDir, RESOURCE_PATH::MODELS, "primitives"), "plane50.obj");
+    meshes[mesh->GetMeshID()] = mesh;
+
+    // Create a shader program for drawing face polygon with the color of the normal
+    {
+        Shader* shader = new Shader("LabShader");
+        shader->AddShader(PATH_JOIN(window->props.selfDir, SOURCE_PATH::M1, "hw2", "shaders", "VertexShader.glsl"), GL_VERTEX_SHADER);
+        shader->AddShader(PATH_JOIN(window->props.selfDir, SOURCE_PATH::M1, "hw2", "shaders", "FragmentShader.glsl"), GL_FRAGMENT_SHADER);
+        shader->CreateAndLink();
+        shaders[shader->GetName()] = shader;
+    }
 
     // TODO(student): After you implement the changing of the projection
     // parameters, remove hardcodings of these parameters
@@ -36,6 +49,14 @@ void Hw2::Init() {
 	top = 10.0f;
 
 	perspectiveType = true;
+
+    // Light & material properties
+    {
+        lightPosition = glm::vec3(0, 10, 0);
+        materialShininess = 30;
+        materialKd = 0.5;
+        materialKs = 0.5;
+    }
 }
 
 
@@ -50,8 +71,73 @@ void Hw2::FrameStart() {
 }
 
 
+void Hw2::RenderMesh(Mesh *mesh, Shader *shader, const glm::mat4 &modelMatrix) {
+    if (!mesh || !shader || !shader->program)
+        return;
+
+    // Render an object using the specified shader and the specified position
+    shader->Use();
+    glUniformMatrix4fv(shader->loc_view_matrix,       1, GL_FALSE, glm::value_ptr(camera->GetViewMatrix()));
+    glUniformMatrix4fv(shader->loc_projection_matrix, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+    glUniformMatrix4fv(shader->loc_model_matrix,      1, GL_FALSE, glm::value_ptr(modelMatrix));
+
+    mesh->Render();
+}
+
+
+void Hw2::RenderSimpleMesh(Mesh* mesh, Shader* shader, const glm::mat4& modelMatrix, const glm::vec3& color)
+{
+    if (!mesh || !shader || !shader->GetProgramID())
+        return;
+
+    // Render an object using the specified shader and the specified position
+    glUseProgram(shader->program);
+
+    // Set light position uniform
+    GLint locLightPos = glGetUniformLocation(shader->program, "light_position");
+    glUniform3fv(locLightPos, 1, glm::value_ptr(lightPosition));
+
+    // Set eye position (camera position) uniform
+    glm::vec3 eyePosition = GetSceneCamera()->m_transform->GetWorldPosition();
+    GLint locEyePos = glGetUniformLocation(shader->program, "eye_position");
+    glUniform3fv(locEyePos, 1, glm::value_ptr(eyePosition));
+
+    // TODO(student): Set material property uniforms (shininess, kd, ks, object color)
+    GLint locMaterial = glGetUniformLocation(shader->program, "material_shininess");
+    glUniform1i(locMaterial, materialShininess);
+
+    GLint locMaterialKd = glGetUniformLocation(shader->program, "material_kd");  // diffuse light
+    glUniform1f(locMaterialKd, materialKd);
+
+    GLint locMaterialKs = glGetUniformLocation(shader->program, "material_ks");  // specular light
+    glUniform1f(locMaterialKs, materialKs);
+
+    GLint locObject = glGetUniformLocation(shader->program, "object_color");
+    glUniform3fv(locObject, 1, glm::value_ptr(color));
+
+    // Bind model matrix
+    GLint loc_model_matrix = glGetUniformLocation(shader->program, "Model");
+    glUniformMatrix4fv(loc_model_matrix, 1, GL_FALSE, glm::value_ptr(modelMatrix));
+
+    // Bind view matrix
+    glm::mat4 viewMatrix = GetSceneCamera()->GetViewMatrix();
+    int loc_view_matrix = glGetUniformLocation(shader->program, "View");
+    glUniformMatrix4fv(loc_view_matrix, 1, GL_FALSE, glm::value_ptr(viewMatrix));
+
+    // Bind projection matrix
+    glm::mat4 projectionMatrix = GetSceneCamera()->GetProjectionMatrix();
+    int loc_projection_matrix = glGetUniformLocation(shader->program, "Projection");
+    glUniformMatrix4fv(loc_projection_matrix, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+
+    // Draw the object
+    glBindVertexArray(mesh->GetBuffers()->m_VAO);
+    glDrawElements(mesh->GetDrawMode(), static_cast<int>(mesh->indices.size()), GL_UNSIGNED_INT, 0);
+}
+
+
 void Hw2::Update(float deltaTimeSeconds)
 {
+    /* Render target */
     // Translate the target based on the camera's position, but keep the y on the ground
     glm::mat4 modelMatrix = glm::mat4(1);
     glm::vec3 targetPosition = camera->GetTargetPosition();
@@ -69,6 +155,23 @@ void Hw2::Update(float deltaTimeSeconds)
     // Scale the target
     modelMatrix = glm::scale(modelMatrix, glm::vec3(0.5f, 0.5f, 1.0f));
     RenderMesh(meshes["box"], shaders["VertexNormal"], modelMatrix);
+
+    /* Render ground */
+    modelMatrix = glm::mat4(1);
+    modelMatrix = glm::translate(modelMatrix, glm::vec3(0, -5, 0));
+    RenderSimpleMesh(meshes["plane"], shaders["LabShader"], modelMatrix, glm::vec3(133, 216, 84) / 255.0f);
+
+    /* Render a big sphere for ambient light */
+    modelMatrix = glm::mat4(1);
+    modelMatrix = glm::translate(modelMatrix, glm::vec3(0, 10, 0));
+    modelMatrix = glm::scale(modelMatrix, glm::vec3(100, 100, 100));
+    RenderSimpleMesh(meshes["sphere"], shaders["LabShader"], modelMatrix, glm::vec3(0, 0.5, 1));
+
+    /* Render light */
+    modelMatrix = glm::mat4(1);
+    modelMatrix = glm::translate(modelMatrix, lightPosition);
+    modelMatrix = glm::scale(modelMatrix, glm::vec3(0.1f));
+    RenderMesh(meshes["sphere"], shaders["Simple"], modelMatrix);
 }
 
 
@@ -76,23 +179,8 @@ void Hw2::FrameEnd() {
     DrawCoordinateSystem(camera->GetViewMatrix(), projectionMatrix);
 }
 
-
-void Hw2::RenderMesh(Mesh *mesh, Shader *shader, const glm::mat4 &modelMatrix) {
-    if (!mesh || !shader || !shader->program)
-        return;
-
-    // Render an object using the specified shader and the specified position
-    shader->Use();
-    glUniformMatrix4fv(shader->loc_view_matrix, 1, GL_FALSE, glm::value_ptr(camera->GetViewMatrix()));
-    glUniformMatrix4fv(shader->loc_projection_matrix, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
-    glUniformMatrix4fv(shader->loc_model_matrix, 1, GL_FALSE, glm::value_ptr(modelMatrix));
-
-    mesh->Render();
-}
-
-
 void Hw2::OnInputUpdate(float deltaTime, int mods) {
-    float cameraSpeed = 1.0f;
+    float cameraSpeed = 2.0f;
 
     if (window->KeyHold(GLFW_KEY_W))
         camera->TranslateForward(cameraSpeed * deltaTime);
