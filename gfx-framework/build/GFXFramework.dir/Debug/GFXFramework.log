@@ -1,9 +1,24 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(944,5): warning MSB8027: Two or more files with the name of object2D.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are ..\src\lab_m1\hw1\object2D.cpp, C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\lab3\object2D.cpp.
-  main.cpp
-c:\users\iulian\desktop\egc\gfx-framework\src\lab_m1\hw1\duck.h(42): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\iulian\desktop\egc\gfx-framework\src\lab_m1\hw1\duck.h(43): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\iulian\desktop\egc\gfx-framework\src\lab_m1\hw1\duck.h(49): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\iulian\desktop\egc\gfx-framework\src\lab_m1\hw1\duck.h(50): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  hw2.cpp
+..\src\lab_m1\hw2\hw2.cpp(85): warning C4018: '<': signed/unsigned mismatch
+..\src\lab_m1\hw2\hw2.cpp(116): warning C4018: '<': signed/unsigned mismatch
+..\src\lab_m1\hw2\hw2.cpp(133): warning C4457: declaration of 'color' hides function parameter
+  ..\src\lab_m1\hw2\hw2.cpp(106): note: see declaration of 'color'
+..\src\lab_m1\hw2\hw2.cpp(138): warning C4244: 'argument': conversion from 'float' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=unsigned int
+          ]
+..\src\lab_m1\hw2\hw2.cpp(139): warning C4244: 'argument': conversion from 'float' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=unsigned int
+          ]
+..\src\lab_m1\hw2\hw2.cpp(140): warning C4244: 'argument': conversion from 'float' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=unsigned int
+          ]
   GFXFramework.vcxproj -> C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\GFXFramework.exe
   Junction created for C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\src <<===>> C:\Users\Iulian\Desktop\EGC\gfx-framework\src
   Junction created for C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\assets <<===>> C:\Users\Iulian\Desktop\EGC\gfx-framework\assets

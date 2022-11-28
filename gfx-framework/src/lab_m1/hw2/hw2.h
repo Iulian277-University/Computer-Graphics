@@ -1,5 +1,4 @@
 #pragma once
-
 #include "components/simple_scene.h"
 #include "components/transform.h"
 #include "lab_m1/hw2/camera.h"
@@ -21,6 +20,8 @@ namespace m1
 
         void RenderMesh(Mesh *mesh, Shader *shader, const glm::mat4 &modelMatrix) override;
         void RenderSimpleMesh(Mesh* mesh, Shader* shader, const glm::mat4& modelMatrix, const glm::vec3& color);
+
+        void CreateTrack(std::vector<glm::vec3> trackPoints, glm::vec3 color);
 
         void OnInputUpdate(float deltaTime, int mods) override;
         void OnKeyPress(int key, int mods) override;
