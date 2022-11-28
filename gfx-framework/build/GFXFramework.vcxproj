@@ -501,6 +501,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="..\src\lab_m1\hw1\hw1.cpp" />
     <ClCompile Include="..\src\lab_m1\hw1\object2D.cpp" />
     <ClCompile Include="..\src\lab_m1\hw1\ui.cpp" />
+    <ClCompile Include="..\src\lab_m1\hw2\environment.cpp" />
     <ClCompile Include="..\src\lab_m1\hw2\hw2.cpp" />
     <ClCompile Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\components\camera_input.cpp" />
     <ClCompile Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\components\scene_input.cpp" />
@@ -536,6 +537,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="..\src\lab_m1\hw1\object2D.h" />
     <ClInclude Include="..\src\lab_m1\hw1\transform2D.h" />
     <ClInclude Include="..\src\lab_m1\hw1\ui.h" />
+    <ClInclude Include="..\src\lab_m1\hw2\camera.h" />
+    <ClInclude Include="..\src\lab_m1\hw2\environment.h" />
     <ClInclude Include="..\src\lab_m1\hw2\hw2.h" />
     <ClInclude Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\components\camera.h" />
     <ClInclude Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\components\camera_input.h" />
@@ -596,6 +599,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\src\lab_m1\hw2\shaders\FragmentShader.glsl" />
+    <None Include="..\src\lab_m1\hw2\shaders\VertexShader.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

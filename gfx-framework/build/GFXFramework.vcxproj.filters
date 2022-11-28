@@ -103,6 +103,9 @@
     <ClCompile Include="..\src\lab_m1\hw2\hw2.cpp">
       <Filter>src\lab_m1\hw2</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\lab_m1\hw2\environment.cpp">
+      <Filter>src\lab_m1\hw2</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\components\camera.h">
@@ -276,6 +279,12 @@
     <ClInclude Include="..\src\lab_m1\hw2\hw2.h">
       <Filter>src\lab_m1\hw2</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\lab_m1\hw2\camera.h">
+      <Filter>src\lab_m1\hw2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lab_m1\hw2\environment.h">
+      <Filter>src\lab_m1\hw2</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\CMakeLists.txt" />
@@ -350,5 +359,16 @@
     <Filter Include="src\lab_m1\hw2">
       <UniqueIdentifier>{2146c475-6dea-4f13-ad06-9b9258496c35}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\lab_m1\hw2\shaders">
+      <UniqueIdentifier>{8b8919b3-3d55-4641-8694-3bcb98247ab9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\src\lab_m1\hw2\shaders\VertexShader.glsl">
+      <Filter>src\lab_m1\hw2\shaders</Filter>
+    </None>
+    <None Include="..\src\lab_m1\hw2\shaders\FragmentShader.glsl">
+      <Filter>src\lab_m1\hw2\shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

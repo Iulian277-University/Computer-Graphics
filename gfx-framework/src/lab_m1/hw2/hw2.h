@@ -2,37 +2,36 @@
 #include "components/simple_scene.h"
 #include "components/transform.h"
 #include "lab_m1/hw2/camera.h"
+#include "lab_m1/hw2/environment.h"
 
-namespace m1
-{
-    class Hw2: public gfxc::SimpleScene
-    {
-     public:
-        Hw2();
-        ~Hw2();
+namespace m1 {
+   class Hw2: public gfxc::SimpleScene {
+      public:
+         Hw2();
+         ~Hw2();
 
-        void Init() override;
+         void Init() override;
 
      private:
-        void FrameStart() override;
-        void Update(float deltaTimeSeconds) override;
-        void FrameEnd() override;
+         void FrameStart() override;
+         void Update(float deltaTimeSeconds) override;
+         void FrameEnd() override;
 
-        void RenderMesh(Mesh *mesh, Shader *shader, const glm::mat4 &modelMatrix) override;
-        void RenderSimpleMesh(Mesh* mesh, Shader* shader, const glm::mat4& modelMatrix, const glm::vec3& color);
+         void RenderMesh(Mesh *mesh, Shader *shader, const glm::mat4 &modelMatrix) override;
+         void RenderSimpleMesh(Mesh* mesh, Shader* shader, const glm::mat4& modelMatrix, const glm::vec3& color);
 
-        void CreateTrack(std::vector<glm::vec3> trackPoints, glm::vec3 color);
-
-        void OnInputUpdate(float deltaTime, int mods) override;
-        void OnKeyPress(int key, int mods) override;
-        void OnKeyRelease(int key, int mods) override;
-        void OnMouseMove(int mouseX, int mouseY, int deltaX, int deltaY) override;
-        void OnMouseBtnPress(int mouseX, int mouseY, int button, int mods) override;
-        void OnMouseBtnRelease(int mouseX, int mouseY, int button, int mods) override;
-        void OnMouseScroll(int mouseX, int mouseY, int offsetX, int offsetY) override;
-        void OnWindowResize(int width, int height) override;
+         void OnInputUpdate(float deltaTime, int mods) override;
+         void OnKeyPress(int key, int mods) override;
+         void OnKeyRelease(int key, int mods) override;
+         void OnMouseMove(int mouseX, int mouseY, int deltaX, int deltaY) override;
+         void OnMouseBtnPress(int mouseX, int mouseY, int button, int mods) override;
+         void OnMouseBtnRelease(int mouseX, int mouseY, int button, int mods) override;
+         void OnMouseScroll(int mouseX, int mouseY, int offsetX, int offsetY) override;
+         void OnWindowResize(int width, int height) override;
 
      protected:
+         environment::Environment env;
+
          cam::Camera *camera;
          glm::mat4 projectionMatrix;
          bool renderCameraTarget;
@@ -46,5 +45,5 @@ namespace m1
          unsigned int materialShininess;
          float materialKd;
          float materialKs;
-    };
+   };
 }
