@@ -51,12 +51,35 @@ void Hw2::Init() {
 	perspectiveType = true;
 
     // Light & material properties
-    {
-        lightPosition = glm::vec3(0, 10, 0);
-        materialShininess = 30;
-        materialKd = 0.5;
-        materialKs = 0.5;
-    }
+    lightPosition = glm::vec3(0, 10, 0);
+    materialShininess = 30;
+    materialKd = 0.5;
+    materialKs = 0.5;
+
+    // Car track
+    // Define a set of points for the car track
+    vector<glm::vec3> trackPoints;
+    trackPoints.push_back(glm::vec3(5.13,  0,  0.98)); // A
+    trackPoints.push_back(glm::vec3(4.33,  0,  2.21)); // B
+    trackPoints.push_back(glm::vec3(3.13,  0,  3.04)); // C
+    trackPoints.push_back(glm::vec3(1.37,  0,  3.44)); // D
+    trackPoints.push_back(glm::vec3(0.11,  0,  2.75)); // E
+    trackPoints.push_back(glm::vec3(-1.17, 0,  1.85)); // F
+    trackPoints.push_back(glm::vec3(-2.58, 0,  2.15)); // G
+    trackPoints.push_back(glm::vec3(-3.68, 0,  3.02)); // H
+    trackPoints.push_back(glm::vec3(-5.09, 0,  2.98)); // I
+    trackPoints.push_back(glm::vec3(-6.02, 0,  2.16)); // J
+    trackPoints.push_back(glm::vec3(-6.40, 0,  0.98)); // K
+    trackPoints.push_back(glm::vec3(-6.13, 0, -0.45)); // L
+    trackPoints.push_back(glm::vec3(-4.46, 0, -1.31)); // M
+    trackPoints.push_back(glm::vec3(-2.86, 0, -1.53)); // N
+    trackPoints.push_back(glm::vec3(-1.15, 0, -1.01)); // O
+    trackPoints.push_back(glm::vec3(0.17,  0, -0.26)); // P
+    trackPoints.push_back(glm::vec3(1.40,  0, -0.26)); // Q
+    trackPoints.push_back(glm::vec3(2.21,  0, -0.86)); // R
+    trackPoints.push_back(glm::vec3(3.42,  0, -1.65)); // S
+    trackPoints.push_back(glm::vec3(4.47,  0, -1.22)); // T
+    trackPoints.push_back(glm::vec3(5.04,  0, -0.38)); // U
 }
 
 
