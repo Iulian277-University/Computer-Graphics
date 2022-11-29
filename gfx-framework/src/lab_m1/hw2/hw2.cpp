@@ -125,10 +125,10 @@ void Hw2::RenderEnvironment(float deltaTimeSeconds) {
 
     /* Render track */
     modelMatrix = glm::mat4(1);
-    modelMatrix = glm::translate(modelMatrix, glm::vec3(0, 0, 0));
-    modelMatrix = glm::scale(modelMatrix, glm::vec3(4.0f));
+    modelMatrix = glm::scale(modelMatrix, glm::vec3(env.trackScale));
     RenderMesh(env.meshes["track"], shaders["VertexNormal"], modelMatrix);
 }
+
 
 void Hw2::Update(float deltaTimeSeconds) {
     /* Render car */
@@ -151,7 +151,7 @@ void Hw2::Update(float deltaTimeSeconds) {
     // Render the car with blue color
     glUseProgram(shaders["Color"]->program);
     GLint loc_color = glGetUniformLocation(shaders["Color"]->program, "color");
-    glUniform3fv(loc_color, 1, glm::value_ptr(glm::vec3(21, 255, 251) / 255.0f));
+    glUniform3fv(loc_color, 1, glm::value_ptr(car.color));
     car.center = targetPosition;
     RenderMesh(car.meshes["car"], shaders["Color"], modelMatrix);
 
@@ -163,49 +163,28 @@ void Hw2::FrameEnd() {
     // DrawCoordinateSystem(camera->GetViewMatrix(), projectionMatrix);
 }
 
-bool Hw2::IsInsideTriangle(glm::vec3 center, std::vector<glm::vec3> triangle) {
-    // Ignore the y coordinate
-    center.y = 0;
-    for (auto &point: triangle)
-        point.y = 0;
-
-    // Compute the area of the triangle
-    float area = glm::length(glm::cross(triangle[1] - triangle[0], triangle[2] - triangle[0])) / 2;
-
-    // Compute the area of the 3 sub-triangles
-    float area1 = glm::length(glm::cross(triangle[1] - triangle[0], center - triangle[0])) / 2;
-    float area2 = glm::length(glm::cross(triangle[2] - triangle[1], center - triangle[1])) / 2;
-    float area3 = glm::length(glm::cross(triangle[0] - triangle[2], center - triangle[2])) / 2;
-
-    // If the sum of the areas is equal to the area of the triangle, then the point is inside
-    // Check with 0.01 precision
-    return abs(area - (area1 + area2 + area3)) < 0.01;
-}
 
 void Hw2::OnInputUpdate(float deltaTime, int mods) {
-    if (window->KeyHold(GLFW_KEY_X)) {
-        std::cout << "Car center: " << car.center.x << " " << car.center.y << " " << car.center.z << std::endl;
-        for (int i = 0; i < env.triangles.size(); i++) {
-            std::cout << "Triangle " << i << ": " << env.triangles[i][0].x << " " << env.triangles[i][0].z << " " << env.triangles[i][1].x << " " << env.triangles[i][1].z << " " << env.triangles[i][2].x << " " << env.triangles[i][2].z << std::endl;
-        }
-    }
-
     if (window->KeyHold(GLFW_KEY_W)) {
         // Check if the car is on the track
-        // Iterate over all env.triangles and check if the car is inside any of them
-        for (auto triangle: env.triangles) {
-            std::cout << "\n";
-            if (IsInsideTriangle(car.center, triangle)) {
-                // Move the car forward
+        if (env.IsOnTrack(car.center)) {
+            // Simulate a move forward of the camera
+            glm::vec3 nextPosition = car.center + glm::normalize(camera->forward) * cameraSpeed * deltaTime * glm::vec3(1, 0, 1);
+            if (env.IsOnTrack(nextPosition)) {
                 camera->TranslateForward(cameraSpeed * deltaTime);
-                std::cout << "car center: " << car.center.x << " " << car.center.z << std::endl;
-                break;
             }
         }
     }
 
     if (window->KeyHold(GLFW_KEY_S)) {
-        camera->TranslateForward(-cameraSpeed * deltaTime);
+        // Check if the car is on the track
+        if (env.IsOnTrack(car.center)) {
+            // Simulate a move forward of the camera
+            glm::vec3 nextPosition = car.center + glm::normalize(camera->forward) * -cameraSpeed * deltaTime * glm::vec3(1, 0, 1);
+            if (env.IsOnTrack(nextPosition)) {
+                camera->TranslateForward(-cameraSpeed * deltaTime);
+            }
+        }
     }
 
     if (window->KeyHold(GLFW_KEY_A))

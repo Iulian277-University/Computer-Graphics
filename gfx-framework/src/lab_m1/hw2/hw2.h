@@ -32,7 +32,7 @@ namespace m1 {
 
          void RenderEnvironment(float deltaTimeSeconds);
 
-         bool IsInsideTriangle(glm::vec3 center, std::vector<glm::vec3> triangle);
+         // bool IsInsideTriangle(glm::vec3 center, std::vector<glm::vec3> triangle);
 
      protected:
          environment::Environment env;

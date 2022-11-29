@@ -18,8 +18,12 @@ namespace environment {
             void generateTrack();
             void generateTrackMesh(std::vector<glm::vec3> trackPoints, glm::vec3 color);
 
+            bool IsOnTrack(glm::vec3 center);
+
             // Vector of triangles, where each triangle is a vector of 3 points
             std::vector<std::vector<glm::vec3>> triangles;
+
+            float trackScale = 4.0f;
 
             glm::vec3 skyColor    = glm::vec3(141, 210, 231) / 255.0f;
             glm::vec3 trackColor  = glm::vec3(50,   50,  50) / 255.0f;

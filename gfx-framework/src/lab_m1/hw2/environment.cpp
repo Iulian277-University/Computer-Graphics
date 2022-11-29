@@ -100,6 +100,13 @@ void Environment::generateTrack() {
         triangle.push_back(trackPoints[(i + 2) % trackPoints.size()]);
         this->triangles.push_back(triangle);
     }
+
+    // Multiply each triangle's point with `trackScale`
+    for (auto &triangle: this->triangles) {
+        for (auto &point: triangle) {
+            point *= this->trackScale;
+        }
+    }
     
     // Generate the track mesh
     generateTrackMesh(trackPoints, trackColor);
@@ -126,6 +133,21 @@ void Environment::generateTrackMesh(vector<glm::vec3> trackPoints, glm::vec3 col
 
         glm::vec3 normal = glm::normalize(glm::cross(v1, v2));
 
+        // glm::vec3 color = glm::vec3(rand() % 100 / 100.0f, rand() % 100 / 100.0f, rand() % 100 / 100.0f);
+        // if (i == 0) {
+        //     color = glm::vec3(1, 0, 0);
+        // } else {
+        //     color = glm::vec3(0, 0, 1);
+        // }
+        // vertices.push_back(VertexFormat(p1, normal, color));
+        // vertices.push_back(VertexFormat(p2, normal, color));
+        // vertices.push_back(VertexFormat(p3, normal, color));
+
+        // indices.push_back(i * 3);
+        // indices.push_back(i * 3 + 1);
+        // indices.push_back(i * 3 + 2);
+
+
         // Split the p2-p3 edge in `n_parts`and create `n_parts` triangles
         float n_parts = 50;
         for (int j = 0; j < n_parts; j++) {
@@ -146,4 +168,30 @@ void Environment::generateTrackMesh(vector<glm::vec3> trackPoints, glm::vec3 col
 
     track->SetDrawMode(GL_TRIANGLES);
     track->InitFromData(vertices, indices);
+}
+
+
+bool Environment::IsOnTrack(glm::vec3 center) {
+    // Iterate over all triangles and check if the center is inside any of them
+    for (auto triangle: this->triangles) {
+        // Ignore the y coordinate
+        center.y = 0;
+        for (auto &point: triangle)
+            point.y = 0;
+
+        // Compute the area of the triangle
+        float area = glm::length(glm::cross(triangle[1] - triangle[0], triangle[2] - triangle[0])) / 2;
+
+        // Compute the area of the 3 sub-triangles
+        float area1 = glm::length(glm::cross(triangle[1] - triangle[0], center - triangle[0])) / 2;
+        float area2 = glm::length(glm::cross(triangle[2] - triangle[1], center - triangle[1])) / 2;
+        float area3 = glm::length(glm::cross(triangle[0] - triangle[2], center - triangle[2])) / 2;
+
+        // If the sum of the areas is equal to the area of the triangle, then the point is inside
+        // Check with 0.001 precision
+        if (abs(area - (area1 + area2 + area3)) < 0.001f)
+            return true;
+    }
+
+    return false;
 }
