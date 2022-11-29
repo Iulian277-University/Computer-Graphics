@@ -8,6 +8,17 @@
 namespace m1 {
    class Hw2: public gfxc::SimpleScene {
       public:
+         struct ViewportArea
+         {
+             ViewportArea() : x(0), y(0), width(1), height(1) {}
+             ViewportArea(int x, int y, int width, int height)
+                 : x(x), y(y), width(width), height(height) {}
+             int x;
+             int y;
+             int width;
+             int height;
+         };
+
          Hw2();
          ~Hw2();
 
@@ -31,14 +42,14 @@ namespace m1 {
          void OnWindowResize(int width, int height) override;
 
          void RenderEnvironment(float deltaTimeSeconds);
-
-         // bool IsInsideTriangle(glm::vec3 center, std::vector<glm::vec3> triangle);
+         void RenderScene(float deltaTimeSeconds);
 
      protected:
          environment::Environment env;
          car::Car car;
-
          cam::Camera *camera;
+         cam::Camera *auxCamera;
+         ViewportArea miniViewportArea;
          glm::mat4 projectionMatrix;
 
          float fov    =  60.0f;
@@ -47,7 +58,7 @@ namespace m1 {
          float right  =  3.5f;
          float left   = -3.5f;
          float bottom = 0.01f;
-         float top    = 10.0f;
+         float top    = 20.0f;
          bool  perspectiveType = true;
 
          float cameraSpeed = 5.0f;

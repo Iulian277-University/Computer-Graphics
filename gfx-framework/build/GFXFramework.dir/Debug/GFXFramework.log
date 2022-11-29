@@ -1,25 +1,25 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(944,5): warning MSB8027: Two or more files with the name of object2D.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are ..\src\lab_m1\hw1\object2D.cpp, C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\lab3\object2D.cpp.
   environment.cpp
-..\src\lab_m1\hw2\environment.cpp(78): warning C4018: '<': signed/unsigned mismatch
-..\src\lab_m1\hw2\environment.cpp(96): warning C4018: '<': signed/unsigned mismatch
-..\src\lab_m1\hw2\environment.cpp(126): warning C4018: '<': signed/unsigned mismatch
-..\src\lab_m1\hw2\environment.cpp(163): warning C4244: 'argument': conversion from 'float' to '_Ty', possible loss of data
+..\src\lab_m1\hw2\environment.cpp(79): warning C4018: '<': signed/unsigned mismatch
+..\src\lab_m1\hw2\environment.cpp(97): warning C4018: '<': signed/unsigned mismatch
+..\src\lab_m1\hw2\environment.cpp(113): warning C4018: '<': signed/unsigned mismatch
+..\src\lab_m1\hw2\environment.cpp(140): warning C4018: '<': signed/unsigned mismatch
+..\src\lab_m1\hw2\environment.cpp(163): warning C4018: '<': signed/unsigned mismatch
+..\src\lab_m1\hw2\environment.cpp(200): warning C4244: 'argument': conversion from 'float' to '_Ty', possible loss of data
           with
           [
               _Ty=unsigned int
           ]
-..\src\lab_m1\hw2\environment.cpp(164): warning C4244: 'argument': conversion from 'float' to '_Ty', possible loss of data
+..\src\lab_m1\hw2\environment.cpp(201): warning C4244: 'argument': conversion from 'float' to '_Ty', possible loss of data
           with
           [
               _Ty=unsigned int
           ]
-..\src\lab_m1\hw2\environment.cpp(165): warning C4244: 'argument': conversion from 'float' to '_Ty', possible loss of data
+..\src\lab_m1\hw2\environment.cpp(202): warning C4244: 'argument': conversion from 'float' to '_Ty', possible loss of data
           with
           [
               _Ty=unsigned int
           ]
-  hw2.cpp
-  Generating Code...
   GFXFramework.vcxproj -> C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\GFXFramework.exe
   Junction created for C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\src <<===>> C:\Users\Iulian\Desktop\EGC\gfx-framework\src
   Junction created for C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\assets <<===>> C:\Users\Iulian\Desktop\EGC\gfx-framework\assets

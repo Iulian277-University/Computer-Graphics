@@ -16,15 +16,32 @@ void Hw2::Init() {
     camera->Set(glm::vec3(0, 1.5f, -5), glm::vec3(0, 1, 0), glm::vec3(0, 1, 0));
 	camera->RotateThirdPerson_OY(RADIANS(-110));
 
+    auxCamera = new cam::Camera();
+    auxCamera->Set(glm::vec3(camera->position.x, camera->position.y, camera->position.z),
+                glm::vec3(camera->forward.x, camera->forward.y, camera->forward.z),
+                glm::vec3(camera->up.x, camera->up.y, camera->up.z));
+    auxCamera->RotateThirdPerson_OY(RADIANS(-110));
+
     // Environment
     env = environment::Environment();
     env.generateMeshes();
     env.generateTrack();
     env.generateShaders();
+    env.generateCube("trunk", glm::vec3(0.45f, 0.35f, 0.28f));
+    env.generateCube("crown", glm::vec3(0.34f, 0.51f, 0.28f));
 
     // Car
     car = car::Car();
     car.generateMeshes();
+
+    // Sets the resolution of the minimap
+    glm::ivec2 resolution = window->GetResolution();
+    // place the minimap in the bottom rigth corner
+    float padding = 20;
+    miniViewportArea = ViewportArea(resolution.x - resolution.x / 4 - padding,
+                                    padding,
+                                    resolution.x / 4,
+                                    resolution.y / 4);
 
     // Projection matrix
 	projectionMatrix = glm::perspective(RADIANS(fov), window->props.aspectRatio, nearZ, farZ);
@@ -105,8 +122,29 @@ void Hw2::RenderSimpleMesh(Mesh* mesh, Shader* shader, const glm::mat4& modelMat
 
 
 void Hw2::RenderEnvironment(float deltaTimeSeconds) {
+    glm::mat4 modelMatrix;
+    /* Render trees */
+    for (auto treesPosition: env.treesPositions) {
+        // Trunk
+        modelMatrix = glm::mat4(1);
+        modelMatrix = glm::translate(modelMatrix, treesPosition);
+        modelMatrix = glm::scale(modelMatrix, glm::vec3(0.5f, 0.7f, 0.5f));
+        modelMatrix = glm::translate(modelMatrix, glm::vec3(-0.5f, 0, -0.5f));
+        RenderMesh(env.meshes["trunk"], shaders["VertexColor"], modelMatrix);
+
+        // Crown
+        modelMatrix = glm::mat4(1);
+        modelMatrix = glm::translate(modelMatrix, treesPosition);
+        modelMatrix = glm::translate(modelMatrix, glm::vec3(0, 0.7f, 0));
+        modelMatrix = glm::scale(modelMatrix, glm::vec3(1.5f, 1.5f, 1.5f));
+        modelMatrix = glm::translate(modelMatrix, glm::vec3(-0.5f, 0, -0.5f));
+        RenderMesh(env.meshes["crown"], shaders["VertexColor"], modelMatrix);
+    }
+
+
+    
     /* Render ground */
-    glm::mat4 modelMatrix = glm::mat4(1);
+    modelMatrix = glm::mat4(1);
     modelMatrix = glm::translate(modelMatrix, glm::vec3(0, -5, 0));
     modelMatrix = glm::scale(modelMatrix, glm::vec3(100, 1, 100));
     RenderSimpleMesh(env.meshes["ground"], env.shaders["LabShader"], modelMatrix, env.groundColor);
@@ -130,8 +168,8 @@ void Hw2::RenderEnvironment(float deltaTimeSeconds) {
 }
 
 
-void Hw2::Update(float deltaTimeSeconds) {
-    /* Render car */
+void Hw2::RenderScene(float deltaTimeSeconds) {
+    /* Render the car */
     // Translate the car based on the camera's position, but keep the y on the ground
     glm::mat4 modelMatrix = glm::mat4(1);
     glm::vec3 targetPosition = camera->GetTargetPosition();
@@ -155,12 +193,37 @@ void Hw2::Update(float deltaTimeSeconds) {
     car.center = targetPosition;
     RenderMesh(car.meshes["car"], shaders["Color"], modelMatrix);
 
+    /* Render the environment */
     RenderEnvironment(deltaTimeSeconds);   
 }
 
 
+void Hw2::Update(float deltaTimeSeconds) {
+    // projectionMatrix = glm::perspective(RADIANS(fov), window->props.aspectRatio, nearZ, farZ);
+    RenderScene(deltaTimeSeconds);
+
+    // glClear(GL_DEPTH_BUFFER_BIT);
+    // glViewport(miniViewportArea.x, miniViewportArea.y, miniViewportArea.width, miniViewportArea.height);
+
+    // // Set the camera to the mini viewport
+    // // Set the auxCamera's position to the camera's position
+    // auxCamera->Set(camera->position, camera->forward, camera->up);
+    //                glm::vec3(camera->up.x, camera->up.y, camera->up.z));
+
+    // // Set the camera to the mini viewport
+    // camera->Set(glm::vec3(0, 20, 0), glm::vec3(0, 0, 1), glm::vec3(0, 1, 0));
+    // projectionMatrix = glm::ortho(left, right, bottom, top, nearZ, farZ);
+    // RenderScene(deltaTimeSeconds);
+
+    // // Restore the camera's position based on the auxCamera
+    // camera->Set(glm::vec3(auxCamera->position.x, auxCamera->position.y, auxCamera->position.z),
+    //             glm::vec3(auxCamera->forward.x, auxCamera->forward.y, auxCamera->forward.z),
+    //             glm::vec3(auxCamera->up.x, auxCamera->up.y, auxCamera->up.z));
+}
+
+
 void Hw2::FrameEnd() {
-    // DrawCoordinateSystem(camera->GetViewMatrix(), projectionMatrix);
+	// DrawCoordinateSystem(camera->GetViewMatrix(), projectionMatrix);
 }
 
 

@@ -2,6 +2,7 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <utility>
 
 #include "core/gpu/mesh.h"
 #include "core/gpu/shader.h"
@@ -88,8 +89,8 @@ void Environment::generateTrack() {
 
         glm::vec3 n = glm::normalize(n1 + n2); // Average of the two normal vectors size
 
-        trackPoints.push_back(p1 + n * 0.5f); // Exterior point
-        trackPoints.push_back(p1 - n * 0.5f); // Interior point
+        trackPoints.push_back(p1 + n * 0.5f); // Interior point
+        trackPoints.push_back(p1 - n * 0.5f); // Exterior point
     }
 
     // Complete the triangles vector with points from `trackPoints`
@@ -107,13 +108,49 @@ void Environment::generateTrack() {
             point *= this->trackScale;
         }
     }
-    
+
+    // Iterate over track points
+    for (int i = 0; i < trackPoints.size(); i++) {
+        glm::vec3 p1 = trackPoints[i];
+        glm::vec3 p2 = trackPoints[(i + 1) % trackPoints.size()];
+        glm::vec3 p3 = trackPoints[(i + 2) % trackPoints.size()];
+
+        glm::vec3 v1 = glm::normalize(p2 - p1); // Direction vector from p1 to p2
+        glm::vec3 v2 = glm::normalize(p3 - p2); // Direction vector from p2 to p3
+        
+        glm::vec3 n1 = glm::normalize(glm::cross(v1, glm::vec3(0, 1, 0))); // Normal vector to v1 (in XOZ plane)
+        glm::vec3 n2 = glm::normalize(glm::cross(v2, glm::vec3(0, 1, 0))); // Normal vector to v2 (in XOZ plane)
+
+        glm::vec3 n = glm::normalize(n1 + n2); // Average of the two normal vectors size
+
+        // Move the tree a little bit to the left or right
+        glm::vec3 treePosition = p1 * this->trackScale;
+        if (i % 2 == 0)
+            treePosition += n * 2.0f;
+        else
+            treePosition -= n * 2.0f;
+
+        treesPositions.push_back(treePosition);
+    }
+
     // Generate the track mesh
-    generateTrackMesh(trackPoints, trackColor);
+    std::vector<VertexFormat> vertices = generateTrackMesh(trackPoints, trackColor);
+
+    // Remove trees that are too close to `vertices`
+    for (int i = 0; i < treesPositions.size(); i++) {
+        glm::vec3 treePosition = treesPositions[i];
+        for (auto &vertex: vertices) {
+            if (glm::distance(treePosition, vertex.position * this->trackScale) < 1.5f) {
+                treesPositions.erase(treesPositions.begin() + i);
+                i--;
+                break;
+            }
+        }
+    }
 }
 
 
-void Environment::generateTrackMesh(vector<glm::vec3> trackPoints, glm::vec3 color) {
+std::vector<VertexFormat> Environment::generateTrackMesh(vector<glm::vec3> trackPoints, glm::vec3 color) {
     // Create the track
     Mesh* track = new Mesh("track");
     this->addMesh("track", track);
@@ -168,6 +205,8 @@ void Environment::generateTrackMesh(vector<glm::vec3> trackPoints, glm::vec3 col
 
     track->SetDrawMode(GL_TRIANGLES);
     track->InitFromData(vertices, indices);
+
+    return vertices;
 }
 
 
@@ -194,4 +233,75 @@ bool Environment::IsOnTrack(glm::vec3 center) {
     }
 
     return false;
+}
+
+void Environment::generateCube(const char *name, glm::vec3 color) {
+    vector<VertexFormat> vertices
+    {
+        VertexFormat(glm::vec3(0, 0, 1), color),
+        VertexFormat(glm::vec3(1, 0, 1), color),
+        VertexFormat(glm::vec3(0, 1, 1), color),
+        VertexFormat(glm::vec3(1, 1, 1), color),
+        VertexFormat(glm::vec3(0, 0, 0), color),
+        VertexFormat(glm::vec3(1, 0, 0), color),
+        VertexFormat(glm::vec3(0, 1, 0), color),
+        VertexFormat(glm::vec3(1, 1, 0), color),
+    };
+
+    vector<unsigned int> indices = {
+        0, 1, 2,
+        1, 3, 2,
+        2, 3, 7,
+        2, 7, 6,
+        1, 7, 3,
+        1, 5, 7,
+        6, 7, 4,
+        7, 5, 4,
+        0, 4, 1,
+        1, 4, 5,
+        2, 6, 4,
+        0, 2, 4,
+    };
+
+    CreateMesh(name, vertices, indices);
+}
+
+
+void Environment::CreateMesh(const char *name, const std::vector<VertexFormat> &vertices, const std::vector<unsigned int> &indices) {
+	unsigned int VAO = 0;
+	glGenVertexArrays(1, &VAO);
+	glBindVertexArray(VAO);
+
+	unsigned int VBO = 0;
+	glGenBuffers(1, &VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[0]) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
+
+	unsigned int IBO = 0;
+	glGenBuffers(1, &IBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices[0]) * indices.size(), &indices[0], GL_STATIC_DRAW);
+
+	// Set vertex position attribute
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexFormat), 0);
+
+	// Set vertex normal attribute
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(VertexFormat), (void*)(sizeof(glm::vec3)));
+
+	// Set texture coordinate attribute
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(VertexFormat), (void*)(2 * sizeof(glm::vec3)));
+
+	// Set vertex color attribute
+	glEnableVertexAttribArray(3);
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(VertexFormat), (void*)(2 * sizeof(glm::vec3) + sizeof(glm::vec2)));
+
+	// Unbind the VAO
+	glBindVertexArray(0);
+
+	// Mesh information is saved into a Mesh object
+	meshes[name] = new Mesh(name);
+	meshes[name]->InitFromBuffer(VAO, static_cast<unsigned int>(indices.size()));
 }
