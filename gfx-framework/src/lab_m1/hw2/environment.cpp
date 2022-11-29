@@ -126,26 +126,31 @@ void Environment::generateTrack() {
         // Move the tree a little bit to the left or right
         glm::vec3 treePosition = p1 * this->trackScale;
         if (i % 2 == 0)
-            treePosition += n * 2.0f;
+            treePosition += n * 2.5f;
         else
             treePosition -= n * 2.0f;
 
-        treesPositions.push_back(treePosition);
+        treePositions.push_back(treePosition);
     }
 
     // Generate the track mesh
     std::vector<VertexFormat> vertices = generateTrackMesh(trackPoints, trackColor);
 
     // Remove trees that are too close to `vertices`
-    for (int i = 0; i < treesPositions.size(); i++) {
-        glm::vec3 treePosition = treesPositions[i];
+    for (int i = 0; i < treePositions.size(); i++) {
+        glm::vec3 treePosition = treePositions[i];
         for (auto &vertex: vertices) {
             if (glm::distance(treePosition, vertex.position * this->trackScale) < 1.5f) {
-                treesPositions.erase(treesPositions.begin() + i);
+                treePositions.erase(treePositions.begin() + i);
                 i--;
                 break;
             }
         }
+    }
+
+    // Give to each tree a random size between 1.2 and 1.7
+    for (int i = 0; i < treePositions.size(); i++) {
+        treeSizes.push_back(1.2f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX/(1.7f - 1.2f))));
     }
 }
 

@@ -12,23 +12,20 @@ Hw2::~Hw2() {}
 
 void Hw2::Init() {
     // Camera
-    camera = new cam::Camera();
-    camera->Set(glm::vec3(0, 1.5f, -5), glm::vec3(0, 1, 0), glm::vec3(0, 1, 0));
-	camera->RotateThirdPerson_OY(RADIANS(-110));
+    mainCamera = new cam::Camera();
+    mainCamera->Set(glm::vec3(0, 1.5f, -5), glm::vec3(0, 1, 0), glm::vec3(0, 1, 0));
+	mainCamera->RotateThirdPerson_OY(RADIANS(-110));
 
-    auxCamera = new cam::Camera();
-    auxCamera->Set(glm::vec3(camera->position.x, camera->position.y, camera->position.z),
-                glm::vec3(camera->forward.x, camera->forward.y, camera->forward.z),
-                glm::vec3(camera->up.x, camera->up.y, camera->up.z));
-    auxCamera->RotateThirdPerson_OY(RADIANS(-110));
+    miniCamera = new cam::Camera();
+    miniCamera->Set(glm::vec3(0, 20, -5), glm::vec3(0, 1, 0), glm::vec3(0, 0, -1));
 
     // Environment
     env = environment::Environment();
     env.generateMeshes();
     env.generateTrack();
     env.generateShaders();
-    env.generateCube("trunk", glm::vec3(0.45f, 0.35f, 0.28f));
-    env.generateCube("crown", glm::vec3(0.34f, 0.51f, 0.28f));
+    env.generateCube("trunk", env.trunkColor);
+    env.generateCube("crown", env.crownColor);
 
     // Car
     car = car::Car();
@@ -72,112 +69,76 @@ void Hw2::RenderMesh(Mesh *mesh, Shader *shader, const glm::mat4 &modelMatrix) {
 }
 
 
-void Hw2::RenderSimpleMesh(Mesh* mesh, Shader* shader, const glm::mat4& modelMatrix, const glm::vec3& color) {
-    if (!mesh || !shader || !shader->GetProgramID())
-        return;
-
-    // Render an object using the specified shader and the specified position
-    glUseProgram(shader->program);
-
-    // Set light position uniform
-    GLint locLightPos = glGetUniformLocation(shader->program, "light_position");
-    glUniform3fv(locLightPos, 1, glm::value_ptr(lightPosition));
-
-    // Set eye position (camera position) uniform
-    glm::vec3 eyePosition = GetSceneCamera()->m_transform->GetWorldPosition();
-    GLint locEyePos = glGetUniformLocation(shader->program, "eye_position");
-    glUniform3fv(locEyePos, 1, glm::value_ptr(eyePosition));
-
-    // Set material property uniforms (shininess, kd, ks, object color)
-    GLint locMaterial = glGetUniformLocation(shader->program, "material_shininess");
-    glUniform1i(locMaterial, materialShininess);
-
-    GLint locMaterialKd = glGetUniformLocation(shader->program, "material_kd");  // diffuse light
-    glUniform1f(locMaterialKd, materialKd);
-
-    GLint locMaterialKs = glGetUniformLocation(shader->program, "material_ks");  // specular light
-    glUniform1f(locMaterialKs, materialKs);
-
-    GLint locObject = glGetUniformLocation(shader->program, "object_color"); // color
-    glUniform3fv(locObject, 1, glm::value_ptr(color));
-
-    // Bind `M` matrix
-    GLint loc_model_matrix = glGetUniformLocation(shader->program, "Model");
-    glUniformMatrix4fv(loc_model_matrix, 1, GL_FALSE, glm::value_ptr(modelMatrix));
-
-    // Bind `V` matrix
-    glm::mat4 viewMatrix = GetSceneCamera()->GetViewMatrix();
-    int loc_view_matrix = glGetUniformLocation(shader->program, "View");
-    glUniformMatrix4fv(loc_view_matrix, 1, GL_FALSE, glm::value_ptr(viewMatrix));
-
-    // Bind `P` matrix
-    glm::mat4 projectionMatrix = GetSceneCamera()->GetProjectionMatrix();
-    int loc_projection_matrix = glGetUniformLocation(shader->program, "Projection");
-    glUniformMatrix4fv(loc_projection_matrix, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
-
-    // Draw the object
-    glBindVertexArray(mesh->GetBuffers()->m_VAO);
-    glDrawElements(mesh->GetDrawMode(), static_cast<int>(mesh->indices.size()), GL_UNSIGNED_INT, 0);
-}
-
-
 void Hw2::RenderEnvironment(float deltaTimeSeconds) {
     glm::mat4 modelMatrix;
     /* Render trees */
-    for (auto treesPosition: env.treesPositions) {
-        // Trunk
+    for (int i = 0; i < env.treePositions.size(); i++) {
+        auto treePosition = env.treePositions[i];
+        // Trunk matrix
         modelMatrix = glm::mat4(1);
-        modelMatrix = glm::translate(modelMatrix, treesPosition);
+        modelMatrix = glm::translate(modelMatrix, treePosition);
         modelMatrix = glm::scale(modelMatrix, glm::vec3(0.5f, 0.7f, 0.5f));
         modelMatrix = glm::translate(modelMatrix, glm::vec3(-0.5f, 0, -0.5f));
-        RenderMesh(env.meshes["trunk"], shaders["VertexColor"], modelMatrix);
 
-        // Crown
+        // Render the trunk
+        glUseProgram(shaders["Color"]->program);
+        GLint loc_color = glGetUniformLocation(shaders["Color"]->program, "color");
+        glUniform3fv(loc_color, 1, glm::value_ptr(env.trunkColor));
+        RenderMesh(env.meshes["trunk"], shaders["Color"], modelMatrix);
+
+        // Crown matrix
         modelMatrix = glm::mat4(1);
-        modelMatrix = glm::translate(modelMatrix, treesPosition);
+        modelMatrix = glm::translate(modelMatrix, treePosition);
         modelMatrix = glm::translate(modelMatrix, glm::vec3(0, 0.7f, 0));
-        modelMatrix = glm::scale(modelMatrix, glm::vec3(1.5f, 1.5f, 1.5f));
+        float scale = env.treeSizes[i];
+        modelMatrix = glm::scale(modelMatrix, glm::vec3(scale, scale, scale));
         modelMatrix = glm::translate(modelMatrix, glm::vec3(-0.5f, 0, -0.5f));
-        RenderMesh(env.meshes["crown"], shaders["VertexColor"], modelMatrix);
+
+        // Render the crown
+        glUseProgram(shaders["Color"]->program);
+        loc_color = glGetUniformLocation(shaders["Color"]->program, "color");
+        glUniform3fv(loc_color, 1, glm::value_ptr(env.crownColor));
+        RenderMesh(env.meshes["crown"], shaders["Color"], modelMatrix);
     }
-
-
     
     /* Render ground */
     modelMatrix = glm::mat4(1);
-    modelMatrix = glm::translate(modelMatrix, glm::vec3(0, -5, 0));
+    modelMatrix = glm::translate(modelMatrix, glm::vec3(0, -1.2f, 0));
     modelMatrix = glm::scale(modelMatrix, glm::vec3(100, 1, 100));
-    RenderSimpleMesh(env.meshes["ground"], env.shaders["LabShader"], modelMatrix, env.groundColor);
+    glUseProgram(shaders["Color"]->program);
+    GLint loc_color = glGetUniformLocation(shaders["Color"]->program, "color");
+    glUniform3fv(loc_color, 1, glm::value_ptr(env.groundColor));
+    RenderMesh(env.meshes["ground"], shaders["Color"], modelMatrix);
 
     /* Render a big sphere for skybox */
     modelMatrix = glm::mat4(1);
     modelMatrix = glm::translate(modelMatrix, glm::vec3(0, 10, 0));
     modelMatrix = glm::scale(modelMatrix, glm::vec3(100, 100, 100));
-    RenderSimpleMesh(env.meshes["skybox"], env.shaders["LabShader"], modelMatrix, env.skyColor);
-
-    /* Render light */
-    modelMatrix = glm::mat4(1);
-    modelMatrix = glm::translate(modelMatrix, lightPosition);
-    modelMatrix = glm::scale(modelMatrix, glm::vec3(0.1f));
-    RenderMesh(meshes["sphere"], shaders["Simple"], modelMatrix);
+    glUseProgram(shaders["Color"]->program);
+    loc_color = glGetUniformLocation(shaders["Color"]->program, "color");
+    glUniform3fv(loc_color, 1, glm::value_ptr(env.skyColor));
+    RenderMesh(env.meshes["skybox"], shaders["Color"], modelMatrix);
 
     /* Render track */
     modelMatrix = glm::mat4(1);
     modelMatrix = glm::scale(modelMatrix, glm::vec3(env.trackScale));
-    RenderMesh(env.meshes["track"], shaders["VertexNormal"], modelMatrix);
+    glUseProgram(shaders["Color"]->program);
+    loc_color = glGetUniformLocation(shaders["Color"]->program, "color");
+    glUniform3fv(loc_color, 1, glm::value_ptr(env.trackColor));
+    RenderMesh(env.meshes["track"], shaders["Color"], modelMatrix);
 }
 
 
-void Hw2::RenderScene(float deltaTimeSeconds) {
+void Hw2::RenderScene(float deltaTimeSeconds, bool updateCarCenter = true) {
     /* Render the car */
     // Translate the car based on the camera's position, but keep the y on the ground
     glm::mat4 modelMatrix = glm::mat4(1);
-    glm::vec3 targetPosition = camera->GetTargetPosition();
+    glm::vec3 targetPosition = mainCamera->GetTargetPosition();
     targetPosition.y = 0.5f;
     modelMatrix = glm::translate(modelMatrix, targetPosition);
 
     // Rotate the car based on the forward vector of the camera
-    glm::vec3 forward = camera->forward * glm::vec3(1, 0, 1);
+    glm::vec3 forward = mainCamera->forward * glm::vec3(1, 0, 1);
     forward = glm::normalize(forward);
     float angle = glm::acos(glm::dot(forward, glm::vec3(0, 0, 1))); // angle = arccos(cos_angle(forward, OZ))
     if (forward.x < 0)
@@ -190,35 +151,31 @@ void Hw2::RenderScene(float deltaTimeSeconds) {
     glUseProgram(shaders["Color"]->program);
     GLint loc_color = glGetUniformLocation(shaders["Color"]->program, "color");
     glUniform3fv(loc_color, 1, glm::value_ptr(car.color));
-    car.center = targetPosition;
+    if (updateCarCenter)
+        car.center = targetPosition;
     RenderMesh(car.meshes["car"], shaders["Color"], modelMatrix);
 
     /* Render the environment */
-    RenderEnvironment(deltaTimeSeconds);   
+    RenderEnvironment(deltaTimeSeconds);
 }
 
 
 void Hw2::Update(float deltaTimeSeconds) {
+    // Third person camera
     // projectionMatrix = glm::perspective(RADIANS(fov), window->props.aspectRatio, nearZ, farZ);
+    camera = mainCamera;
     RenderScene(deltaTimeSeconds);
 
-    // glClear(GL_DEPTH_BUFFER_BIT);
-    // glViewport(miniViewportArea.x, miniViewportArea.y, miniViewportArea.width, miniViewportArea.height);
+    // Switch to the second viewport
+    glClear(GL_DEPTH_BUFFER_BIT);
+    glViewport(miniViewportArea.x, miniViewportArea.y, miniViewportArea.width, miniViewportArea.height);
 
-    // // Set the camera to the mini viewport
-    // // Set the auxCamera's position to the camera's position
-    // auxCamera->Set(camera->position, camera->forward, camera->up);
-    //                glm::vec3(camera->up.x, camera->up.y, camera->up.z));
-
-    // // Set the camera to the mini viewport
-    // camera->Set(glm::vec3(0, 20, 0), glm::vec3(0, 0, 1), glm::vec3(0, 1, 0));
+    // Minimap
     // projectionMatrix = glm::ortho(left, right, bottom, top, nearZ, farZ);
-    // RenderScene(deltaTimeSeconds);
-
-    // // Restore the camera's position based on the auxCamera
-    // camera->Set(glm::vec3(auxCamera->position.x, auxCamera->position.y, auxCamera->position.z),
-    //             glm::vec3(auxCamera->forward.x, auxCamera->forward.y, auxCamera->forward.z),
-    //             glm::vec3(auxCamera->up.x, auxCamera->up.y, auxCamera->up.z));
+    miniCamera->Set(car.center + glm::vec3(0, 20, -5), car.center, glm::vec3(0, 0, -1));
+    camera = miniCamera;
+    miniCamera->RotateFirstPerson_OY(RADIANS(90));
+    RenderScene(deltaTimeSeconds, false);
 }
 
 
@@ -228,6 +185,7 @@ void Hw2::FrameEnd() {
 
 
 void Hw2::OnInputUpdate(float deltaTime, int mods) {
+    camera = mainCamera;
     if (window->KeyHold(GLFW_KEY_W)) {
         // Check if the car is on the track
         if (env.IsOnTrack(car.center)) {
