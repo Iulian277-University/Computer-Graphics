@@ -24,8 +24,8 @@ void Hw2::Init() {
     env.generateMeshes();
     env.generateTrack();
     env.generateShaders();
-    env.generateCube("trunk", env.trunkColor);
-    env.generateCube("crown", env.crownColor);
+    env.generateCube("trunk");
+    env.generateCube("crown");
 
     // Car
     car = car::Car();
@@ -76,7 +76,7 @@ void Hw2::RenderEnvironment(float deltaTimeSeconds) {
         modelMatrix = glm::mat4(1);
         modelMatrix = glm::translate(modelMatrix, treePosition);
         modelMatrix = glm::scale(modelMatrix, glm::vec3(0.5f, 0.7f, 0.5f));
-        modelMatrix = glm::translate(modelMatrix, glm::vec3(-0.5f, 0, -0.5f));
+        modelMatrix = glm::translate(modelMatrix, glm::vec3(0, 0.5f, 0));
 
         // Render the trunk
         glUseProgram(shaders["Color"]->program);
@@ -85,12 +85,12 @@ void Hw2::RenderEnvironment(float deltaTimeSeconds) {
         RenderMesh(env.meshes["trunk"], shaders["Color"], modelMatrix);
 
         // Crown matrix
-        modelMatrix = glm::mat4(1);
+        modelMatrix = glm::mat4(1); 
         modelMatrix = glm::translate(modelMatrix, treePosition);
         modelMatrix = glm::translate(modelMatrix, glm::vec3(0, 0.7f, 0));
         float scale = env.treeSizes[i];
         modelMatrix = glm::scale(modelMatrix, glm::vec3(scale, scale, scale));
-        modelMatrix = glm::translate(modelMatrix, glm::vec3(-0.5f, 0, -0.5f));
+        modelMatrix = glm::translate(modelMatrix, glm::vec3(0, 0.5f, 0));
 
         // Render the crown
         glUseProgram(shaders["Color"]->program);
@@ -164,6 +164,7 @@ void Hw2::Update(float deltaTimeSeconds) {
     // projectionMatrix = glm::perspective(RADIANS(fov), window->props.aspectRatio, nearZ, farZ);
     camera = mainCamera;
     RenderScene(deltaTimeSeconds);
+	// DrawCoordinateSystem(camera->GetViewMatrix(), projectionMatrix);
 
     // Switch to the second viewport
     glm::ivec2 resolution = window->GetResolution();
@@ -180,6 +181,7 @@ void Hw2::Update(float deltaTimeSeconds) {
     camera = miniCamera;
     miniCamera->RotateFirstPerson_OY(RADIANS(90));
     RenderScene(deltaTimeSeconds, false);
+	// DrawCoordinateSystem(camera->GetViewMatrix(), projectionMatrix);
 }
 
 

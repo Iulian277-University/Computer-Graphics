@@ -1,10 +1,65 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(944,5): warning MSB8027: Two or more files with the name of object2D.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are ..\src\lab_m1\hw1\object2D.cpp, C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\lab3\object2D.cpp.
+  environment.cpp
+..\src\lab_m1\hw2\environment.cpp(86): warning C4018: '<': signed/unsigned mismatch
+..\src\lab_m1\hw2\environment.cpp(104): warning C4018: '<': signed/unsigned mismatch
+..\src\lab_m1\hw2\environment.cpp(120): warning C4018: '<': signed/unsigned mismatch
+..\src\lab_m1\hw2\environment.cpp(147): warning C4018: '<': signed/unsigned mismatch
+..\src\lab_m1\hw2\environment.cpp(159): warning C4018: '<': signed/unsigned mismatch
+..\src\lab_m1\hw2\environment.cpp(175): warning C4018: '<': signed/unsigned mismatch
+..\src\lab_m1\hw2\environment.cpp(212): warning C4244: 'argument': conversion from 'float' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=unsigned int
+          ]
+..\src\lab_m1\hw2\environment.cpp(213): warning C4244: 'argument': conversion from 'float' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=unsigned int
+          ]
+..\src\lab_m1\hw2\environment.cpp(214): warning C4244: 'argument': conversion from 'float' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=unsigned int
+          ]
   hw2.cpp
 ..\src\lab_m1\hw2\hw2.cpp(37): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
 ..\src\lab_m1\hw2\hw2.cpp(36): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
 ..\src\lab_m1\hw2\hw2.cpp(73): warning C4018: '<': signed/unsigned mismatch
+..\src\lab_m1\hw2\hw2.cpp(172): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
 ..\src\lab_m1\hw2\hw2.cpp(171): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-..\src\lab_m1\hw2\hw2.cpp(170): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  main.cpp
+c:\users\iulian\desktop\egc\gfx-framework\src\lab_m1\hw1\duck.h(42): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\iulian\desktop\egc\gfx-framework\src\lab_m1\hw1\duck.h(43): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\iulian\desktop\egc\gfx-framework\src\lab_m1\hw1\duck.h(49): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\iulian\desktop\egc\gfx-framework\src\lab_m1\hw1\duck.h(50): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  Generating Code...
+GFXFramework.dir\Debug\object2D.obj : warning LNK4042: object specified more than once; extras ignored
+     Creating library C:/Users/Iulian/Desktop/EGC/gfx-framework/build/Debug/GFXFramework.lib and object C:/Users/Iulian/Desktop/EGC/gfx-framework/build/Debug/GFXFramework.exp
+text_utils.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'text_utils.obj' or at 'C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\vc141.pdb'; linking object as if no debug info
+gl_utils.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'gl_utils.obj' or at 'C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\vc141.pdb'; linking object as if no debug info
+lab9.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'lab9.obj' or at 'C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\vc141.pdb'; linking object as if no debug info
+lab8.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'lab8.obj' or at 'C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\vc141.pdb'; linking object as if no debug info
+lab6.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'lab6.obj' or at 'C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\vc141.pdb'; linking object as if no debug info
+lab3_vis2D.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'lab3_vis2D.obj' or at 'C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\vc141.pdb'; linking object as if no debug info
+lab3.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'lab3.obj' or at 'C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\vc141.pdb'; linking object as if no debug info
+lab2.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'lab2.obj' or at 'C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\vc141.pdb'; linking object as if no debug info
+lab1.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'lab1.obj' or at 'C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\vc141.pdb'; linking object as if no debug info
+world.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'world.obj' or at 'C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\vc141.pdb'; linking object as if no debug info
+window_object.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'window_object.obj' or at 'C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\vc141.pdb'; linking object as if no debug info
+window_callbacks.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'window_callbacks.obj' or at 'C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\vc141.pdb'; linking object as if no debug info
+input_controller.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'input_controller.obj' or at 'C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\vc141.pdb'; linking object as if no debug info
+texture_manager.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'texture_manager.obj' or at 'C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\vc141.pdb'; linking object as if no debug info
+texture2D.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'texture2D.obj' or at 'C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\vc141.pdb'; linking object as if no debug info
+shader.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'shader.obj' or at 'C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\vc141.pdb'; linking object as if no debug info
+mesh.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'mesh.obj' or at 'C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\vc141.pdb'; linking object as if no debug info
+gpu_buffers.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'gpu_buffers.obj' or at 'C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\vc141.pdb'; linking object as if no debug info
+frame_buffer.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'frame_buffer.obj' or at 'C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\vc141.pdb'; linking object as if no debug info
+engine.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'engine.obj' or at 'C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\vc141.pdb'; linking object as if no debug info
+text_renderer.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'text_renderer.obj' or at 'C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\vc141.pdb'; linking object as if no debug info
+simple_scene.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'simple_scene.obj' or at 'C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\vc141.pdb'; linking object as if no debug info
+scene_input.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'scene_input.obj' or at 'C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\vc141.pdb'; linking object as if no debug info
+ui.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'ui.obj' or at 'C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\vc141.pdb'; linking object as if no debug info
+object2D.obj : warning LNK4099: PDB 'vc141.pdb' was not found with 'object2D.obj' or at 'C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\vc141.pdb'; linking object as if no debug info
   GFXFramework.vcxproj -> C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\GFXFramework.exe
   Junction created for C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\src <<===>> C:\Users\Iulian\Desktop\EGC\gfx-framework\src
   Junction created for C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\assets <<===>> C:\Users\Iulian\Desktop\EGC\gfx-framework\assets

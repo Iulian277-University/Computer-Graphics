@@ -49,6 +49,13 @@ void Environment::generateShaders() {
 }
 
 
+void Environment::generateCube(const char *name) {
+    Mesh *cube = new Mesh(name);
+    cube->LoadMesh(RESOURCE_PATH::MODELS + "/primitives", "box.obj");
+    this->addMesh(name, cube);
+}
+
+
 void Environment::generateTrack() {
     // Define a set of points for the middle points of car track
     vector<glm::vec3> trackPointsMiddlePoints;
@@ -148,9 +155,9 @@ void Environment::generateTrack() {
         }
     }
 
-    // Give to each tree a random size between 1.2 and 1.7
+    // Give to each tree a random size between 1.1 and 1.5
     for (int i = 0; i < treePositions.size(); i++) {
-        treeSizes.push_back(1.2f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX/(1.7f - 1.2f))));
+        treeSizes.push_back(1.1f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX/(1.5f - 1.1f))));
     }
 }
 
@@ -240,73 +247,8 @@ bool Environment::IsOnTrack(glm::vec3 center) {
     return false;
 }
 
-void Environment::generateCube(const char *name, glm::vec3 color) {
-    vector<VertexFormat> vertices
-    {
-        VertexFormat(glm::vec3(0, 0, 1), color),
-        VertexFormat(glm::vec3(1, 0, 1), color),
-        VertexFormat(glm::vec3(0, 1, 1), color),
-        VertexFormat(glm::vec3(1, 1, 1), color),
-        VertexFormat(glm::vec3(0, 0, 0), color),
-        VertexFormat(glm::vec3(1, 0, 0), color),
-        VertexFormat(glm::vec3(0, 1, 0), color),
-        VertexFormat(glm::vec3(1, 1, 0), color),
-    };
 
-    vector<unsigned int> indices = {
-        0, 1, 2,
-        1, 3, 2,
-        2, 3, 7,
-        2, 7, 6,
-        1, 7, 3,
-        1, 5, 7,
-        6, 7, 4,
-        7, 5, 4,
-        0, 4, 1,
-        1, 4, 5,
-        2, 6, 4,
-        0, 2, 4,
-    };
-
-    CreateMesh(name, vertices, indices);
+void Environment::generateObstacle() {
+    return;
 }
-
-
-void Environment::CreateMesh(const char *name, const std::vector<VertexFormat> &vertices, const std::vector<unsigned int> &indices) {
-	unsigned int VAO = 0;
-	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);
-
-	unsigned int VBO = 0;
-	glGenBuffers(1, &VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[0]) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
-
-	unsigned int IBO = 0;
-	glGenBuffers(1, &IBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices[0]) * indices.size(), &indices[0], GL_STATIC_DRAW);
-
-	// Set vertex position attribute
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexFormat), 0);
-
-	// Set vertex normal attribute
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(VertexFormat), (void*)(sizeof(glm::vec3)));
-
-	// Set texture coordinate attribute
-	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(VertexFormat), (void*)(2 * sizeof(glm::vec3)));
-
-	// Set vertex color attribute
-	glEnableVertexAttribArray(3);
-	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(VertexFormat), (void*)(2 * sizeof(glm::vec3) + sizeof(glm::vec2)));
-
-	// Unbind the VAO
-	glBindVertexArray(0);
-
-	// Mesh information is saved into a Mesh object
-	meshes[name] = new Mesh(name);
-	meshes[name]->InitFromBuffer(VAO, static_cast<unsigned int>(indices.size()));
-}
+            

@@ -18,9 +18,11 @@ namespace environment {
             void generateTrack();
             std::vector<VertexFormat> generateTrackMesh(std::vector<glm::vec3> trackPoints, glm::vec3 color);
 
-            void generateCube(const char *name, glm::vec3 color);
+            void generateCube(const char *name);
 
             bool IsOnTrack(glm::vec3 center);
+
+            void generateObstacle();
 
             // Vector of triangles, where each triangle is a vector of 3 points
             std::vector<std::vector<glm::vec3>> triangles;
@@ -28,6 +30,9 @@ namespace environment {
             // Vector of trees' positions
             std::vector<glm::vec3> treePositions;
             std::vector<float> treeSizes;
+
+            // Vector of another car's trajectory
+            std::vector<glm::vec3> obstaclePositions;
 
             float trackScale = 6.0f;
 
