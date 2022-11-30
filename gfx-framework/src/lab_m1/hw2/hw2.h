@@ -29,7 +29,7 @@ namespace m1 {
          void Update(float deltaTimeSeconds) override;
          void FrameEnd() override;
 
-         void RenderMesh(Mesh *mesh, Shader *shader, const glm::mat4 &modelMatrix) override;
+         void RenderMesh(Mesh *mesh, Shader *shader, const glm::mat4 &modelMatrix, glm::vec3 color);
 
          void OnInputUpdate(float deltaTime, int mods) override;
          void OnKeyPress(int key, int mods) override;

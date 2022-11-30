@@ -17,7 +17,7 @@ void Hw2::Init() {
 	mainCamera->RotateThirdPerson_OY(RADIANS(-110));
 
     miniCamera = new cam::Camera();
-    miniCamera->Set(glm::vec3(0, 20, -5), glm::vec3(0, 1, 0), glm::vec3(0, 0, -1));
+    miniCamera->Set(glm::vec3(0, 30, -5), glm::vec3(0, 1, 0), glm::vec3(0, 0, -1));
 
     // Environment
     env = environment::Environment();
@@ -27,8 +27,7 @@ void Hw2::Init() {
     env.generateCube("trunk");
     env.generateCube("crown");
 
-    // Obstacol
-    // env.generateObstacle();
+    // Obstacles
     env.generateObstacles();
 
     // Car
@@ -44,6 +43,13 @@ void Hw2::Init() {
 
     // Projection matrix
 	projectionMatrix = glm::perspective(RADIANS(fov), window->props.aspectRatio, nearZ, farZ);
+
+    // Create a shader
+    Shader* shader = new Shader("CustomShader");
+    shader->AddShader(PATH_JOIN(window->props.selfDir, SOURCE_PATH::M1, "hw2", "shaders", "VertexShader.glsl"), GL_VERTEX_SHADER);
+    shader->AddShader(PATH_JOIN(window->props.selfDir, SOURCE_PATH::M1, "hw2", "shaders", "FragmentShader.glsl"), GL_FRAGMENT_SHADER);
+    shader->CreateAndLink();
+    shaders[shader->GetName()] = shader;
 }
 
 
@@ -58,7 +64,7 @@ void Hw2::FrameStart() {
 }
 
 
-void Hw2::RenderMesh(Mesh *mesh, Shader *shader, const glm::mat4 &modelMatrix) {
+void Hw2::RenderMesh(Mesh *mesh, Shader *shader, const glm::mat4 &modelMatrix, glm::vec3 color) {
     if (!mesh || !shader || !shader->program)
         return;
 
@@ -67,6 +73,8 @@ void Hw2::RenderMesh(Mesh *mesh, Shader *shader, const glm::mat4 &modelMatrix) {
     glUniformMatrix4fv(shader->loc_view_matrix,       1, GL_FALSE, glm::value_ptr(camera->GetViewMatrix()));
     glUniformMatrix4fv(shader->loc_projection_matrix, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
     glUniformMatrix4fv(shader->loc_model_matrix,      1, GL_FALSE, glm::value_ptr(modelMatrix));
+    GLint loc_color = glGetUniformLocation(shaders["CustomShader"]->program, "object_color");
+    glUniform3fv(loc_color, 1, glm::value_ptr(color));
     mesh->Render();
 }
 
@@ -83,10 +91,7 @@ void Hw2::RenderEnvironment(float deltaTimeSeconds) {
         modelMatrix = glm::translate(modelMatrix, glm::vec3(0, 0.5f, 0));
 
         // Render the trunk
-        glUseProgram(shaders["Color"]->program);
-        GLint loc_color = glGetUniformLocation(shaders["Color"]->program, "color");
-        glUniform3fv(loc_color, 1, glm::value_ptr(env.trunkColor));
-        RenderMesh(env.meshes["trunk"], shaders["Color"], modelMatrix);
+        RenderMesh(env.meshes["trunk"], shaders["CustomShader"], modelMatrix, env.trunkColor);
 
         // Crown matrix
         modelMatrix = glm::mat4(1); 
@@ -97,37 +102,25 @@ void Hw2::RenderEnvironment(float deltaTimeSeconds) {
         modelMatrix = glm::translate(modelMatrix, glm::vec3(0, 0.5f, 0));
 
         // Render the crown
-        glUseProgram(shaders["Color"]->program);
-        loc_color = glGetUniformLocation(shaders["Color"]->program, "color");
-        glUniform3fv(loc_color, 1, glm::value_ptr(env.crownColor));
-        RenderMesh(env.meshes["crown"], shaders["Color"], modelMatrix);
+        RenderMesh(env.meshes["crown"], shaders["CustomShader"], modelMatrix, env.crownColor);
     }
     
     /* Render ground */
     modelMatrix = glm::mat4(1);
     modelMatrix = glm::translate(modelMatrix, glm::vec3(0, -1.0f, 0));
     modelMatrix = glm::scale(modelMatrix, glm::vec3(200, 1, 200));
-    glUseProgram(shaders["Color"]->program);
-    GLint loc_color = glGetUniformLocation(shaders["Color"]->program, "color");
-    glUniform3fv(loc_color, 1, glm::value_ptr(env.groundColor));
-    RenderMesh(env.meshes["ground"], shaders["Color"], modelMatrix);
+    RenderMesh(env.meshes["ground"], shaders["CustomShader"], modelMatrix, env.groundColor);
 
     /* Render a big sphere for skybox */
     modelMatrix = glm::mat4(1);
     modelMatrix = glm::translate(modelMatrix, glm::vec3(0, 10, 0));
     modelMatrix = glm::scale(modelMatrix, glm::vec3(200, 200, 200));
-    glUseProgram(shaders["Color"]->program);
-    loc_color = glGetUniformLocation(shaders["Color"]->program, "color");
-    glUniform3fv(loc_color, 1, glm::value_ptr(env.skyColor));
-    RenderMesh(env.meshes["skybox"], shaders["Color"], modelMatrix);
+    RenderMesh(env.meshes["skybox"], shaders["CustomShader"], modelMatrix, env.skyColor);
 
     /* Render track */
     modelMatrix = glm::mat4(1);
     modelMatrix = glm::scale(modelMatrix, glm::vec3(env.trackScale));
-    glUseProgram(shaders["Color"]->program);
-    loc_color = glGetUniformLocation(shaders["Color"]->program, "color");
-    glUniform3fv(loc_color, 1, glm::value_ptr(env.trackColor));
-    RenderMesh(env.meshes["track"], shaders["Color"], modelMatrix);
+    RenderMesh(env.meshes["track"], shaders["CustomShader"], modelMatrix, env.trackColor);
 
     /* Render obstacles */
     for (int i = 0; i < env.obstacleIdxs.size(); i++)
@@ -180,10 +173,7 @@ void Hw2::RenderObstacle(float deltaTimeSeconds, int i) {
     }
 
     // Render the obstacle
-    glUseProgram(shaders["Color"]->program);
-    GLint loc_color = glGetUniformLocation(shaders["Color"]->program, "color");
-    glUniform3fv(loc_color, 1, glm::value_ptr(env.obstacleColors[i]));
-    RenderMesh(env.meshes["obstacle"], shaders["Color"], modelMatrix);
+    RenderMesh(env.meshes["obstacle"], shaders["CustomShader"], modelMatrix, env.obstacleColors[i]);
 }
 
 
@@ -206,12 +196,9 @@ void Hw2::RenderScene(float deltaTimeSeconds, bool updateCarCenter = true) {
     // Scale the car
     modelMatrix = glm::scale(modelMatrix, glm::vec3(0.5f, 0.5f, 1.0f));
     // Render the car with blue color
-    glUseProgram(shaders["Color"]->program);
-    GLint loc_color = glGetUniformLocation(shaders["Color"]->program, "color");
-    glUniform3fv(loc_color, 1, glm::value_ptr(car.color));
     if (updateCarCenter)
         car.center = targetPosition;
-    RenderMesh(car.meshes["car"], shaders["Color"], modelMatrix);
+    RenderMesh(car.meshes["car"], shaders["CustomShader"], modelMatrix, car.color);
 
     /* Render the environment */
     RenderEnvironment(deltaTimeSeconds);
@@ -223,7 +210,6 @@ void Hw2::Update(float deltaTimeSeconds) {
     // Third person camera
     camera = mainCamera;
     RenderScene(deltaTimeSeconds);
-	// DrawCoordinateSystem(camera->GetViewMatrix(), projectionMatrix);
 
     // Switch to the second viewport
     glm::ivec2 resolution = window->GetResolution();
@@ -235,11 +221,10 @@ void Hw2::Update(float deltaTimeSeconds) {
     glViewport(miniViewportArea.x, miniViewportArea.y, miniViewportArea.width, miniViewportArea.height);
 
     // Minimap
-    miniCamera->Set(car.center + glm::vec3(0, 80, -5), car.center, glm::vec3(0, 0, -1));
+    miniCamera->Set(car.center + glm::vec3(0, 30, -5), car.center, glm::vec3(0, 0, -1));
     camera = miniCamera;
     miniCamera->RotateFirstPerson_OY(RADIANS(90));
     RenderScene(deltaTimeSeconds, false);
-	// DrawCoordinateSystem(camera->GetViewMatrix(), projectionMatrix);
 }
 
 
