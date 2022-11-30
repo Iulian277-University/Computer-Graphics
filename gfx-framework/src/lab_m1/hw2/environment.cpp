@@ -81,7 +81,7 @@ void Environment::generateTrack() {
     trackMiddlePoints.push_back(glm::vec3(0.17,  0, -0.26)); // P
     trackMiddlePoints.push_back(glm::vec3(1.40,  0, -0.26)); // Q
     trackMiddlePoints.push_back(glm::vec3(2.21,  0, -0.86)); // R
-    trackMiddlePoints.push_back(glm::vec3(3.42,  0, -1.65)); // S
+    trackMiddlePoints.push_back(glm::vec3(3.25,  0, -1.39)); // S
     trackMiddlePoints.push_back(glm::vec3(4.47,  0, -1.22)); // T
     trackMiddlePoints.push_back(glm::vec3(5.04,  0, -0.38)); // U
 
@@ -137,7 +137,7 @@ void Environment::generateTrack() {
         // Move the tree a little bit to the left or right
         glm::vec3 treePosition = p1 * this->trackScale;
         if (i % 2 == 0)
-            treePosition += n * 2.5f;
+            treePosition += n * 2.0f;
         else
             treePosition -= n * 2.0f;
 
@@ -252,11 +252,38 @@ bool Environment::IsOnTrack(glm::vec3 center) {
 }
 
 
-void Environment::generateObstacle() {
-    // Get a random point from `trackMiddlePoints`
-    int index = rand() % this->trackMiddlePoints.size();
-    // Generate a random orientation (-1 or 1)
-    // int orientation = rand() % 2 == 0 ? -1 : 1;
-    obstacleIdx = index;
+void Environment::generateObstacles() {
+    // Generate 10 unique random indices from `trackMiddlePoints`
+    while (obstacleIdxs.size() < 10) {
+        int index = rand() % this->trackMiddlePoints.size();
+        if (std::find(obstacleIdxs.begin(), obstacleIdxs.end(), index) == obstacleIdxs.end())
+            obstacleIdxs.push_back(index);
+    }
+
+    // Initialize `obstaclePositions` with MAX_INT
+    for (int i = 0; i < 10; i++)
+        obstaclePositions.push_back(glm::vec3(INT_MAX, INT_MAX, INT_MAX));
+
+    // Give some random offsets to the obstacles in range [-1.5, 1.5]
+    for (int i = 0; i < 10; i++)
+        obstacleOffsets.push_back(glm::vec3(rand() % 300 / 100.0f - 1.5f, 0, rand() % 300 / 100.0f - 1.5f));
+
+    // Give some random colors to the obstacles
+    for (int i = 0; i < 10; i++)
+        obstacleColors.push_back(glm::vec3(rand() % 100 / 100.0f, rand() % 100 / 100.0f, rand() % 100 / 100.0f));
+
+    // Give some random scales to the obstacles in range [1.1, 1.5]
+    for (int i = 0; i < 10; i++)
+        obstacleScales.push_back(1.1f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX/(1.5f - 1.1f))));
 }
-            
+
+
+bool Environment::IsOnCollision(glm::vec3 center) {
+    // Check if car's center is on colision with `obstaclePosition`
+    for (int i = 0; i < obstaclePositions.size(); i++) {
+        glm::vec3 obstaclePosition = obstaclePositions[i];
+        if (glm::distance(center, obstaclePosition + obstacleOffsets[i]) < 1.0f)
+            return true;
+    }
+    return false;
+}

@@ -28,7 +28,8 @@ void Hw2::Init() {
     env.generateCube("crown");
 
     // Obstacol
-    env.generateObstacle();
+    // env.generateObstacle();
+    env.generateObstacles();
 
     // Car
     car = car::Car();
@@ -104,8 +105,8 @@ void Hw2::RenderEnvironment(float deltaTimeSeconds) {
     
     /* Render ground */
     modelMatrix = glm::mat4(1);
-    modelMatrix = glm::translate(modelMatrix, glm::vec3(0, -1.2f, 0));
-    modelMatrix = glm::scale(modelMatrix, glm::vec3(100, 1, 100));
+    modelMatrix = glm::translate(modelMatrix, glm::vec3(0, -1.0f, 0));
+    modelMatrix = glm::scale(modelMatrix, glm::vec3(200, 1, 200));
     glUseProgram(shaders["Color"]->program);
     GLint loc_color = glGetUniformLocation(shaders["Color"]->program, "color");
     glUniform3fv(loc_color, 1, glm::value_ptr(env.groundColor));
@@ -114,7 +115,7 @@ void Hw2::RenderEnvironment(float deltaTimeSeconds) {
     /* Render a big sphere for skybox */
     modelMatrix = glm::mat4(1);
     modelMatrix = glm::translate(modelMatrix, glm::vec3(0, 10, 0));
-    modelMatrix = glm::scale(modelMatrix, glm::vec3(100, 100, 100));
+    modelMatrix = glm::scale(modelMatrix, glm::vec3(200, 200, 200));
     glUseProgram(shaders["Color"]->program);
     loc_color = glGetUniformLocation(shaders["Color"]->program, "color");
     glUniform3fv(loc_color, 1, glm::value_ptr(env.skyColor));
@@ -128,29 +129,34 @@ void Hw2::RenderEnvironment(float deltaTimeSeconds) {
     glUniform3fv(loc_color, 1, glm::value_ptr(env.trackColor));
     RenderMesh(env.meshes["track"], shaders["Color"], modelMatrix);
 
-    /* Render obstacle */
-    RenderObstacle(deltaTimeSeconds, env.obstacleIdx);
+    /* Render obstacles */
+    for (int i = 0; i < env.obstacleIdxs.size(); i++)
+        RenderObstacle(deltaTimeSeconds, i);
 }
 
 
-void Hw2::RenderObstacle(float deltaTimeSeconds, int obstacleIdx) {
+void Hw2::RenderObstacle(float deltaTimeSeconds, int i) {
+    int obstacleIdx = env.obstacleIdxs[i];
+
     // Next obstacle position
     glm::vec3 nextObstaclePosition = env.trackMiddlePoints[(obstacleIdx + 1) % env.trackMiddlePoints.size()] * env.trackScale;
 
     // Choose the initial position of the obstacle or the updated one
-    if (glm::distance(env.obstaclePosition, nextObstaclePosition) >
+    if (glm::distance(env.obstaclePositions[i], nextObstaclePosition) >
         glm::distance(env.trackMiddlePoints[obstacleIdx] * env.trackScale, nextObstaclePosition)) {
-            env.obstaclePosition = env.trackMiddlePoints[obstacleIdx] * env.trackScale;
+            env.obstaclePositions[i] = env.trackMiddlePoints[obstacleIdx] * env.trackScale;
     }
 
     // Obstacle matrix
     glm::mat4 modelMatrix = glm::mat4(1);
-    modelMatrix = glm::translate(modelMatrix, env.obstaclePosition);
+    modelMatrix = glm::translate(modelMatrix, env.obstacleOffsets[i]);
+    modelMatrix = glm::translate(modelMatrix, env.obstaclePositions[i]);
+    modelMatrix = glm::scale(modelMatrix, glm::vec3(env.obstacleScales[i]));
     modelMatrix = glm::scale(modelMatrix, glm::vec3(0.5f, 0.5f, 0.5f));
     modelMatrix = glm::translate(modelMatrix, glm::vec3(0, 0.5f, 0));
 
     // Rotate the obstacle to be parallel to the vector between the current and the next point
-    glm::vec3 obstacleDirection = glm::normalize(nextObstaclePosition - env.obstaclePosition);
+    glm::vec3 obstacleDirection = glm::normalize(nextObstaclePosition - env.obstaclePositions[i]);
     glm::vec3 obstacleUp = glm::vec3(0, 1, 0);
     glm::vec3 obstacleRight = glm::normalize(glm::cross(obstacleDirection, obstacleUp));
     glm::vec3 obstacleFront = glm::normalize(glm::cross(obstacleRight, obstacleUp));
@@ -162,21 +168,21 @@ void Hw2::RenderObstacle(float deltaTimeSeconds, int obstacleIdx) {
 
 
     // Move the obstacle twoards the nextObstaclePosition with the same speed between the two points
-    float distance = glm::distance(env.obstaclePosition, nextObstaclePosition);
-    float speed = cameraSpeed / 3;
+    float distance = glm::distance(env.obstaclePositions[i], nextObstaclePosition);
+    float speed = cameraSpeed / 2;
     float step = speed * deltaTimeSeconds;
     if (step > distance) {
-        env.obstaclePosition = nextObstaclePosition;
-        env.obstacleIdx = (env.obstacleIdx + 1) % env.trackMiddlePoints.size();
+        env.obstaclePositions[i] = nextObstaclePosition;
+        env.obstacleIdxs[i] = (env.obstacleIdxs[i] + 1) % env.trackMiddlePoints.size();
     } else {
-        glm::vec3 direction = glm::normalize(nextObstaclePosition - env.obstaclePosition);
-        env.obstaclePosition += direction * step;
+        glm::vec3 direction = glm::normalize(nextObstaclePosition - env.obstaclePositions[i]);
+        env.obstaclePositions[i] += direction * step;
     }
 
     // Render the obstacle
     glUseProgram(shaders["Color"]->program);
     GLint loc_color = glGetUniformLocation(shaders["Color"]->program, "color");
-    glUniform3fv(loc_color, 1, glm::value_ptr(car.color));
+    glUniform3fv(loc_color, 1, glm::value_ptr(env.obstacleColors[i]));
     RenderMesh(env.meshes["obstacle"], shaders["Color"], modelMatrix);
 }
 
@@ -229,7 +235,7 @@ void Hw2::Update(float deltaTimeSeconds) {
     glViewport(miniViewportArea.x, miniViewportArea.y, miniViewportArea.width, miniViewportArea.height);
 
     // Minimap
-    miniCamera->Set(car.center + glm::vec3(0, 20, -5), car.center, glm::vec3(0, 0, -1));
+    miniCamera->Set(car.center + glm::vec3(0, 80, -5), car.center, glm::vec3(0, 0, -1));
     camera = miniCamera;
     miniCamera->RotateFirstPerson_OY(RADIANS(90));
     RenderScene(deltaTimeSeconds, false);
@@ -245,6 +251,9 @@ void Hw2::FrameEnd() {
 void Hw2::OnInputUpdate(float deltaTime, int mods) {
     camera = mainCamera;
     if (window->KeyHold(GLFW_KEY_W)) {
+        if (env.IsOnCollision(car.center))
+            return;
+
         // Check if the car is on the track
         if (env.IsOnTrack(car.center)) {
             // Simulate a move forward of the camera
@@ -256,6 +265,9 @@ void Hw2::OnInputUpdate(float deltaTime, int mods) {
     }
 
     if (window->KeyHold(GLFW_KEY_S)) {
+        if (env.IsOnCollision(car.center))
+            return;
+
         // Check if the car is on the track
         if (env.IsOnTrack(car.center)) {
             // Simulate a move forward of the camera
@@ -267,9 +279,9 @@ void Hw2::OnInputUpdate(float deltaTime, int mods) {
     }
 
     if (window->KeyHold(GLFW_KEY_A))
-        camera->RotateThirdPerson_OY(cameraSpeed * deltaTime);
+        camera->RotateThirdPerson_OY((float) cameraSpeed / 2 * deltaTime);
     if (window->KeyHold(GLFW_KEY_D))
-        camera->RotateThirdPerson_OY(-cameraSpeed * deltaTime);
+        camera->RotateThirdPerson_OY(-(float) cameraSpeed / 2 * deltaTime);
 }
 
 

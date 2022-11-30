@@ -21,8 +21,9 @@ namespace environment {
             void generateCube(const char *name);
 
             bool IsOnTrack(glm::vec3 center);
+            bool IsOnCollision(glm::vec3 center);
 
-            void generateObstacle();
+			void generateObstacles();
 
             std::vector<glm::vec3> trackMiddlePoints;
             // Vector of triangles, where each triangle is a vector of 3 points
@@ -32,12 +33,14 @@ namespace environment {
             std::vector<glm::vec3> treePositions;
             std::vector<float> treeSizes;
 
-            // Vector of another car's trajectory
-            // std::vector<glm::vec3> obstaclePositions;
-            int obstacleIdx;
-            glm::vec3 obstaclePosition;
+            // Vector of obstacles' positions
+            std::vector<int> obstacleIdxs;
+            std::vector<glm::vec3> obstaclePositions;
+            std::vector<glm::vec3> obstacleOffsets;
+            std::vector<glm::vec3> obstacleColors;
+            std::vector<float> obstacleScales;
 
-            float trackScale = 6.0f;
+            float trackScale = 7.0f;
 
             glm::vec3 skyColor    = glm::vec3(141, 210, 231) / 255.0f;
             glm::vec3 trackColor  = glm::vec3(50,   50,  50) / 255.0f;

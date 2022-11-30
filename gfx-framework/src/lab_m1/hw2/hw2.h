@@ -41,7 +41,7 @@ namespace m1 {
          void OnWindowResize(int width, int height) override;
 
          void RenderEnvironment(float deltaTimeSeconds);
-         void RenderObstacle(float deltaTimeSeconds, int obstacleIdx);
+         void RenderObstacle(float deltaTimeSeconds, int ithObstacle);
          void RenderScene(float deltaTimeSeconds, bool updateCarCenter);
 
      protected:
@@ -60,9 +60,9 @@ namespace m1 {
 
          float fov    =  60.0f;
          float nearZ  =  0.01f;
-         float farZ   = 200.0f;
+         float farZ   = 300.0f;
 
-         float cameraSpeed = 5.0f;
+         float cameraSpeed = 7.0f;
 
          glm::vec3 lightPosition = glm::vec3(0, 20, 0);
          unsigned int materialShininess = 30;
