@@ -53,6 +53,11 @@ namespace m1 {
          ViewportArea miniViewportArea;
          glm::mat4 projectionMatrix;
 
+         float minimapPadding = 20.0f;
+         
+         float window_wid = 1280.0f;
+		 float window_hei = 720.0f;
+
          float fov    =  60.0f;
          float nearZ  =  0.01f;
          float farZ   = 200.0f;

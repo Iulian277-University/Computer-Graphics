@@ -33,12 +33,10 @@ void Hw2::Init() {
 
     // Sets the resolution of the minimap
     glm::ivec2 resolution = window->GetResolution();
-    // place the minimap in the bottom rigth corner
-    float padding = 20;
-    miniViewportArea = ViewportArea(resolution.x - resolution.x / 4 - padding,
-                                    padding,
-                                    resolution.x / 4,
-                                    resolution.y / 4);
+    miniViewportArea = ViewportArea(resolution.x - resolution.x / 4 - minimapPadding, // x
+                                    minimapPadding, // y
+                                    resolution.x / 4, // width
+                                    resolution.y / 4); // height
 
     // Projection matrix
 	projectionMatrix = glm::perspective(RADIANS(fov), window->props.aspectRatio, nearZ, farZ);
@@ -160,6 +158,7 @@ void Hw2::RenderScene(float deltaTimeSeconds, bool updateCarCenter = true) {
 }
 
 
+// [TODO]: Use `orthographic` projection matrix (15 points)
 void Hw2::Update(float deltaTimeSeconds) {
     // Third person camera
     // projectionMatrix = glm::perspective(RADIANS(fov), window->props.aspectRatio, nearZ, farZ);
@@ -167,6 +166,11 @@ void Hw2::Update(float deltaTimeSeconds) {
     RenderScene(deltaTimeSeconds);
 
     // Switch to the second viewport
+    glm::ivec2 resolution = window->GetResolution();
+    miniViewportArea = ViewportArea(resolution.x - resolution.x / 4 - minimapPadding, // x
+									minimapPadding, // y
+                                    resolution.x / 4, // width
+                                    resolution.y / 4); // height
     glClear(GL_DEPTH_BUFFER_BIT);
     glViewport(miniViewportArea.x, miniViewportArea.y, miniViewportArea.width, miniViewportArea.height);
 
