@@ -27,6 +27,9 @@ void Hw2::Init() {
     env.generateCube("trunk");
     env.generateCube("crown");
 
+    // Obstacol
+    env.generateObstacle();
+
     // Car
     car = car::Car();
     car.generateMeshes();
@@ -124,6 +127,57 @@ void Hw2::RenderEnvironment(float deltaTimeSeconds) {
     loc_color = glGetUniformLocation(shaders["Color"]->program, "color");
     glUniform3fv(loc_color, 1, glm::value_ptr(env.trackColor));
     RenderMesh(env.meshes["track"], shaders["Color"], modelMatrix);
+
+    /* Render obstacle */
+    RenderObstacle(deltaTimeSeconds, env.obstacleIdx);
+}
+
+
+void Hw2::RenderObstacle(float deltaTimeSeconds, int obstacleIdx) {
+    // Next obstacle position
+    glm::vec3 nextObstaclePosition = env.trackMiddlePoints[(obstacleIdx + 1) % env.trackMiddlePoints.size()] * env.trackScale;
+
+    // Choose the initial position of the obstacle or the updated one
+    if (glm::distance(env.obstaclePosition, nextObstaclePosition) >
+        glm::distance(env.trackMiddlePoints[obstacleIdx] * env.trackScale, nextObstaclePosition)) {
+            env.obstaclePosition = env.trackMiddlePoints[obstacleIdx] * env.trackScale;
+    }
+
+    // Obstacle matrix
+    glm::mat4 modelMatrix = glm::mat4(1);
+    modelMatrix = glm::translate(modelMatrix, env.obstaclePosition);
+    modelMatrix = glm::scale(modelMatrix, glm::vec3(0.5f, 0.5f, 0.5f));
+    modelMatrix = glm::translate(modelMatrix, glm::vec3(0, 0.5f, 0));
+
+    // Rotate the obstacle to be parallel to the vector between the current and the next point
+    glm::vec3 obstacleDirection = glm::normalize(nextObstaclePosition - env.obstaclePosition);
+    glm::vec3 obstacleUp = glm::vec3(0, 1, 0);
+    glm::vec3 obstacleRight = glm::normalize(glm::cross(obstacleDirection, obstacleUp));
+    glm::vec3 obstacleFront = glm::normalize(glm::cross(obstacleRight, obstacleUp));
+    glm::mat4 obstacleRotationMatrix = glm::mat4(1);
+    obstacleRotationMatrix[0] = glm::vec4(obstacleRight, 0);
+    obstacleRotationMatrix[1] = glm::vec4(obstacleUp, 0);
+    obstacleRotationMatrix[2] = glm::vec4(obstacleFront, 0);
+    modelMatrix = modelMatrix * obstacleRotationMatrix;
+
+
+    // Move the obstacle twoards the nextObstaclePosition with the same speed between the two points
+    float distance = glm::distance(env.obstaclePosition, nextObstaclePosition);
+    float speed = cameraSpeed / 3;
+    float step = speed * deltaTimeSeconds;
+    if (step > distance) {
+        env.obstaclePosition = nextObstaclePosition;
+        env.obstacleIdx = (env.obstacleIdx + 1) % env.trackMiddlePoints.size();
+    } else {
+        glm::vec3 direction = glm::normalize(nextObstaclePosition - env.obstaclePosition);
+        env.obstaclePosition += direction * step;
+    }
+
+    // Render the obstacle
+    glUseProgram(shaders["Color"]->program);
+    GLint loc_color = glGetUniformLocation(shaders["Color"]->program, "color");
+    glUniform3fv(loc_color, 1, glm::value_ptr(car.color));
+    RenderMesh(env.meshes["obstacle"], shaders["Color"], modelMatrix);
 }
 
 
@@ -161,7 +215,6 @@ void Hw2::RenderScene(float deltaTimeSeconds, bool updateCarCenter = true) {
 // [TODO]: Use `orthographic` projection matrix (15 points)
 void Hw2::Update(float deltaTimeSeconds) {
     // Third person camera
-    // projectionMatrix = glm::perspective(RADIANS(fov), window->props.aspectRatio, nearZ, farZ);
     camera = mainCamera;
     RenderScene(deltaTimeSeconds);
 	// DrawCoordinateSystem(camera->GetViewMatrix(), projectionMatrix);
@@ -176,7 +229,6 @@ void Hw2::Update(float deltaTimeSeconds) {
     glViewport(miniViewportArea.x, miniViewportArea.y, miniViewportArea.width, miniViewportArea.height);
 
     // Minimap
-    // projectionMatrix = glm::ortho(left, right, bottom, top, nearZ, farZ);
     miniCamera->Set(car.center + glm::vec3(0, 20, -5), car.center, glm::vec3(0, 0, -1));
     camera = miniCamera;
     miniCamera->RotateFirstPerson_OY(RADIANS(90));
@@ -218,49 +270,10 @@ void Hw2::OnInputUpdate(float deltaTime, int mods) {
         camera->RotateThirdPerson_OY(cameraSpeed * deltaTime);
     if (window->KeyHold(GLFW_KEY_D))
         camera->RotateThirdPerson_OY(-cameraSpeed * deltaTime);
-
-
-    // Changing fov
-	if (perspectiveType) {
-		if (window->KeyHold(GLFW_KEY_R)) {
-			fov -= deltaTime * 3.0f;
-			projectionMatrix = glm::perspective(RADIANS(fov), window->props.aspectRatio, nearZ, farZ);
-		}
-		if (window->KeyHold(GLFW_KEY_Y)) {
-			fov += deltaTime * 3.0f;
-			projectionMatrix = glm::perspective(RADIANS(fov), window->props.aspectRatio, nearZ, farZ);
-		}
-	}
-
-	// Ortho change bottom and top
-	if (!perspectiveType) {
-		if (window->KeyHold(GLFW_KEY_1)) {
-			top += deltaTime * 2.0f;
-			bottom += deltaTime * 2.0f;
-			projectionMatrix = glm::ortho(left, right, bottom, top, nearZ, farZ);
-		}
-		if (window->KeyHold(GLFW_KEY_2)) {
-			top -= deltaTime * 2.0f;
-			bottom -= deltaTime * 2.0f;
-			projectionMatrix = glm::ortho(left, right, bottom, top, nearZ, farZ);
-		}
-	}
-
 }
 
 
-void Hw2::OnKeyPress(int key, int mods) {
-    // Switch projections
-    if (key == GLFW_KEY_P)
-    {
-        perspectiveType = !perspectiveType;
-        if (perspectiveType)
-            projectionMatrix = glm::perspective(RADIANS(fov), window->props.aspectRatio, nearZ, farZ);
-        else
-            projectionMatrix = glm::ortho(left, right, bottom, top, nearZ, farZ);
-    }
-}
-
+void Hw2::OnKeyPress(int key, int mods) {}
 
 void Hw2::OnKeyRelease(int key, int mods) {}
 

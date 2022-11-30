@@ -30,7 +30,6 @@ namespace m1 {
          void FrameEnd() override;
 
          void RenderMesh(Mesh *mesh, Shader *shader, const glm::mat4 &modelMatrix) override;
-         // void RenderSimpleMesh(Mesh* mesh, Shader* shader, const glm::mat4& modelMatrix, const glm::vec3& color);
 
          void OnInputUpdate(float deltaTime, int mods) override;
          void OnKeyPress(int key, int mods) override;
@@ -42,6 +41,7 @@ namespace m1 {
          void OnWindowResize(int width, int height) override;
 
          void RenderEnvironment(float deltaTimeSeconds);
+         void RenderObstacle(float deltaTimeSeconds, int obstacleIdx);
          void RenderScene(float deltaTimeSeconds, bool updateCarCenter);
 
      protected:
@@ -61,11 +61,6 @@ namespace m1 {
          float fov    =  60.0f;
          float nearZ  =  0.01f;
          float farZ   = 200.0f;
-         float right  =  3.5f;
-         float left   = -3.5f;
-         float bottom = 0.01f;
-         float top    = 100.0f;
-         bool  perspectiveType = true;
 
          float cameraSpeed = 5.0f;
 

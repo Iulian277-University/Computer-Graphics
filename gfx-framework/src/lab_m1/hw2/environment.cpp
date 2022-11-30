@@ -36,6 +36,11 @@ void Environment::generateMeshes() {
     Mesh *ground = new Mesh("ground");
     ground->LoadMesh(RESOURCE_PATH::MODELS + "/primitives", "box.obj");
     this->addMesh("ground", ground);
+
+    // Obstacle
+    Mesh *obstacle = new Mesh("obstacle");
+    obstacle->LoadMesh(RESOURCE_PATH::MODELS + "/primitives", "box.obj");
+    this->addMesh("obstacle", obstacle);
 }
 
 
@@ -58,35 +63,34 @@ void Environment::generateCube(const char *name) {
 
 void Environment::generateTrack() {
     // Define a set of points for the middle points of car track
-    vector<glm::vec3> trackPointsMiddlePoints;
-    trackPointsMiddlePoints.push_back(glm::vec3(5.13,  0,  0.98)); // A
-    trackPointsMiddlePoints.push_back(glm::vec3(4.33,  0,  2.21)); // B
-    trackPointsMiddlePoints.push_back(glm::vec3(3.13,  0,  3.04)); // C
-    trackPointsMiddlePoints.push_back(glm::vec3(1.37,  0,  3.44)); // D
-    trackPointsMiddlePoints.push_back(glm::vec3(0.11,  0,  2.75)); // E
-    trackPointsMiddlePoints.push_back(glm::vec3(-1.17, 0,  1.85)); // F
-    trackPointsMiddlePoints.push_back(glm::vec3(-2.58, 0,  2.15)); // G
-    trackPointsMiddlePoints.push_back(glm::vec3(-3.68, 0,  3.02)); // H
-    trackPointsMiddlePoints.push_back(glm::vec3(-5.09, 0,  2.98)); // I
-    trackPointsMiddlePoints.push_back(glm::vec3(-6.02, 0,  2.16)); // J
-    trackPointsMiddlePoints.push_back(glm::vec3(-6.40, 0,  0.98)); // K
-    trackPointsMiddlePoints.push_back(glm::vec3(-6.13, 0, -0.45)); // L
-    trackPointsMiddlePoints.push_back(glm::vec3(-4.46, 0, -1.31)); // M
-    trackPointsMiddlePoints.push_back(glm::vec3(-2.86, 0, -1.53)); // N
-    trackPointsMiddlePoints.push_back(glm::vec3(-1.15, 0, -1.01)); // O
-    trackPointsMiddlePoints.push_back(glm::vec3(0.17,  0, -0.26)); // P
-    trackPointsMiddlePoints.push_back(glm::vec3(1.40,  0, -0.26)); // Q
-    trackPointsMiddlePoints.push_back(glm::vec3(2.21,  0, -0.86)); // R
-    trackPointsMiddlePoints.push_back(glm::vec3(3.42,  0, -1.65)); // S
-    trackPointsMiddlePoints.push_back(glm::vec3(4.47,  0, -1.22)); // T
-    trackPointsMiddlePoints.push_back(glm::vec3(5.04,  0, -0.38)); // U
+    trackMiddlePoints.push_back(glm::vec3(5.13,  0,  0.98)); // A
+    trackMiddlePoints.push_back(glm::vec3(4.33,  0,  2.21)); // B
+    trackMiddlePoints.push_back(glm::vec3(3.13,  0,  3.04)); // C
+    trackMiddlePoints.push_back(glm::vec3(1.37,  0,  3.44)); // D
+    trackMiddlePoints.push_back(glm::vec3(0.11,  0,  2.75)); // E
+    trackMiddlePoints.push_back(glm::vec3(-1.17, 0,  1.85)); // F
+    trackMiddlePoints.push_back(glm::vec3(-2.58, 0,  2.15)); // G
+    trackMiddlePoints.push_back(glm::vec3(-3.68, 0,  3.02)); // H
+    trackMiddlePoints.push_back(glm::vec3(-5.09, 0,  2.98)); // I
+    trackMiddlePoints.push_back(glm::vec3(-6.02, 0,  2.16)); // J
+    trackMiddlePoints.push_back(glm::vec3(-6.40, 0,  0.98)); // K
+    trackMiddlePoints.push_back(glm::vec3(-6.13, 0, -0.45)); // L
+    trackMiddlePoints.push_back(glm::vec3(-4.46, 0, -1.31)); // M
+    trackMiddlePoints.push_back(glm::vec3(-2.86, 0, -1.53)); // N
+    trackMiddlePoints.push_back(glm::vec3(-1.15, 0, -1.01)); // O
+    trackMiddlePoints.push_back(glm::vec3(0.17,  0, -0.26)); // P
+    trackMiddlePoints.push_back(glm::vec3(1.40,  0, -0.26)); // Q
+    trackMiddlePoints.push_back(glm::vec3(2.21,  0, -0.86)); // R
+    trackMiddlePoints.push_back(glm::vec3(3.42,  0, -1.65)); // S
+    trackMiddlePoints.push_back(glm::vec3(4.47,  0, -1.22)); // T
+    trackMiddlePoints.push_back(glm::vec3(5.04,  0, -0.38)); // U
 
     // Generate the exterior and interior points of the track using 3 consecutive points
     vector<glm::vec3> trackPoints;
-    for (int i = 0; i < trackPointsMiddlePoints.size(); i++) {
-        glm::vec3 p1 = trackPointsMiddlePoints[i];
-        glm::vec3 p2 = trackPointsMiddlePoints[(i + 1) % trackPointsMiddlePoints.size()];
-        glm::vec3 p3 = trackPointsMiddlePoints[(i + 2) % trackPointsMiddlePoints.size()];
+    for (int i = 0; i < trackMiddlePoints.size(); i++) {
+        glm::vec3 p1 = trackMiddlePoints[i];
+        glm::vec3 p2 = trackMiddlePoints[(i + 1) % trackMiddlePoints.size()];
+        glm::vec3 p3 = trackMiddlePoints[(i + 2) % trackMiddlePoints.size()];
 
         glm::vec3 v1 = glm::normalize(p2 - p1); // Direction vector from p1 to p2
         glm::vec3 v2 = glm::normalize(p3 - p2); // Direction vector from p2 to p3
@@ -155,9 +159,9 @@ void Environment::generateTrack() {
         }
     }
 
-    // Give to each tree a random size between 1.1 and 1.5
+    // Give to each tree a random size between 1.2 and 1.7
     for (int i = 0; i < treePositions.size(); i++) {
-        treeSizes.push_back(1.1f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX/(1.5f - 1.1f))));
+        treeSizes.push_back(1.2f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX/(1.7f - 1.2f))));
     }
 }
 
@@ -249,6 +253,10 @@ bool Environment::IsOnTrack(glm::vec3 center) {
 
 
 void Environment::generateObstacle() {
-    return;
+    // Get a random point from `trackMiddlePoints`
+    int index = rand() % this->trackMiddlePoints.size();
+    // Generate a random orientation (-1 or 1)
+    // int orientation = rand() % 2 == 0 ? -1 : 1;
+    obstacleIdx = index;
 }
             
