@@ -9,14 +9,8 @@ uniform mat4 Model;
 uniform mat4 View;
 uniform mat4 Projection;
 
-// Uniforms for light properties
-uniform vec3 light_position;
-uniform vec3 eye_position;
-uniform float material_kd;
-uniform float material_ks;
-uniform int material_shininess;
-
 uniform vec3 object_color;
+uniform vec3 car_position;
 
 // Output value to fragment shader
 out vec3 color;
@@ -27,29 +21,17 @@ void main()
 	vec3 world_position = (Model * vec4(v_position, 1)).xyz;
 	vec3 world_normal	= normalize(mat3(Model) * normalize(v_normal));
 
-	vec3 V = normalize(eye_position - world_position);
-	vec3 L = normalize(light_position - world_position);
-	vec3 R = normalize(reflect(-L, world_normal));
+	// Pos_{v_y} = Pos_{v_y} - \|{Pos_{car}-Pos_v}\|^2 \cdot scaleFactor
+	float scaleFactor = 0.02;
+	// float scaleFactor = 0;
+	float distance = length(car_position - world_position);
+	float height = world_position.y - pow(distance, 2) * scaleFactor;
 
-	// Define ambient light component
-	float ambient_light = 0.25;
+	// Compute the final position
+	vec4 position = vec4(world_position.x, height, world_position.z, 1);
+	gl_Position = Projection * View * position;
 
-	// Compute diffuse light component
-	float diffuse_light = material_kd * max(dot(world_normal, L), 0);
-
-	// Compute specular light component
-	float specular_light = 0;
-	if (diffuse_light > 0)
-		specular_light = material_ks * pow(max(dot(V, R), 0), material_shininess);
-
-	// Compute light
-	float d						= distance(light_position, world_position);
-	float attenuation_factor	= 1 / (1 + 0.14 * d + 0.07 * d * d);
-	float light					= ambient_light + attenuation_factor * (diffuse_light + specular_light);
-
-	// Send color light output to fragment shader
-	// color = object_color * light; // this disables the illumination
+	// gl_Position = Projection * View * Model * vec4(v_position, 1.0);
+	// Compute the color
 	color = object_color;
-
-	gl_Position = Projection * View * Model * vec4(v_position, 1.0);
 }

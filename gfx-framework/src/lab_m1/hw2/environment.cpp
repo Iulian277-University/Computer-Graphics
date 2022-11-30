@@ -33,9 +33,50 @@ void Environment::generateMeshes() {
     this->addMesh("skybox", skybox);
 
     // Ground
-    Mesh *ground = new Mesh("ground");
-    ground->LoadMesh(RESOURCE_PATH::MODELS + "/primitives", "box.obj");
+    Mesh* ground = new Mesh("ground");
     this->addMesh("ground", ground);
+
+    // Create the vertices buffer
+    vector<VertexFormat> vertices;
+    vector<unsigned int> indices;
+
+    std::vector<glm::vec3> groundPoints;
+    groundPoints.push_back(glm::vec3(0, 0, 0));
+    groundPoints.push_back(glm::vec3(1, 0, 0));
+    groundPoints.push_back(glm::vec3(0, 0, 1));
+    groundPoints.push_back(glm::vec3(1, 0, 1));
+
+    for (int i = 0; i < groundPoints.size(); ++i) {
+        glm::vec3 p1 = groundPoints[i];
+        glm::vec3 p2 = groundPoints[(i + 1) % groundPoints.size()];
+        glm::vec3 p3 = groundPoints[(i + 2) % groundPoints.size()];
+        
+        glm::vec3 v1 = p2 - p1;
+        glm::vec3 v2 = p3 - p1;
+
+        glm::vec3 normal = glm::normalize(glm::cross(v1, v2));
+
+        // Split the p2-p3 edge in `n_parts`and create `n_parts` triangles
+        float n_parts = 200;
+        for (int j = 0; j < n_parts; j++) {
+            glm::vec3 p4 = p2 + (p3 - p2) * (float) (j + 1) / n_parts;
+            glm::vec3 p5 = p2 + (p3 - p2) * (float) (j + 0) / n_parts;
+
+            // This random color is used only for debugging purposes (to visualize the triangles)
+            glm::vec3 color = glm::vec3(rand() % 100 / 100.0f, rand() % 100 / 100.0f, rand() % 100 / 100.0f);
+            vertices.push_back(VertexFormat(p1, normal, color));
+            vertices.push_back(VertexFormat(p4, normal, color));
+            vertices.push_back(VertexFormat(p5, normal, color));
+
+            indices.push_back(i * n_parts * 3 + j * 3 + 0);
+            indices.push_back(i * n_parts * 3 + j * 3 + 1);
+            indices.push_back(i * n_parts * 3 + j * 3 + 2);
+        }
+    }
+
+    ground->SetDrawMode(GL_TRIANGLES);
+    ground->InitFromData(vertices, indices);
+
 
     // Obstacle
     Mesh *obstacle = new Mesh("obstacle");
@@ -186,23 +227,8 @@ std::vector<VertexFormat> Environment::generateTrackMesh(vector<glm::vec3> track
 
         glm::vec3 normal = glm::normalize(glm::cross(v1, v2));
 
-        // glm::vec3 color = glm::vec3(rand() % 100 / 100.0f, rand() % 100 / 100.0f, rand() % 100 / 100.0f);
-        // if (i == 0) {
-        //     color = glm::vec3(1, 0, 0);
-        // } else {
-        //     color = glm::vec3(0, 0, 1);
-        // }
-        // vertices.push_back(VertexFormat(p1, normal, color));
-        // vertices.push_back(VertexFormat(p2, normal, color));
-        // vertices.push_back(VertexFormat(p3, normal, color));
-
-        // indices.push_back(i * 3);
-        // indices.push_back(i * 3 + 1);
-        // indices.push_back(i * 3 + 2);
-
-
         // Split the p2-p3 edge in `n_parts`and create `n_parts` triangles
-        float n_parts = 50;
+        float n_parts = 200;
         for (int j = 0; j < n_parts; j++) {
             glm::vec3 p4 = p2 + (p3 - p2) * (float) (j + 1) / n_parts;
             glm::vec3 p5 = p2 + (p3 - p2) * (float) (j + 0) / n_parts;

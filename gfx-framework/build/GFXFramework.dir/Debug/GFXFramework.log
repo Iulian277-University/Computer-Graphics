@@ -2,16 +2,10 @@
   hw2.cpp
 ..\src\lab_m1\hw2\hw2.cpp(40): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
 ..\src\lab_m1\hw2\hw2.cpp(39): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-..\src\lab_m1\hw2\hw2.cpp(85): warning C4018: '<': signed/unsigned mismatch
-..\src\lab_m1\hw2\hw2.cpp(126): warning C4018: '<': signed/unsigned mismatch
-..\src\lab_m1\hw2\hw2.cpp(217): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-..\src\lab_m1\hw2\hw2.cpp(216): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-  main.cpp
-c:\users\iulian\desktop\egc\gfx-framework\src\lab_m1\hw1\duck.h(42): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\iulian\desktop\egc\gfx-framework\src\lab_m1\hw1\duck.h(43): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\iulian\desktop\egc\gfx-framework\src\lab_m1\hw1\duck.h(49): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\iulian\desktop\egc\gfx-framework\src\lab_m1\hw1\duck.h(50): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-  Generating Code...
+..\src\lab_m1\hw2\hw2.cpp(93): warning C4018: '<': signed/unsigned mismatch
+..\src\lab_m1\hw2\hw2.cpp(135): warning C4018: '<': signed/unsigned mismatch
+..\src\lab_m1\hw2\hw2.cpp(227): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+..\src\lab_m1\hw2\hw2.cpp(226): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
   GFXFramework.vcxproj -> C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\GFXFramework.exe
   Junction created for C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\src <<===>> C:\Users\Iulian\Desktop\EGC\gfx-framework\src
   Junction created for C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\assets <<===>> C:\Users\Iulian\Desktop\EGC\gfx-framework\assets

@@ -50,6 +50,7 @@ namespace m1 {
          cam::Camera *camera;
          cam::Camera *mainCamera;
          cam::Camera *miniCamera;
+         Shader *shader;
          ViewportArea miniViewportArea;
          glm::mat4 projectionMatrix;
 
