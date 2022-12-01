@@ -41,6 +41,7 @@ namespace environment {
             std::vector<float> obstacleScales;
 
             float trackScale = 7.0f;
+            float max_obstacles = 20.0f;
 
             glm::vec3 skyColor    = glm::vec3(141, 210, 231) / 255.0f;
             glm::vec3 trackColor  = glm::vec3(50,   50,  50) / 255.0f;

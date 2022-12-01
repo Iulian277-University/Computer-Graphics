@@ -63,7 +63,7 @@ namespace m1 {
          float nearZ  =  0.01f;
          float farZ   = 300.0f;
 
-         float cameraSpeed = 7.0f;
+         float cameraSpeed = 8.0f;
 
          glm::vec3 lightPosition = glm::vec3(0, 20, 0);
          unsigned int materialShininess = 30;

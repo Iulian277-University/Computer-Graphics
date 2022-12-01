@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -27,12 +28,12 @@ void Environment::addShader(std::string shader_name, Shader *shader) {
 
 
 void Environment::generateMeshes() {
-    // Skybox
-    Mesh *skybox = new Mesh("skybox");
-    skybox->LoadMesh(RESOURCE_PATH::MODELS + "/primitives", "box.obj");
-    this->addMesh("skybox", skybox);
+    // Ground - v1
+    Mesh *ground1 = new Mesh("ground-plane50");
+	ground1->LoadMesh(RESOURCE_PATH::MODELS + "/primitives", "plane50.obj");
+    this->addMesh("ground-plane50", ground1);
 
-    // Ground
+    // Ground - v2
     Mesh* ground = new Mesh("ground");
     this->addMesh("ground", ground);
 
@@ -50,6 +51,7 @@ void Environment::generateMeshes() {
         glm::vec3 p1 = groundPoints[i];
         glm::vec3 p2 = groundPoints[(i + 1) % groundPoints.size()];
         glm::vec3 p3 = groundPoints[(i + 2) % groundPoints.size()];
+        glm::vec3 p4 = groundPoints[(i + 3) % groundPoints.size()];
         
         glm::vec3 v1 = p2 - p1;
         glm::vec3 v2 = p3 - p1;
@@ -57,7 +59,7 @@ void Environment::generateMeshes() {
         glm::vec3 normal = glm::normalize(glm::cross(v1, v2));
 
         // Split the p2-p3 edge in `n_parts`and create `n_parts` triangles
-        float n_parts = 200;
+        float n_parts = 100;
         for (int j = 0; j < n_parts; j++) {
             glm::vec3 p4 = p2 + (p3 - p2) * (float) (j + 1) / n_parts;
             glm::vec3 p5 = p2 + (p3 - p2) * (float) (j + 0) / n_parts;
@@ -76,7 +78,6 @@ void Environment::generateMeshes() {
 
     ground->SetDrawMode(GL_TRIANGLES);
     ground->InitFromData(vertices, indices);
-
 
     // Obstacle
     Mesh *obstacle = new Mesh("obstacle");
@@ -103,28 +104,22 @@ void Environment::generateCube(const char *name) {
 
 
 void Environment::generateTrack() {
-    // Define a set of points for the middle points of car track
-    trackMiddlePoints.push_back(glm::vec3(5.13,  0,  0.98)); // A
-    trackMiddlePoints.push_back(glm::vec3(4.33,  0,  2.21)); // B
-    trackMiddlePoints.push_back(glm::vec3(3.13,  0,  3.04)); // C
-    trackMiddlePoints.push_back(glm::vec3(1.37,  0,  3.44)); // D
-    trackMiddlePoints.push_back(glm::vec3(0.11,  0,  2.75)); // E
-    trackMiddlePoints.push_back(glm::vec3(-1.17, 0,  1.85)); // F
-    trackMiddlePoints.push_back(glm::vec3(-2.58, 0,  2.15)); // G
-    trackMiddlePoints.push_back(glm::vec3(-3.68, 0,  3.02)); // H
-    trackMiddlePoints.push_back(glm::vec3(-5.09, 0,  2.98)); // I
-    trackMiddlePoints.push_back(glm::vec3(-6.02, 0,  2.16)); // J
-    trackMiddlePoints.push_back(glm::vec3(-6.40, 0,  0.98)); // K
-    trackMiddlePoints.push_back(glm::vec3(-6.13, 0, -0.45)); // L
-    trackMiddlePoints.push_back(glm::vec3(-4.46, 0, -1.31)); // M
-    trackMiddlePoints.push_back(glm::vec3(-2.86, 0, -1.53)); // N
-    trackMiddlePoints.push_back(glm::vec3(-1.15, 0, -1.01)); // O
-    trackMiddlePoints.push_back(glm::vec3(0.17,  0, -0.26)); // P
-    trackMiddlePoints.push_back(glm::vec3(1.40,  0, -0.26)); // Q
-    trackMiddlePoints.push_back(glm::vec3(2.21,  0, -0.86)); // R
-    trackMiddlePoints.push_back(glm::vec3(3.25,  0, -1.39)); // S
-    trackMiddlePoints.push_back(glm::vec3(4.47,  0, -1.22)); // T
-    trackMiddlePoints.push_back(glm::vec3(5.04,  0, -0.38)); // U
+    // Read a set of points for the middle points of car track
+    // Read from `hw2/track_points.txt` file
+    std::ifstream trackPointsFile;
+    trackPointsFile.open(SOURCE_PATH::M1 + "/hw2/track_points.txt");
+
+    if (trackPointsFile.is_open()) {
+        std::string line;
+        while (std::getline(trackPointsFile, line)) {
+            std::istringstream iss(line);
+            float x, z;
+            if (!(iss >> x >> z)) {
+                break;
+            }
+			trackMiddlePoints.push_back(glm::vec3(x, 0, z));
+        }
+    }
 
     // Generate the exterior and interior points of the track using 3 consecutive points
     vector<glm::vec3> trackPoints;
@@ -161,7 +156,7 @@ void Environment::generateTrack() {
         }
     }
 
-    // Iterate over track points
+    // Generate trees' positions
     for (int i = 0; i < trackPoints.size(); i++) {
         glm::vec3 p1 = trackPoints[i];
         glm::vec3 p2 = trackPoints[(i + 1) % trackPoints.size()];
@@ -200,6 +195,27 @@ void Environment::generateTrack() {
         }
     }
 
+    // Remove trees that are too close to each other
+    for (int i = 0; i < treePositions.size(); i++) {
+        glm::vec3 treePosition = treePositions[i];
+        for (int j = 0; j < treePositions.size(); j++) {
+            if (i == j)
+                continue;
+            if (glm::distance(treePosition, treePositions[j]) < 1.5f) {
+                treePositions.erase(treePositions.begin() + i);
+                i--;
+                break;
+            }
+        }
+    }
+
+    // Keep only 75% of the trees
+    int treesToKeep = treePositions.size() * 0.75f;
+    while (treePositions.size() > treesToKeep) {
+        int index = rand() % treePositions.size();
+        treePositions.erase(treePositions.begin() + index);
+    }
+
     // Give to each tree a random size between 1.2 and 1.7
     for (int i = 0; i < treePositions.size(); i++) {
         treeSizes.push_back(1.2f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX/(1.7f - 1.2f))));
@@ -216,25 +232,50 @@ std::vector<VertexFormat> Environment::generateTrackMesh(vector<glm::vec3> track
     vector<VertexFormat> vertices;
     vector<unsigned int> indices;
 
-    // Iterate over trackPoints, take 3 consecutive points and create a triangle
+    // Iterate over `trackPoints`, take 3 consecutive points and create a triangle
     for (int i = 0; i < trackPoints.size(); i++) {
-        glm::vec3 p1 = trackPoints[i];
+        glm::vec3 p1 = trackPoints[i % trackPoints.size()];
         glm::vec3 p2 = trackPoints[(i + 1) % trackPoints.size()];
         glm::vec3 p3 = trackPoints[(i + 2) % trackPoints.size()];
+        // std::cout << i + 1 << p1 << p2 << p3 << std::endl;
 
-        glm::vec3 v1 = p2 - p1;
-        glm::vec3 v2 = p3 - p2;
-
-        glm::vec3 normal = glm::normalize(glm::cross(v1, v2));
+        glm::vec3 normal = glm::normalize(glm::cross(p2 - p1, p3 - p1));
 
         // Split the p2-p3 edge in `n_parts`and create `n_parts` triangles
-        float n_parts = 200;
+        float n_parts = 100;
         for (int j = 0; j < n_parts; j++) {
             glm::vec3 p4 = p2 + (p3 - p2) * (float) (j + 1) / n_parts;
             glm::vec3 p5 = p2 + (p3 - p2) * (float) (j + 0) / n_parts;
 
             // This random color is used only for debugging purposes (to visualize the triangles)
-            // glm::vec3 color = glm::vec3(rand() % 100 / 100.0f, rand() % 100 / 100.0f, rand() % 100 / 100.0f);
+            glm::vec3 color = glm::vec3(rand() % 100 / 100.0f, rand() % 100 / 100.0f, rand() % 100 / 100.0f);
+            vertices.push_back(VertexFormat(p1, normal, color));
+            vertices.push_back(VertexFormat(p4, normal, color));
+            vertices.push_back(VertexFormat(p5, normal, color));
+
+            indices.push_back(i * n_parts * 3 + j * 3 + 0);
+            indices.push_back(i * n_parts * 3 + j * 3 + 1);
+            indices.push_back(i * n_parts * 3 + j * 3 + 2);
+        }
+
+        i++;
+        glm::vec3 p4 = trackPoints[i % trackPoints.size()];
+        p3 = trackPoints[(i - 2) % trackPoints.size()];
+        p2 = trackPoints[(i - 1) % trackPoints.size()];
+        if (i == 1) {
+            p2 = trackPoints[0];
+            p3 = trackPoints[trackPoints.size() - 1];
+        }
+
+        normal = glm::normalize(glm::cross(p2 - p4, p3 - p4));
+
+        // Split the p2-p3 edge in `n_parts`and create `n_parts` triangles
+        for (int j = 0; j < n_parts; j++) {
+            glm::vec3 p1 = p2 + (p3 - p2) * (float) (j + 1) / n_parts;
+            glm::vec3 p5 = p2 + (p3 - p2) * (float) (j + 0) / n_parts;
+
+            // This random color is used only for debugging purposes (to visualize the triangles)
+            glm::vec3 color = glm::vec3(rand() % 100 / 100.0f, rand() % 100 / 100.0f, rand() % 100 / 100.0f);
             vertices.push_back(VertexFormat(p1, normal, color));
             vertices.push_back(VertexFormat(p4, normal, color));
             vertices.push_back(VertexFormat(p5, normal, color));
@@ -280,27 +321,38 @@ bool Environment::IsOnTrack(glm::vec3 center) {
 
 void Environment::generateObstacles() {
     // Generate 10 unique random indices from `trackMiddlePoints`
-    while (obstacleIdxs.size() < 10) {
+    while (obstacleIdxs.size() < max_obstacles) {
         int index = rand() % this->trackMiddlePoints.size();
         if (std::find(obstacleIdxs.begin(), obstacleIdxs.end(), index) == obstacleIdxs.end())
             obstacleIdxs.push_back(index);
     }
 
+    // Remove obstacles that are too close to each other
+    for (int i = 0; i < obstacleIdxs.size(); i++) {
+        for (int j = i + 1; j < obstacleIdxs.size(); j++) {
+            if (glm::distance(trackMiddlePoints[obstacleIdxs[i]], trackMiddlePoints[obstacleIdxs[j]]) < 1.0f) {
+                obstacleIdxs.erase(obstacleIdxs.begin() + j);
+                j--;
+            }
+        }
+    }
+
     // Initialize `obstaclePositions` with MAX_INT
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < max_obstacles; i++)
         obstaclePositions.push_back(glm::vec3(INT_MAX, INT_MAX, INT_MAX));
 
     // Give some random offsets to the obstacles in range [-1.5, 1.5]
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < max_obstacles; i++)
         obstacleOffsets.push_back(glm::vec3(rand() % 300 / 100.0f - 1.5f, 0, rand() % 300 / 100.0f - 1.5f));
 
     // Give some random colors to the obstacles
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < max_obstacles; i++)
         obstacleColors.push_back(glm::vec3(rand() % 100 / 100.0f, rand() % 100 / 100.0f, rand() % 100 / 100.0f));
 
     // Give some random scales to the obstacles in range [1.1, 1.5]
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < max_obstacles; i++)
         obstacleScales.push_back(1.1f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX/(1.5f - 1.1f))));
+
 }
 
 

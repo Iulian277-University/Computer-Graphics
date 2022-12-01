@@ -1,11 +1,72 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(944,5): warning MSB8027: Two or more files with the name of object2D.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are ..\src\lab_m1\hw1\object2D.cpp, C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\lab3\object2D.cpp.
-  hw2.cpp
-..\src\lab_m1\hw2\hw2.cpp(40): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-..\src\lab_m1\hw2\hw2.cpp(39): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-..\src\lab_m1\hw2\hw2.cpp(93): warning C4018: '<': signed/unsigned mismatch
-..\src\lab_m1\hw2\hw2.cpp(135): warning C4018: '<': signed/unsigned mismatch
-..\src\lab_m1\hw2\hw2.cpp(227): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-..\src\lab_m1\hw2\hw2.cpp(226): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  environment.cpp
+..\src\lab_m1\hw2\environment.cpp(50): warning C4018: '<': signed/unsigned mismatch
+..\src\lab_m1\hw2\environment.cpp(64): warning C4456: declaration of 'p4' hides previous local declaration
+  ..\src\lab_m1\hw2\environment.cpp(54): note: see declaration of 'p4'
+..\src\lab_m1\hw2\environment.cpp(73): warning C4244: 'argument': conversion from 'float' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=unsigned int
+          ]
+..\src\lab_m1\hw2\environment.cpp(74): warning C4244: 'argument': conversion from 'float' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=unsigned int
+          ]
+..\src\lab_m1\hw2\environment.cpp(75): warning C4244: 'argument': conversion from 'float' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=unsigned int
+          ]
+..\src\lab_m1\hw2\environment.cpp(126): warning C4018: '<': signed/unsigned mismatch
+..\src\lab_m1\hw2\environment.cpp(144): warning C4018: '<': signed/unsigned mismatch
+..\src\lab_m1\hw2\environment.cpp(160): warning C4018: '<': signed/unsigned mismatch
+..\src\lab_m1\hw2\environment.cpp(187): warning C4018: '<': signed/unsigned mismatch
+..\src\lab_m1\hw2\environment.cpp(199): warning C4018: '<': signed/unsigned mismatch
+..\src\lab_m1\hw2\environment.cpp(201): warning C4018: '<': signed/unsigned mismatch
+..\src\lab_m1\hw2\environment.cpp(213): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+..\src\lab_m1\hw2\environment.cpp(214): warning C4018: '>': signed/unsigned mismatch
+..\src\lab_m1\hw2\environment.cpp(220): warning C4018: '<': signed/unsigned mismatch
+..\src\lab_m1\hw2\environment.cpp(236): warning C4018: '<': signed/unsigned mismatch
+..\src\lab_m1\hw2\environment.cpp(251): warning C4457: declaration of 'color' hides function parameter
+  ..\src\lab_m1\hw2\environment.cpp(226): note: see declaration of 'color'
+..\src\lab_m1\hw2\environment.cpp(256): warning C4244: 'argument': conversion from 'float' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=unsigned int
+          ]
+..\src\lab_m1\hw2\environment.cpp(257): warning C4244: 'argument': conversion from 'float' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=unsigned int
+          ]
+..\src\lab_m1\hw2\environment.cpp(258): warning C4244: 'argument': conversion from 'float' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=unsigned int
+          ]
+..\src\lab_m1\hw2\environment.cpp(274): warning C4456: declaration of 'p1' hides previous local declaration
+  ..\src\lab_m1\hw2\environment.cpp(237): note: see declaration of 'p1'
+..\src\lab_m1\hw2\environment.cpp(278): warning C4457: declaration of 'color' hides function parameter
+  ..\src\lab_m1\hw2\environment.cpp(226): note: see declaration of 'color'
+..\src\lab_m1\hw2\environment.cpp(283): warning C4244: 'argument': conversion from 'float' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=unsigned int
+          ]
+..\src\lab_m1\hw2\environment.cpp(284): warning C4244: 'argument': conversion from 'float' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=unsigned int
+          ]
+..\src\lab_m1\hw2\environment.cpp(285): warning C4244: 'argument': conversion from 'float' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=unsigned int
+          ]
+..\src\lab_m1\hw2\environment.cpp(331): warning C4018: '<': signed/unsigned mismatch
+..\src\lab_m1\hw2\environment.cpp(332): warning C4018: '<': signed/unsigned mismatch
+..\src\lab_m1\hw2\environment.cpp(361): warning C4018: '<': signed/unsigned mismatch
   GFXFramework.vcxproj -> C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\GFXFramework.exe
   Junction created for C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\src <<===>> C:\Users\Iulian\Desktop\EGC\gfx-framework\src
   Junction created for C:\Users\Iulian\Desktop\EGC\gfx-framework\build\bin\Debug\assets <<===>> C:\Users\Iulian\Desktop\EGC\gfx-framework\assets

@@ -23,7 +23,6 @@ void main()
 
 	// Pos_{v_y} = Pos_{v_y} - \|{Pos_{car}-Pos_v}\|^2 \cdot scaleFactor
 	float scaleFactor = 0.02;
-	// float scaleFactor = 0;
 	float distance = length(car_position - world_position);
 	float height = world_position.y - pow(distance, 2) * scaleFactor;
 
@@ -31,7 +30,6 @@ void main()
 	vec4 position = vec4(world_position.x, height, world_position.z, 1);
 	gl_Position = Projection * View * position;
 
-	// gl_Position = Projection * View * Model * vec4(v_position, 1.0);
 	// Compute the color
 	color = object_color;
 }

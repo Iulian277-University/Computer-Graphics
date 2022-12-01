@@ -377,4 +377,9 @@
       <Filter>src\lab_m1\hw2\shaders</Filter>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\src\lab_m1\hw2\track_points.txt">
+      <Filter>src\lab_m1\hw2</Filter>
+    </Text>
+  </ItemGroup>
 </Project>

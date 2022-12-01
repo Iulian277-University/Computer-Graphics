@@ -13,8 +13,9 @@ Hw2::~Hw2() {}
 void Hw2::Init() {
     // Camera
     mainCamera = new cam::Camera();
-    mainCamera->Set(glm::vec3(0, 1.5f, -5), glm::vec3(0, 1, 0), glm::vec3(0, 1, 0));
+    mainCamera->Set(glm::vec3(1, 2.8f, -10), glm::vec3(0, 1, 0), glm::vec3(0, 1, 0));
 	mainCamera->RotateThirdPerson_OY(RADIANS(-110));
+    mainCamera->RotateThirdPerson_OX(RADIANS(-15));
 
     miniCamera = new cam::Camera();
     miniCamera->Set(glm::vec3(0, 30, -5), glm::vec3(0, 1, 0), glm::vec3(0, 0, -1));
@@ -55,7 +56,7 @@ void Hw2::Init() {
 
 void Hw2::FrameStart() {
     // Clears the color buffer (using the previously set color) and depth buffer
-    glClearColor(0, 0, 0, 1);
+    glClearColor(env.skyColor.r, env.skyColor.g, env.skyColor.b, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Sets the screen area where to draw
@@ -74,11 +75,11 @@ void Hw2::RenderMesh(Mesh *mesh, Shader *shader, const glm::mat4 &modelMatrix, g
     glUniformMatrix4fv(shader->loc_projection_matrix, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
     glUniformMatrix4fv(shader->loc_model_matrix,      1, GL_FALSE, glm::value_ptr(modelMatrix));
     
-	// Send for shaders["Color"]
+	// Send for `shaders["Color"]`
     GLint loc_color = glGetUniformLocation(shader->program, "color");
     glUniform3fv(loc_color, 1, glm::value_ptr(color));
 
-	// Send for shaders["CustomShader"]
+	// Send for `shaders["CustomShader"]`
     loc_color = glGetUniformLocation(shader->program, "object_color");
     glUniform3fv(loc_color, 1, glm::value_ptr(color));
 
@@ -98,7 +99,7 @@ void Hw2::RenderEnvironment(float deltaTimeSeconds) {
         modelMatrix = glm::mat4(1);
         modelMatrix = glm::translate(modelMatrix, treePosition);
         modelMatrix = glm::scale(modelMatrix, glm::vec3(0.5f, 0.7f, 0.5f));
-        modelMatrix = glm::translate(modelMatrix, glm::vec3(0, 0.5f, 0));
+        modelMatrix = glm::translate(modelMatrix, glm::vec3(0, -1.2f, 0));
 
         // Render the trunk
         RenderMesh(env.meshes["trunk"], shader, modelMatrix, env.trunkColor);
@@ -106,31 +107,37 @@ void Hw2::RenderEnvironment(float deltaTimeSeconds) {
         // Crown matrix
         modelMatrix = glm::mat4(1); 
         modelMatrix = glm::translate(modelMatrix, treePosition);
-        modelMatrix = glm::translate(modelMatrix, glm::vec3(0, 0.7f, 0));
+        modelMatrix = glm::translate(modelMatrix, glm::vec3(0, 0.1f, 0));
         float scale = env.treeSizes[i];
         modelMatrix = glm::scale(modelMatrix, glm::vec3(scale, scale, scale));
-        modelMatrix = glm::translate(modelMatrix, glm::vec3(0, 0.5f, 0));
 
         // Render the crown
         RenderMesh(env.meshes["crown"], shader, modelMatrix, env.crownColor);
     }
     
-    /* Render ground */
-    modelMatrix = glm::mat4(1);
-    modelMatrix = glm::translate(modelMatrix, glm::vec3(0, 0, 0));
-    modelMatrix = glm::scale(modelMatrix, glm::vec3(200, 1, 200));
-    modelMatrix = glm::translate(modelMatrix, glm::vec3(-0.5f, -0.5f, -0.5f));
-    RenderMesh(env.meshes["ground"], shader, modelMatrix, env.groundColor);
+    /* Render ground - v1 */
+    // Render n*n tiles of "ground-plane50"
+    float num_tiles = 5; 
+    for (int i = -num_tiles; i < num_tiles; i++) {
+        for (int j = -num_tiles; j < num_tiles; j++) {
+            modelMatrix = glm::translate(glm::mat4(1), glm::vec3(i * num_tiles, -1.0f, j * num_tiles));
+            modelMatrix = glm::scale(modelMatrix, glm::vec3(5, 1, 5));
+            RenderMesh(env.meshes["ground-plane50"], shader, modelMatrix, env.groundColor);
+        }
+    }
 
-    /* Render a big sphere for skybox */
-    modelMatrix = glm::mat4(1);
-    modelMatrix = glm::translate(modelMatrix, glm::vec3(0, 10, 0));
-    modelMatrix = glm::scale(modelMatrix, glm::vec3(200, 200, 200));
-    RenderMesh(env.meshes["skybox"], shader, modelMatrix, env.skyColor);
+
+    /* Render ground - v2 */
+    // modelMatrix = glm::mat4(1);
+    // modelMatrix = glm::translate(modelMatrix, glm::vec3(0, 0, 0));
+    // modelMatrix = glm::scale(modelMatrix, glm::vec3(200, 1, 200));
+    // modelMatrix = glm::translate(modelMatrix, glm::vec3(-0.5f, -0.5f, -0.5f));
+    // RenderMesh(env.meshes["ground"], shader, modelMatrix, env.groundColor);
 
     /* Render track */
     modelMatrix = glm::mat4(1);
     modelMatrix = glm::scale(modelMatrix, glm::vec3(env.trackScale));
+    modelMatrix = glm::translate(modelMatrix, glm::vec3(0, -0.1f, 0));
     RenderMesh(env.meshes["track"], shader, modelMatrix, env.trackColor);
 
     /* Render obstacles */
@@ -153,6 +160,7 @@ void Hw2::RenderObstacle(float deltaTimeSeconds, int i) {
 
     // Obstacle matrix
     glm::mat4 modelMatrix = glm::mat4(1);
+    modelMatrix = glm::translate(modelMatrix, glm::vec3(0, -0.75f, 0));
     modelMatrix = glm::translate(modelMatrix, env.obstacleOffsets[i]);
     modelMatrix = glm::translate(modelMatrix, env.obstaclePositions[i]);
     modelMatrix = glm::scale(modelMatrix, glm::vec3(env.obstacleScales[i]));
@@ -173,7 +181,7 @@ void Hw2::RenderObstacle(float deltaTimeSeconds, int i) {
 
     // Move the obstacle twoards the nextObstaclePosition with the same speed between the two points
     float distance = glm::distance(env.obstaclePositions[i], nextObstaclePosition);
-    float speed = cameraSpeed / 2;
+    float speed = cameraSpeed * 0.75f;
     float step = speed * deltaTimeSeconds;
     if (step > distance) {
         env.obstaclePositions[i] = nextObstaclePosition;
@@ -216,7 +224,6 @@ void Hw2::RenderScene(float deltaTimeSeconds, bool updateCarCenter = true) {
 }
 
 
-// [TODO]: Use `orthographic` projection matrix (15 points)
 void Hw2::Update(float deltaTimeSeconds) {
     // Third person camera
     camera = mainCamera;
@@ -240,11 +247,7 @@ void Hw2::Update(float deltaTimeSeconds) {
     RenderScene(deltaTimeSeconds, false);
 }
 
-
-void Hw2::FrameEnd() {
-	// DrawCoordinateSystem(camera->GetViewMatrix(), projectionMatrix);
-}
-
+void Hw2::FrameEnd() {}
 
 void Hw2::OnInputUpdate(float deltaTime, int mods) {
     camera = mainCamera;

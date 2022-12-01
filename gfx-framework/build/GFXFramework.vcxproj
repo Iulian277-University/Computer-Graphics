@@ -606,6 +606,9 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <None Include="..\src\lab_m1\hw2\shaders\FragmentShader.glsl" />
     <None Include="..\src\lab_m1\hw2\shaders\VertexShader.glsl" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\src\lab_m1\hw2\track_points.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
