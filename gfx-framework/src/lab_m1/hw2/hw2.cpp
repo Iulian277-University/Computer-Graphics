@@ -1,5 +1,4 @@
 #include <iostream>
-#include <vector>
 
 #include "lab_m1/hw2/hw2.h"
 #include "lab_m1/hw2/environment.h"
@@ -11,12 +10,13 @@ Hw2::Hw2() {}
 Hw2::~Hw2() {}
 
 void Hw2::Init() {
-    // Camera
+    // Third person camera
     mainCamera = new cam::Camera();
     mainCamera->Set(glm::vec3(1, 2.8f, -10), glm::vec3(0, 1, 0), glm::vec3(0, 1, 0));
 	mainCamera->RotateThirdPerson_OY(RADIANS(-110));
     mainCamera->RotateThirdPerson_OX(RADIANS(-15));
 
+    // Minimap camera
     miniCamera = new cam::Camera();
     miniCamera->Set(glm::vec3(0, 30, -5), glm::vec3(0, 1, 0), glm::vec3(0, 0, -1));
 
@@ -24,7 +24,6 @@ void Hw2::Init() {
     env = environment::Environment();
     env.generateMeshes();
     env.generateTrack();
-    env.generateShaders();
     env.generateCube("trunk");
     env.generateCube("crown");
 
@@ -90,69 +89,13 @@ void Hw2::RenderMesh(Mesh *mesh, Shader *shader, const glm::mat4 &modelMatrix, g
 }
 
 
-void Hw2::RenderEnvironment(float deltaTimeSeconds) {
-    glm::mat4 modelMatrix;
-    /* Render trees */
-    for (int i = 0; i < env.treePositions.size(); i++) {
-        auto treePosition = env.treePositions[i];
-        // Trunk matrix
-        modelMatrix = glm::mat4(1);
-        modelMatrix = glm::translate(modelMatrix, treePosition);
-        modelMatrix = glm::scale(modelMatrix, glm::vec3(0.5f, 0.7f, 0.5f));
-        modelMatrix = glm::translate(modelMatrix, glm::vec3(0, -1.2f, 0));
-
-        // Render the trunk
-        RenderMesh(env.meshes["trunk"], shader, modelMatrix, env.trunkColor);
-
-        // Crown matrix
-        modelMatrix = glm::mat4(1); 
-        modelMatrix = glm::translate(modelMatrix, treePosition);
-        modelMatrix = glm::translate(modelMatrix, glm::vec3(0, 0.1f, 0));
-        float scale = env.treeSizes[i];
-        modelMatrix = glm::scale(modelMatrix, glm::vec3(scale, scale, scale));
-
-        // Render the crown
-        RenderMesh(env.meshes["crown"], shader, modelMatrix, env.crownColor);
-    }
-    
-    /* Render ground - v1 */
-    // Render n*n tiles of "ground-plane50"
-    float num_tiles = 5; 
-    for (int i = -num_tiles; i < num_tiles; i++) {
-        for (int j = -num_tiles; j < num_tiles; j++) {
-            modelMatrix = glm::translate(glm::mat4(1), glm::vec3(i * num_tiles, -1.0f, j * num_tiles));
-            modelMatrix = glm::scale(modelMatrix, glm::vec3(5, 1, 5));
-            RenderMesh(env.meshes["ground-plane50"], shader, modelMatrix, env.groundColor);
-        }
-    }
-
-
-    /* Render ground - v2 */
-    // modelMatrix = glm::mat4(1);
-    // modelMatrix = glm::translate(modelMatrix, glm::vec3(0, 0, 0));
-    // modelMatrix = glm::scale(modelMatrix, glm::vec3(200, 1, 200));
-    // modelMatrix = glm::translate(modelMatrix, glm::vec3(-0.5f, -0.5f, -0.5f));
-    // RenderMesh(env.meshes["ground"], shader, modelMatrix, env.groundColor);
-
-    /* Render track */
-    modelMatrix = glm::mat4(1);
-    modelMatrix = glm::scale(modelMatrix, glm::vec3(env.trackScale));
-    modelMatrix = glm::translate(modelMatrix, glm::vec3(0, -0.1f, 0));
-    RenderMesh(env.meshes["track"], shader, modelMatrix, env.trackColor);
-
-    /* Render obstacles */
-    for (int i = 0; i < env.obstacleIdxs.size(); i++)
-        RenderObstacle(deltaTimeSeconds, i);
-}
-
-
 void Hw2::RenderObstacle(float deltaTimeSeconds, int i) {
     int obstacleIdx = env.obstacleIdxs[i];
 
     // Next obstacle position
     glm::vec3 nextObstaclePosition = env.trackMiddlePoints[(obstacleIdx + 1) % env.trackMiddlePoints.size()] * env.trackScale;
 
-    // Choose the initial position of the obstacle or the updated one
+    // Choose between the initial position of the obstacle and the updated one
     if (glm::distance(env.obstaclePositions[i], nextObstaclePosition) >
         glm::distance(env.trackMiddlePoints[obstacleIdx] * env.trackScale, nextObstaclePosition)) {
             env.obstaclePositions[i] = env.trackMiddlePoints[obstacleIdx] * env.trackScale;
@@ -196,6 +139,55 @@ void Hw2::RenderObstacle(float deltaTimeSeconds, int i) {
 }
 
 
+void Hw2::RenderEnvironment(float deltaTimeSeconds) {
+    glm::mat4 modelMatrix;
+
+    /* Render trees */
+    for (int i = 0; i < env.treePositions.size(); i++) {
+        auto treePosition = env.treePositions[i];
+        // Trunk matrix
+        modelMatrix = glm::mat4(1);
+        modelMatrix = glm::translate(modelMatrix, treePosition);
+        modelMatrix = glm::scale(modelMatrix, glm::vec3(0.5f, 0.7f, 0.5f));
+        modelMatrix = glm::translate(modelMatrix, glm::vec3(0, -1.2f, 0));
+
+        // Render the trunk
+        RenderMesh(env.meshes["trunk"], shader, modelMatrix, env.trunkColor);
+
+        // Crown matrix
+        modelMatrix = glm::mat4(1); 
+        modelMatrix = glm::translate(modelMatrix, treePosition);
+        modelMatrix = glm::translate(modelMatrix, glm::vec3(0, 0.1f, 0));
+        float scale = env.treeSizes[i];
+        modelMatrix = glm::scale(modelMatrix, glm::vec3(scale, scale, scale));
+
+        // Render the crown
+        RenderMesh(env.meshes["crown"], shader, modelMatrix, env.crownColor);
+    }
+    
+    /* Render ground */
+    // Render n*n tiles of "ground-plane50"
+    float num_tiles = 5; 
+    for (int i = -num_tiles; i < num_tiles; i++) {
+        for (int j = -num_tiles; j < num_tiles; j++) {
+            modelMatrix = glm::translate(glm::mat4(1), glm::vec3(i * num_tiles, -1.0f, j * num_tiles));
+            modelMatrix = glm::scale(modelMatrix, glm::vec3(5, 1, 5));
+            RenderMesh(env.meshes["ground-plane50"], shader, modelMatrix, env.groundColor);
+        }
+    }
+
+    /* Render track */
+    modelMatrix = glm::mat4(1);
+    modelMatrix = glm::scale(modelMatrix, glm::vec3(env.trackScale));
+    modelMatrix = glm::translate(modelMatrix, glm::vec3(0, -0.1f, 0));
+    RenderMesh(env.meshes["track"], shader, modelMatrix, env.trackColor);
+
+    /* Render obstacles */
+    for (int i = 0; i < env.obstacleIdxs.size(); i++)
+        RenderObstacle(deltaTimeSeconds, i);
+}
+
+
 void Hw2::RenderScene(float deltaTimeSeconds, bool updateCarCenter = true) {
     /* Render the car */
     // Translate the car based on the camera's position, but keep the y on the ground
@@ -225,12 +217,13 @@ void Hw2::RenderScene(float deltaTimeSeconds, bool updateCarCenter = true) {
 
 
 void Hw2::Update(float deltaTimeSeconds) {
-    // Third person camera
+    /* Third person camera */
     camera = mainCamera;
     shader = shaders["CustomShader"];
+    projectionMatrix = glm::perspective(RADIANS(fov), window->props.aspectRatio, nearZ, farZ);
     RenderScene(deltaTimeSeconds);
 
-    // Switch to the second viewport
+    /* Switch to the second viewport */
     glm::ivec2 resolution = window->GetResolution();
     miniViewportArea = ViewportArea(resolution.x - resolution.x / 4 - minimapPadding, // x
 									minimapPadding, // y
@@ -239,11 +232,12 @@ void Hw2::Update(float deltaTimeSeconds) {
     glClear(GL_DEPTH_BUFFER_BIT);
     glViewport(miniViewportArea.x, miniViewportArea.y, miniViewportArea.width, miniViewportArea.height);
 
-    // Minimap
+    /* Minimap */
     miniCamera->Set(car.center + glm::vec3(0, 30, -5), car.center, glm::vec3(0, 0, -1));
     miniCamera->RotateFirstPerson_OY(RADIANS(90));
     camera = miniCamera;
 	shader = shaders["Color"];
+    projectionMatrix = glm::ortho(-25.0f, 25.0f, -25.0f, 25.0f, nearZ, farZ);
     RenderScene(deltaTimeSeconds, false);
 }
 
@@ -252,28 +246,28 @@ void Hw2::FrameEnd() {}
 void Hw2::OnInputUpdate(float deltaTime, int mods) {
     camera = mainCamera;
     if (window->KeyHold(GLFW_KEY_W)) {
-        if (env.IsOnCollision(car.center))
+        if (env.isOnCollision(car.center))
             return;
 
         // Check if the car is on the track
-        if (env.IsOnTrack(car.center)) {
+        if (env.isOnTrack(car.center)) {
             // Simulate a move forward of the camera
             glm::vec3 nextPosition = car.center + glm::normalize(camera->forward) * cameraSpeed * deltaTime * glm::vec3(1, 0, 1);
-            if (env.IsOnTrack(nextPosition)) {
+            if (env.isOnTrack(nextPosition)) {
                 camera->TranslateForward(cameraSpeed * deltaTime);
             }
         }
     }
 
     if (window->KeyHold(GLFW_KEY_S)) {
-        if (env.IsOnCollision(car.center))
+        if (env.isOnCollision(car.center))
             return;
 
         // Check if the car is on the track
-        if (env.IsOnTrack(car.center)) {
-            // Simulate a move forward of the camera
+        if (env.isOnTrack(car.center)) {
+            // Simulate a move backward of the camera
             glm::vec3 nextPosition = car.center + glm::normalize(camera->forward) * -cameraSpeed * deltaTime * glm::vec3(1, 0, 1);
-            if (env.IsOnTrack(nextPosition)) {
+            if (env.isOnTrack(nextPosition)) {
                 camera->TranslateForward(-cameraSpeed * deltaTime);
             }
         }

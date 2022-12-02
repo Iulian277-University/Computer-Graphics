@@ -6,7 +6,6 @@ namespace car {
             Car();
             ~Car();
 
-            // bool isOnTrack = true;
             glm::vec3 center = glm::vec3(1, 1, 1);
 
             std::unordered_map<std::string, Mesh *> meshes;

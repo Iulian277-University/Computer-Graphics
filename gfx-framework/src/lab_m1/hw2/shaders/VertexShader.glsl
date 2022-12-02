@@ -15,8 +15,7 @@ uniform vec3 car_position;
 // Output value to fragment shader
 out vec3 color;
 
-void main()
-{
+void main() {
 	// Compute world space vectors
 	vec3 world_position = (Model * vec4(v_position, 1)).xyz;
 	vec3 world_normal	= normalize(mat3(Model) * normalize(v_normal));

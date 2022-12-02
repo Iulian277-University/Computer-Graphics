@@ -46,7 +46,6 @@ namespace cam
 
 		void TranslateRight(float distance) {
 			position += glm::normalize(glm::vec3(right.x, 0, right.z)) * distance;
-			// position += glm::normalize(right) * distance;
 		}
 
 		// Rotations
@@ -76,7 +75,6 @@ namespace cam
 			up = glm::cross(right, forward);
 		}
 
-		// Rotations for third person
 		void RotateThirdPerson_OX(float angle) {
 			TranslateForward(distanceToTarget);
 			RotateFirstPerson_OX(angle);

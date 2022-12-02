@@ -14,11 +14,11 @@ Car::Car() {}
 Car::~Car() {}
 
 void Car::addMesh(std::string mesh_name, Mesh *mesh) {
-    this->meshes[mesh_name] = mesh;
+    meshes[mesh_name] = mesh;
 }
 
 void Car::generateMeshes() {
     Mesh *car = new Mesh("car");
     car->LoadMesh(RESOURCE_PATH::MODELS + "/primitives", "box.obj");
-    this->addMesh("car", car);
+    addMesh("car", car);
 }
