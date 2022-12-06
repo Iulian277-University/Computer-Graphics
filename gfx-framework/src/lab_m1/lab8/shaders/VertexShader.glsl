@@ -14,11 +14,10 @@ uniform mat4 Projection;
 out vec3 world_position;
 out vec3 world_normal;
 
-
-void main()
-{
-    // TODO(student): Compute world space vertex position and normal,
-    // and send them to the fragment shader
+void main() {
+    // Compute world space vertex position and normal, and send them to the fragment shader
+    world_position = vec3(Model * vec4(v_position, 1.0));
+    world_normal   = vec3(Model * vec4(v_normal, 0.0));
 
     gl_Position = Projection * View * Model * vec4(v_position, 1.0);
 }

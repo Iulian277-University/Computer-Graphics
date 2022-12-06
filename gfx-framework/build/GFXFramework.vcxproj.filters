@@ -46,6 +46,27 @@
     <ClCompile Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\core\world.cpp">
       <Filter>src\core</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\hw1\duck.cpp">
+      <Filter>src\lab_m1\hw1</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\hw1\hw1.cpp">
+      <Filter>src\lab_m1\hw1</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\hw1\object2D.cpp">
+      <Filter>src\lab_m1\hw1</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\hw1\ui.cpp">
+      <Filter>src\lab_m1\hw1</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\hw2\car.cpp">
+      <Filter>src\lab_m1\hw2</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\hw2\environment.cpp">
+      <Filter>src\lab_m1\hw2</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\hw2\hw2.cpp">
+      <Filter>src\lab_m1\hw2</Filter>
+    </ClCompile>
     <ClCompile Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\lab1\lab1.cpp">
       <Filter>src\lab_m1\lab1</Filter>
     </ClCompile>
@@ -56,6 +77,9 @@
       <Filter>src\lab_m1\lab3</Filter>
     </ClCompile>
     <ClCompile Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\lab3\lab3_vis2D.cpp">
+      <Filter>src\lab_m1\lab3</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\lab3\object2D.cpp">
       <Filter>src\lab_m1\lab3</Filter>
     </ClCompile>
     <ClCompile Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\lab4\lab4.cpp">
@@ -84,30 +108,6 @@
     </ClCompile>
     <ClCompile Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\utils\text_utils.cpp">
       <Filter>src\utils</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\lab_m1\hw1\hw1.cpp">
-      <Filter>src\lab_m1\hw1</Filter>
-    </ClCompile>
-    <ClCompile Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\lab3\object2D.cpp">
-      <Filter>src\lab_m1\lab3</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\lab_m1\hw1\object2D.cpp">
-      <Filter>src\lab_m1\hw1</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\lab_m1\hw1\duck.cpp">
-      <Filter>src\lab_m1\hw1</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\lab_m1\hw1\ui.cpp">
-      <Filter>src\lab_m1\hw1</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\lab_m1\hw2\hw2.cpp">
-      <Filter>src\lab_m1\hw2</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\lab_m1\hw2\environment.cpp">
-      <Filter>src\lab_m1\hw2</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\lab_m1\hw2\car.cpp">
-      <Filter>src\lab_m1\hw2</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -177,6 +177,39 @@
     <ClInclude Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\core\world.h">
       <Filter>src\core</Filter>
     </ClInclude>
+    <ClInclude Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\hw1\duck.h">
+      <Filter>src\lab_m1\hw1</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\hw1\hw1.h">
+      <Filter>src\lab_m1\hw1</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\hw1\object2D.h">
+      <Filter>src\lab_m1\hw1</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\hw1\transform2D.h">
+      <Filter>src\lab_m1\hw1</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\hw1\ui.h">
+      <Filter>src\lab_m1\hw1</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\hw2\camera.h">
+      <Filter>src\lab_m1\hw2</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\hw2\car.h">
+      <Filter>src\lab_m1\hw2</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\hw2\environment.h">
+      <Filter>src\lab_m1\hw2</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\hw2\hw2.h">
+      <Filter>src\lab_m1\hw2</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\hw2\shaders\FragmentShader.glsl">
+      <Filter>src\lab_m1\hw2\shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\hw2\shaders\VertexShader.glsl">
+      <Filter>src\lab_m1\hw2\shaders</Filter>
+    </ClInclude>
     <ClInclude Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\lab1\lab1.h">
       <Filter>src\lab_m1\lab1</Filter>
     </ClInclude>
@@ -187,6 +220,12 @@
       <Filter>src\lab_m1\lab3</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\lab3\lab3_vis2D.h">
+      <Filter>src\lab_m1\lab3</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\lab3\object2D.h">
+      <Filter>src\lab_m1\lab3</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\lab3\transform2D.h">
       <Filter>src\lab_m1\lab3</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\lab4\lab4.h">
@@ -258,39 +297,6 @@
     <ClInclude Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\utils\window_utils.h">
       <Filter>src\utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\lab_m1\hw1\hw1.h">
-      <Filter>src\lab_m1\hw1</Filter>
-    </ClInclude>
-    <ClInclude Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\lab3\object2D.h">
-      <Filter>src\lab_m1\lab3</Filter>
-    </ClInclude>
-    <ClInclude Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\src\lab_m1\lab3\transform2D.h">
-      <Filter>src\lab_m1\lab3</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\lab_m1\hw1\object2D.h">
-      <Filter>src\lab_m1\hw1</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\lab_m1\hw1\transform2D.h">
-      <Filter>src\lab_m1\hw1</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\lab_m1\hw1\duck.h">
-      <Filter>src\lab_m1\hw1</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\lab_m1\hw1\ui.h">
-      <Filter>src\lab_m1\hw1</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\lab_m1\hw2\hw2.h">
-      <Filter>src\lab_m1\hw2</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\lab_m1\hw2\camera.h">
-      <Filter>src\lab_m1\hw2</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\lab_m1\hw2\environment.h">
-      <Filter>src\lab_m1\hw2</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\lab_m1\hw2\car.h">
-      <Filter>src\lab_m1\hw2</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="C:\Users\Iulian\Desktop\EGC\gfx-framework\CMakeLists.txt" />
@@ -316,6 +322,15 @@
     </Filter>
     <Filter Include="src\lab_m1">
       <UniqueIdentifier>{9C3DB280-9FF8-3A15-B4C4-C39EB9DF9F87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\lab_m1\hw1">
+      <UniqueIdentifier>{E5CD31D3-C2A1-354D-9CB4-D4C6ABF0F332}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\lab_m1\hw2">
+      <UniqueIdentifier>{EEBC8903-E405-39C2-8A9F-C10B97662C87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\lab_m1\hw2\shaders">
+      <UniqueIdentifier>{8FFA747B-37BC-3D44-8E32-0787C4D1E5E8}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\lab_m1\lab1">
       <UniqueIdentifier>{79159932-7329-3E6A-BA04-87D9F69B10E7}</UniqueIdentifier>
@@ -359,23 +374,6 @@
     <Filter Include="src\utils">
       <UniqueIdentifier>{E3CA3D06-C5A1-34DA-9A0B-6F3BA0844060}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\lab_m1\hw1">
-      <UniqueIdentifier>{c5fb71f2-0096-4473-b3cf-87891e266663}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\lab_m1\hw2">
-      <UniqueIdentifier>{2146c475-6dea-4f13-ad06-9b9258496c35}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\lab_m1\hw2\shaders">
-      <UniqueIdentifier>{8b8919b3-3d55-4641-8694-3bcb98247ab9}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\src\lab_m1\hw2\shaders\VertexShader.glsl">
-      <Filter>src\lab_m1\hw2\shaders</Filter>
-    </None>
-    <None Include="..\src\lab_m1\hw2\shaders\FragmentShader.glsl">
-      <Filter>src\lab_m1\hw2\shaders</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\src\lab_m1\hw2\track_points.txt">

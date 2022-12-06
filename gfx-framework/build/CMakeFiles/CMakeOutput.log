@@ -9,7 +9,7 @@ The output was:
 Microsoft (R) Build Engine version 15.9.20+g88f5fadfbe for .NET Framework
 Copyright (C) Microsoft Corporation. All rights reserved.
 
-Build started 11-Oct-22 3:03:01 PM.
+Build started 02-Dec-22 11:48:23 AM.
 Project "C:\Users\Iulian\Desktop\EGC\gfx-framework\build\CMakeFiles\3.24.2\CompilerIdC\CompilerIdC.vcxproj" on node 1 (default targets).
 PrepareForBuild:
   Creating directory "Debug\".
@@ -35,7 +35,7 @@ Build succeeded.
     0 Warning(s)
     0 Error(s)
 
-Time Elapsed 00:00:00.96
+Time Elapsed 00:00:00.99
 
 
 Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CompilerIdC.exe"
@@ -54,7 +54,7 @@ The output was:
 Microsoft (R) Build Engine version 15.9.20+g88f5fadfbe for .NET Framework
 Copyright (C) Microsoft Corporation. All rights reserved.
 
-Build started 11-Oct-22 3:03:02 PM.
+Build started 02-Dec-22 11:48:24 AM.
 Project "C:\Users\Iulian\Desktop\EGC\gfx-framework\build\CMakeFiles\3.24.2\CompilerIdCXX\CompilerIdCXX.vcxproj" on node 1 (default targets).
 PrepareForBuild:
   Creating directory "Debug\".
@@ -80,7 +80,7 @@ Build succeeded.
     0 Warning(s)
     0 Error(s)
 
-Time Elapsed 00:00:00.70
+Time Elapsed 00:00:00.68
 
 
 Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.exe"
@@ -92,32 +92,32 @@ The CXX compiler identification is MSVC, found in "C:/Users/Iulian/Desktop/EGC/g
 Detecting C compiler ABI info compiled with the following output:
 Change Dir: C:/Users/Iulian/Desktop/EGC/gfx-framework/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/MSBuild/15.0/Bin/MSBuild.exe cmTC_dd98a.vcxproj /p:Configuration=Debug /p:Platform=Win32 /p:VisualStudioVersion=15.0 /v:m && Microsoft (R) Build Engine version 15.9.20+g88f5fadfbe for .NET Framework
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/MSBuild/15.0/Bin/MSBuild.exe cmTC_a38df.vcxproj /p:Configuration=Debug /p:Platform=Win32 /p:VisualStudioVersion=15.0 /v:m && Microsoft (R) Build Engine version 15.9.20+g88f5fadfbe for .NET Framework
 Copyright (C) Microsoft Corporation. All rights reserved.
 
   Microsoft (R) C/C++ Optimizing Compiler Version 19.16.27024.1 for x86
   Copyright (C) Microsoft Corporation.  All rights reserved.
   
-  cl /c /Zi /W1 /WX- /diagnostics:classic /Od /Ob0 /Oy- /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_dd98a.dir\Debug\\" /Fd"cmTC_dd98a.dir\Debug\vc141.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCCompilerABI.c"
+  cl /c /Zi /W1 /WX- /diagnostics:classic /Od /Ob0 /Oy- /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_a38df.dir\Debug\\" /Fd"cmTC_a38df.dir\Debug\vc141.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCCompilerABI.c"
   CMakeCCompilerABI.c
   
-  cmTC_dd98a.vcxproj -> C:\Users\Iulian\Desktop\EGC\gfx-framework\build\CMakeFiles\CMakeTmp\Debug\cmTC_dd98a.exe
+  cmTC_a38df.vcxproj -> C:\Users\Iulian\Desktop\EGC\gfx-framework\build\CMakeFiles\CMakeTmp\Debug\cmTC_a38df.exe
 
 
 
 Detecting CXX compiler ABI info compiled with the following output:
 Change Dir: C:/Users/Iulian/Desktop/EGC/gfx-framework/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/MSBuild/15.0/Bin/MSBuild.exe cmTC_63270.vcxproj /p:Configuration=Debug /p:Platform=Win32 /p:VisualStudioVersion=15.0 /v:m && Microsoft (R) Build Engine version 15.9.20+g88f5fadfbe for .NET Framework
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/MSBuild/15.0/Bin/MSBuild.exe cmTC_cbb60.vcxproj /p:Configuration=Debug /p:Platform=Win32 /p:VisualStudioVersion=15.0 /v:m && Microsoft (R) Build Engine version 15.9.20+g88f5fadfbe for .NET Framework
 Copyright (C) Microsoft Corporation. All rights reserved.
 
   Microsoft (R) C/C++ Optimizing Compiler Version 19.16.27024.1 for x86
   Copyright (C) Microsoft Corporation.  All rights reserved.
   
-  cl /c /Zi /W1 /WX- /diagnostics:classic /Od /Ob0 /Oy- /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_63270.dir\Debug\\" /Fd"cmTC_63270.dir\Debug\vc141.pdb" /Gd /TP /analyze- /errorReport:queue "C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCXXCompilerABI.cpp"
+  cl /c /Zi /W1 /WX- /diagnostics:classic /Od /Ob0 /Oy- /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_cbb60.dir\Debug\\" /Fd"cmTC_cbb60.dir\Debug\vc141.pdb" /Gd /TP /analyze- /errorReport:queue "C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCXXCompilerABI.cpp"
   CMakeCXXCompilerABI.cpp
   
-  cmTC_63270.vcxproj -> C:\Users\Iulian\Desktop\EGC\gfx-framework\build\CMakeFiles\CMakeTmp\Debug\cmTC_63270.exe
+  cmTC_cbb60.vcxproj -> C:\Users\Iulian\Desktop\EGC\gfx-framework\build\CMakeFiles\CMakeTmp\Debug\cmTC_cbb60.exe
 
 
 

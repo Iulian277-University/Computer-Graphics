@@ -122,7 +122,7 @@ void Hw2::RenderObstacle(float deltaTimeSeconds, int i) {
     modelMatrix = modelMatrix * obstacleRotationMatrix;
 
 
-    // Move the obstacle twoards the nextObstaclePosition with the same speed between the two points
+    // Move the obstacle towards the nextObstaclePosition with the same speed between the two points
     float distance = glm::distance(env.obstaclePositions[i], nextObstaclePosition);
     float speed = cameraSpeed * 0.75f;
     float step = speed * deltaTimeSeconds;

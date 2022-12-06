@@ -54,7 +54,8 @@ int main(int argc, char **argv)
 	// World *world = new m1::Lab5();
 	// World *world = new m1::Lab6();
 	// World *world = new m1::Lab7();
-	World *world = new m1::Hw2();
+	// World *world = new m1::Hw2();
+	World *world = new m1::Lab8();
 
     world->Init();
     world->Run();
